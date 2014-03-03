@@ -1,0 +1,6 @@
+commands.realname.usage=/realname <nickname>
+commands.realname.is=The real name of this person is
+commands.realname.isNot=This person has no real name!
+commands.me.usage=/me <...>
+commands.nick.usage=/nick [target] <nickname>
+commands.nick.done=Nickname changed!
