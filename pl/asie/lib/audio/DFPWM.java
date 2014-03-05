@@ -53,6 +53,14 @@ public class DFPWM
 		lastbit = curbit;
 	}
 
+	/**
+	 * Decompresses a set of DFPWM-encoded data.
+	 * @param dest An 8-bit, signed integer output array.
+	 * @param src A 1-bit DFPWM input array.
+	 * @param destoffs The offset in the destination array.
+	 * @param srcoffs The offset in the source array.
+	 * @param len The length of the source array.
+	 */
 	public void decompress(byte[] dest, byte[] src, int destoffs, int srcoffs, int len)
 	{
 		for(int i = 0; i < len; i++)
@@ -80,6 +88,14 @@ public class DFPWM
 		}
 	}
 
+	/**
+	 * Compresses a set of 8-bit signed integer audio data to 1-bit DFPWM data.
+	 * @param dest A 1-bit DFPWM output array.
+	 * @param src An 8-bit, signed integer input array.
+	 * @param destoffs The offset in the destination array.
+	 * @param srcoffs The offset in the source array.
+	 * @param len The length of the destination array.
+	 */
 	public void compress(byte[] dest, byte[] src, int destoffs, int srcoffs, int len)
 	{
 		int d = 0;
