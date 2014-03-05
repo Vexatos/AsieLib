@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class ItemUtils {
-
     public static void dropItems(World world, int x, int y, int z) {
     	TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
     	if (tileEntity == null || !(tileEntity instanceof IInventory)) {

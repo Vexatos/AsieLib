@@ -1,4 +1,4 @@
-package pl.asie.lib.util;
+package pl.asie.lib.util.color;
 
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemStack;

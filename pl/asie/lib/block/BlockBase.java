@@ -7,16 +7,34 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 public abstract class BlockBase extends BlockContainer {
-	public BlockBase(int id, Material material) {
+	private final Object parent;
+	private int gui = -1;
+	
+	public BlockBase(int id, Material material, Object parent) {
 		super(id, material);
 		this.setCreativeTab(CreativeTabs.tabMisc);
 		this.setHardness(1.5F);
+		this.parent = parent;
+	}
+	
+	public Object getOwner() { return parent; }
+	
+	public void setGuiID(int gui) { if(gui >= 0) this.gui = gui; }
+	public boolean hasGui() { return (gui >= 0); }
+	public int getGuiID() { return gui; }
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		if(!world.isRemote)
+			player.openGui(this.parent, this.gui, world, x, y, z);
+		return true;
 	}
 	
 	// Simple textures
