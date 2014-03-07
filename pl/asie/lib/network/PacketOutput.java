@@ -1,4 +1,4 @@
-package pl.asie.lib.packet;
+package pl.asie.lib.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.util.WorldUtils;
 
 import com.google.gson.Gson;
 
@@ -33,18 +34,14 @@ public class PacketOutput {
 		int x = readInt();
 		int y = readInt();
 		int z = readInt();
-		if(AsieLibMod.proxy.isClient()) {
-			if(Minecraft.getMinecraft().theWorld.provider.dimensionId != dimensionId) {
-				return null;
-			} else world = Minecraft.getMinecraft().theWorld;
-		} else {
-			world = MinecraftServer.getServer().worldServerForDimension(dimensionId);
-		}
-		return world.getBlockTileEntity(x, y, z);
+		return WorldUtils.getTileEntity(dimensionId, x, y, z);
 	}
 	
 	public byte[] readByteArray() throws IOException {
-		int size = read.readUnsignedShort();
+		return readByteArrayData(read.readUnsignedShort());
+	}
+	
+	public byte[] readByteArrayData(int size) throws IOException {
 		byte[] data = new byte[size];
 		read.read(data, 0, size);
 		return data;

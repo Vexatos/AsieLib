@@ -7,9 +7,13 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -23,6 +27,70 @@ public abstract class BlockBase extends BlockContainer {
 		this.setHardness(1.5F);
 		this.parent = parent;
 	}
+	
+	// Direction placement
+	
+	private boolean rotateFrontSide = false;
+	
+	public void setRotateFrontSide(boolean v) { rotateFrontSide = v; }
+	
+    private void setDefaultFrontSideDirection(World world, int x, int y, int z)
+    {
+        if (!world.isRemote)
+        {
+            int l = world.getBlockId(x, y, z - 1);
+            int i1 = world.getBlockId(x, y, z + 1);
+            int j1 = world.getBlockId(x - 1, y, z);
+            int k1 = world.getBlockId(x + 1, y, z);
+            byte b0 = 3;
+
+            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
+            {
+                b0 = 3;
+            }
+
+            if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
+            {
+                b0 = 2;
+            }
+
+            if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
+            {
+                b0 = 5;
+            }
+
+            if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
+            {
+                b0 = 4;
+            }
+
+            world.setBlockMetadataWithNotify(x, y, z, b0, 2);
+        }
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
+    {
+    	if(rotateFrontSide) {
+	        int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+	
+	        if (l == 0) world.setBlockMetadataWithNotify(x, y, z, 2, 2);
+	        if (l == 1) world.setBlockMetadataWithNotify(x, y, z, 5, 2);
+	        if (l == 2) world.setBlockMetadataWithNotify(x, y, z, 3, 2);
+	        if (l == 3) world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+	    }
+    }
+    
+    @Override
+    public void onBlockAdded(World world, int x, int y, int z)
+    {
+        super.onBlockAdded(world, x, y, z);
+        if(rotateFrontSide) {
+        	this.setDefaultFrontSideDirection(world, x, y, z);
+        }
+    }
+
+	// GUI handling
 	
 	public Object getOwner() { return parent; }
 	

@@ -5,6 +5,19 @@ import java.io.File;
 import pl.asie.lib.AsieLibMod;
 
 public class MiscUtils {
+	private static final int[] sides = {2, 5, 3, 4};
+	
+	public static int getAbsoluteSide(int side, int relativeFront) {
+		if(side < 2) return side;
+		int relativeFrontID = 0;
+		int sideID = 0;
+		for(int i = 0; i < 4; i++) {
+			if(sides[i] == relativeFront) relativeFrontID = i;
+			if(sides[i] == side) sideID = i;
+		}
+		return sides[(4 + relativeFrontID - sideID) % 4];
+	}
+	
 	public static int getSideFromName(String endpoint) {
 		endpoint = endpoint.toLowerCase();
 		if(endpoint.equalsIgnoreCase("up") || endpoint.equalsIgnoreCase("top")) return 1;

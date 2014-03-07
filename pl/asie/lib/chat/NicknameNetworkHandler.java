@@ -3,7 +3,7 @@ package pl.asie.lib.chat;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.Packets;
 import pl.asie.lib.api.chat.INicknameHandler;
-import pl.asie.lib.packet.PacketInput;
+import pl.asie.lib.network.PacketInput;
 import pl.asie.lib.util.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;

@@ -1,4 +1,4 @@
-package pl.asie.lib.packet;
+package pl.asie.lib.network;
 
 import java.io.IOException;
 

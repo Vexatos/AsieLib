@@ -1,4 +1,4 @@
-package pl.asie.lib.packet;
+package pl.asie.lib.network;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -50,6 +50,11 @@ public class PacketInput {
 	public PacketInput writeByteArray(byte[] array) throws IOException, RuntimeException {
 		if(array.length > 65535) throw new RuntimeException("Invalid array size!");
 		write.writeShort(array.length);
+		write.write(array);
+		return this;
+	}
+	
+	public PacketInput writeByteArrayData(byte[] array) throws IOException {
 		write.write(array);
 		return this;
 	}

@@ -11,7 +11,7 @@ import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
-import pl.asie.lib.packet.PacketFactory;
+import pl.asie.lib.network.PacketFactory;
 import pl.asie.lib.shinonome.ItemKey;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -60,6 +60,7 @@ public class AsieLibMod extends AsieLibAPI {
 		nick.loadNicknames();
     	MinecraftForge.EVENT_BUS.register(chat);
     	MinecraftForge.EVENT_BUS.register(nick);
+    	MinecraftForge.EVENT_BUS.register(new AsieLibEvents());
     	
 		if(System.getProperty("user.dir").indexOf(".asielauncher") >= 0) {
 			log.info("Hey, you! Yes, you! Thanks for using AsieLauncher! ~asie");

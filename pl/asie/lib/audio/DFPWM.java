@@ -24,7 +24,7 @@ public class DFPWM
 
 	private int flastlevel = 0;
 	private int lpflevel = 0;
-
+	
 	public DFPWM() {}
 
 	private void ctx_update(boolean curbit)
@@ -65,6 +65,7 @@ public class DFPWM
 	{
 		for(int i = 0; i < len; i++)
 		{
+			if(srcoffs >= src.length) return;
 			int d = src[srcoffs++];
 			d &= 0xFF;
 			for(int j = 0; j < 8; j++)
@@ -98,11 +99,12 @@ public class DFPWM
 	 */
 	public void compress(byte[] dest, byte[] src, int destoffs, int srcoffs, int len)
 	{
-		int d = 0;
 		for(int i = 0; i < len; i++)
 		{
+			int d = 0;
 			for(int j = 0; j < 8; j++)
 			{
+				if(srcoffs >= src.length) return;
 				int inlevel = src[srcoffs++];
 				boolean curbit = (inlevel > level || (inlevel == level && level == 127));
 				//boolean curbit = !(inlevel < level || inlevel == 128);

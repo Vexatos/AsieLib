@@ -24,6 +24,12 @@ public class RecipeColorizer implements IRecipe
 		this.sourceItems = sourceItems;
 	}
 	
+	public RecipeColorizer(Item item) {
+		this.targetItem = item;
+		this.sourceItems = new ArrayList<Item>(1);
+		this.sourceItems.add(item);
+	}
+
     public boolean matches(InventoryCrafting crafting, World par2World)
     {
         ItemStack targetStack = null;
