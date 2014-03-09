@@ -10,7 +10,7 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
 public abstract class NetworkHandlerBase implements IPacketHandler {
-	public abstract void handlePacket(PacketOutput packet, int command, Player player, boolean isClient) throws IOException;
+	public abstract void handlePacket(INetworkManager manager, PacketOutput packet, int command, Player player, boolean isClient) throws IOException;
 	
 	@Override
 	public void onPacketData(INetworkManager manager,
@@ -18,7 +18,7 @@ public abstract class NetworkHandlerBase implements IPacketHandler {
 		PacketOutput packet = new PacketOutput(_packet);
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		try {
-			handlePacket(packet, packet.readUnsignedShort(), player, (side == Side.CLIENT));
+			handlePacket(manager, packet, packet.readUnsignedShort(), player, (side == Side.CLIENT));
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

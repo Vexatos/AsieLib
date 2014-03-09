@@ -62,7 +62,7 @@ public class DFPWMCodec extends DFPWM {
 		// Prepare buffers
 		int processed = AL10.alGetSourcei(source.get(0), AL10.AL_BUFFERS_PROCESSED);
 		if (processed > 0) {
-			buffer = BufferUtils.createIntBuffer(processed);
+			buffer = BufferUtils.createIntBuffer(1);
 			AL10.alGenBuffers(buffer);
 			AL10.alSourceUnqueueBuffers(source.get(0), buffer);
 		} else {
@@ -92,8 +92,9 @@ public class DFPWMCodec extends DFPWM {
 	    AL10.alSourceQueueBuffers(source.get(0), buffer);
 	    
 	    int state = AL10.alGetSourcei(source.get(0), AL10.AL_SOURCE_STATE);
-	    if(receivedPackets > 0 && gain > 0.0f && state != AL10.AL_PLAYING) AL10.alSourcePlay(source.get(0));
-
+	    if(receivedPackets > 3 && gain > 0.0f && state != AL10.AL_PLAYING) AL10.alSourcePlay(source.get(0));
+	    else if(receivedPackets <= 3 || gain == 0.0f) AL10.alSourcePause(source.get(0));
+	    
 	    receivedPackets++;
 	    
 	    buffersPlayed.add(buffer);

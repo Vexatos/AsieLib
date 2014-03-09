@@ -22,8 +22,9 @@ public class NicknameNetworkHandler implements INicknameHandler, IConnectionHand
 		if(player instanceof EntityPlayer)
 			AsieLibMod.nick.updateNickname(((EntityPlayer)player).username);
 		
-		for(EntityPlayer e: PlayerUtils.iterator()) {
-			if(e == null) continue;
+		for(Object o: MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+			if(o == null || !(o instanceof EntityPlayer)) continue;
+			EntityPlayer e = (EntityPlayer)o;
 			String username = e.username;
 			String nickname = AsieLibMod.nick.getNickname(username);
 			if(!nickname.equals(username))

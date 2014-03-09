@@ -9,13 +9,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class ItemUtils {
-    public static void dropItems(World world, int x, int y, int z) {
-    	TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-    	if (tileEntity == null || !(tileEntity instanceof IInventory)) {
-    		return;
-    	}
-    	IInventory inventory = (IInventory) tileEntity;
-
+    public static void dropItems(World world, int x, int y, int z, IInventory inventory) {
     	for (int i = 0; i < inventory.getSizeInventory(); i++) {
     		ItemStack item = inventory.getStackInSlot(i);
 
@@ -25,6 +19,15 @@ public class ItemUtils {
     			item.stackSize = 0;
     		}
     	}
+    }
+    
+    public static void dropItems(World world, int x, int y, int z) {
+    	TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+    	if (tileEntity == null || !(tileEntity instanceof IInventory)) {
+    		return;
+    	}
+    	IInventory inventory = (IInventory) tileEntity;
+    	dropItems(world, x, y, z, inventory);
     }
 
 	public static void dropItem(World world, int x, int y, int z, ItemStack item) {

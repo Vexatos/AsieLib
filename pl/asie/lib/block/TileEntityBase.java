@@ -6,4 +6,8 @@ public class TileEntityBase extends TileEntity {
 	public void onWorldUnload() {
 		
 	}
+	
+	public void onBlockDestroy() {
+		
+	}
 }

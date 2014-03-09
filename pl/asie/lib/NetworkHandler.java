@@ -13,7 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler {
 	@Override
-	public void handlePacket(PacketOutput packet, int command, Player player,
+	public void handlePacket(INetworkManager manager, PacketOutput packet, int command, Player player,
 			boolean isClient) throws IOException {
 		switch(command) {
 			case Packets.NICKNAME_CHANGE:

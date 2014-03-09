@@ -1,5 +1,6 @@
 package pl.asie.lib.block;
 
+import pl.asie.lib.util.ItemUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -9,6 +10,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -130,6 +132,12 @@ public abstract class BlockBase extends BlockContainer {
 	public void onBlockDestroyed(World world, int x, int y, int z, int meta) {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if(tileEntity != null) {
+			if(tileEntity instanceof TileEntityBase) {
+				((TileEntityBase)tileEntity).onBlockDestroy();
+			}
+			if(tileEntity instanceof IInventory) {
+				ItemUtils.dropItems(world, x, y, z, (IInventory)tileEntity);
+			}
 			tileEntity.invalidate();
 		}
 	}
