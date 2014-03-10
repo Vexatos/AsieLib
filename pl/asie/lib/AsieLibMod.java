@@ -27,7 +27,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid="asielib", name="AsieLib", version="0.1.0")
+@Mod(modid="asielib", name="AsieLib", version="0.1.1")
 @NetworkMod(channels={"asielib"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;

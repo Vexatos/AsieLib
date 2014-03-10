@@ -94,7 +94,7 @@ public abstract class BlockBase extends BlockContainer {
     {
     	if(rotateFrontSide) {
 	        int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-	
+
 	        int m = stack.getItemDamage() & (~3);
 	        if (l == 0) world.setBlockMetadataWithNotify(x, y, z, m | 0, 2);
 	        if (l == 1) world.setBlockMetadataWithNotify(x, y, z, m | 3, 2);
