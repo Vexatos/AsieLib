@@ -17,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class DFPWMCodec extends DFPWM {
 	public int lastPacketId;
 	private int receivedPackets;
-	
+
 	private boolean isInitializedClient = false;
 	private IntBuffer source;
 	private ArrayList<IntBuffer> buffersPlayed;

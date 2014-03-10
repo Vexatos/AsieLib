@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
@@ -18,6 +19,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 
 public abstract class BlockBase extends BlockContainer {
 	private final Object parent;
@@ -26,13 +28,29 @@ public abstract class BlockBase extends BlockContainer {
 	public BlockBase(int id, Material material, Object parent) {
 		super(id, material);
 		this.setCreativeTab(CreativeTabs.tabMisc);
-		this.setHardness(1.5F);
+		this.setHardness(2.0F);
 		this.parent = parent;
 	}
 	
+	@Override
+    public TileEntity createNewTileEntity(World world) { return null; }
+	public abstract TileEntity createNewTileEntity(World world, int metadata);
+	
+	@Override
+    public TileEntity createTileEntity(World world, int metadata)
+    {
+        return createNewTileEntity(world, metadata);
+    }
+
 	// Direction placement
 	
 	private boolean rotateFrontSide = false;
+	
+	public ForgeDirection getFacingDirection(World world, int x, int y, int z) {
+		if(!rotateFrontSide) return null;
+		int m = world.getBlockMetadata(x, y, z) & 3;
+		return ForgeDirection.getOrientation(m+2);
+	}
 	
 	public void setRotateFrontSide(boolean v) { rotateFrontSide = v; }
 	
@@ -44,29 +62,30 @@ public abstract class BlockBase extends BlockContainer {
             int i1 = world.getBlockId(x, y, z + 1);
             int j1 = world.getBlockId(x - 1, y, z);
             int k1 = world.getBlockId(x + 1, y, z);
-            byte b0 = 3;
+	        int m = world.getBlockMetadata(x, y, z) & (~3);
+            byte b0 = 1;
 
             if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
             {
-                b0 = 3;
+                b0 = 1;
             }
 
             if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
             {
-                b0 = 2;
+                b0 = 0;
             }
 
             if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
             {
-                b0 = 5;
+                b0 = 2;
             }
 
             if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
             {
-                b0 = 4;
+                b0 = 3;
             }
 
-            world.setBlockMetadataWithNotify(x, y, z, b0, 2);
+            world.setBlockMetadataWithNotify(x, y, z, m | b0, 2);
         }
     }
     
@@ -76,10 +95,11 @@ public abstract class BlockBase extends BlockContainer {
     	if(rotateFrontSide) {
 	        int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
 	
-	        if (l == 0) world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-	        if (l == 1) world.setBlockMetadataWithNotify(x, y, z, 5, 2);
-	        if (l == 2) world.setBlockMetadataWithNotify(x, y, z, 3, 2);
-	        if (l == 3) world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+	        int m = stack.getItemDamage() & (~3);
+	        if (l == 0) world.setBlockMetadataWithNotify(x, y, z, m | 0, 2);
+	        if (l == 1) world.setBlockMetadataWithNotify(x, y, z, m | 3, 2);
+	        if (l == 2) world.setBlockMetadataWithNotify(x, y, z, m | 1, 2);
+	        if (l == 3) world.setBlockMetadataWithNotify(x, y, z, m | 2, 2);
 	    }
     }
     

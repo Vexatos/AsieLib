@@ -3,6 +3,7 @@ package pl.asie.lib.util;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.lib.AsieLibMod;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -23,6 +24,10 @@ public class WorldUtils {
 		World world = getWorld(dimensionId);
 		if(world == null) return null;
 		return world.getBlockTileEntity(x, y, z);
+	}
+	
+	public static Block getBlock(World world, int x, int y, int z) {
+		return Block.blocksList[world.getBlockId(x, y, z)];
 	}
 	
 	@SideOnly(Side.CLIENT)
