@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
@@ -32,6 +33,47 @@ public abstract class BlockBase extends BlockContainer {
 		this.parent = parent;
 	}
 	
+	// Handler: Redstone
+	
+	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
+		return false;
+	}
+	
+	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z, int side) {
+		return false;
+	}
+
+	@Override
+	public boolean canProvidePower() { return true; }
+	
+	// Vanilla
+    public int getVanillaRedstoneValue(World world, int x, int y, int z) {
+    	return (world.isBlockIndirectlyGettingPowered(x, y, z) ? 1 : 0);
+    }
+	
+	@Override
+    public void onNeighborBlockChange(World world, int x, int y, int z, int side) {
+		if(receivesRedstone(world, x, y, z, side)) {
+			TileEntity te = world.getBlockTileEntity(x, y, z);
+			if(te != null && te instanceof TileEntityBase)
+				((TileEntityBase)te).onRedstoneSignal_internal(side, getVanillaRedstoneValue(world, x, y, z));
+		}
+	}
+	
+	@Override
+	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
+		return (emitsRedstone(world, x, y, z, side) || receivesRedstone(world, x, y, z, side));
+	}
+
+    @Override
+	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
+    	if(!emitsRedstone(access,x,y,z,side)) return 0;
+		TileEntity te = access.getBlockTileEntity(x, y, z);
+		if(te != null && te instanceof TileEntityBase)
+			return ((TileEntityBase)te).requestCurrentRedstoneValue(side);
+		return 0;
+    }
+    
 	@Override
     public TileEntity createNewTileEntity(World world) { return null; }
 	public abstract TileEntity createNewTileEntity(World world, int metadata);
