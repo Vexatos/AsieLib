@@ -21,6 +21,9 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				String nickname = packet.readString();
 				if(isClient) AsieLibMod.nick.setNickname(username, nickname);
 				break;
+			case Packets.NANO_NANO:
+				if(isClient) AsieLibMod.key.scheduleSpin();
+				break;
 		}
 	}
 }

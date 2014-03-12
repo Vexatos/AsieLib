@@ -19,23 +19,23 @@ public class ModelKey extends ModelBiped {
         
         // gear part 1: handle intensifies
         this.bipedBody.setTextureOffset(10, 0);
-        this.bipedBody.addBox(-1.0F, 2.0F - 3.0F, 2.0F, 2, 2, 5);
+        this.bipedBody.addBox(-1.0F, 2.0F - 3.0F, 2.0F, 2, 2, 2);
         
         // gear part 2: spinny!
         this.bipedBody.setTextureOffset(0, 20);
-        this.bipedBody.addBox(-1.5F, 2.0F - 3.0F, 4.0F, 3, 2, 2);
+        this.bipedBody.addBox(-1.0F, 2.0F - 3.0F, 4.0F, 2, 2, 2);
         
         // gear parts 3: the high parts
         this.bipedBody.setTextureOffset(0, 10);
-        this.bipedBody.addBox(-1.5F, 0.0F - 3.0F, 3.0F, 3, 2, 1); // front top
-        this.bipedBody.addBox(-1.5F, 0.0F - 3.0F, 6.0F, 3, 2, 1); // back top
-        this.bipedBody.addBox(-1.5F, 4.0F - 3.0F, 3.0F, 3, 2, 1); // front bottom
-        this.bipedBody.addBox(-1.5F, 4.0F - 3.0F, 6.0F, 3, 2, 1); // back bottom
+        this.bipedBody.addBox(-1.0F, 0.0F - 3.0F, 3.0F, 2, 2, 1); // front top
+        this.bipedBody.addBox(-1.0F, 0.0F - 3.0F, 6.0F, 2, 2, 1); // back top
+        this.bipedBody.addBox(-1.0F, 4.0F - 3.0F, 3.0F, 2, 2, 1); // front bottom
+        this.bipedBody.addBox(-1.0F, 4.0F - 3.0F, 6.0F, 2, 2, 1); // back bottom
         
 		// gear parts 4: the ending parts
         this.bipedBody.setTextureOffset(0, 0);
-        this.bipedBody.addBox(-1.5F, -1.0F - 3.0F, 4.0F, 3, 1, 2); // top
-        this.bipedBody.addBox(-1.5F, 6.0F - 3.0F, 4.0F, 3, 1, 2); // bottom
+        this.bipedBody.addBox(-1.0F, -1.0F - 3.0F, 4.0F, 2, 1, 2); // top
+        this.bipedBody.addBox(-1.0F, 6.0F - 3.0F, 4.0F, 2, 1, 2); // bottom
 	}
 	
 	public static float angle = 0.0F;

@@ -12,6 +12,7 @@ import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
 import pl.asie.lib.network.PacketFactory;
+import pl.asie.lib.shinonome.EventKey;
 import pl.asie.lib.shinonome.ItemKey;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -26,8 +27,10 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.1.1")
+@Mod(modid="asielib", name="AsieLib", version="0.1.2")
 @NetworkMod(channels={"asielib"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
@@ -37,6 +40,7 @@ public class AsieLibMod extends AsieLibAPI {
 	public static NicknameRepository nick;
 	public static ItemKey itemKey;
 	public static PacketFactory packet;
+	public static EventKey key = new EventKey();
 	
 	@Instance(value="asielib")
 	public static AsieLibMod instance;
@@ -72,14 +76,14 @@ public class AsieLibMod extends AsieLibAPI {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		proxy.registerEvents();
+		MinecraftForge.EVENT_BUS.register(key);
 		
 		NetworkRegistry.instance().registerConnectionHandler(new NicknameNetworkHandler());
 	}
 	
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
-    	proxy.registerTickHandlers();
+		TickRegistry.registerTickHandler(key, Side.CLIENT);
     	chat.registerCommands(event);
 	}
 	

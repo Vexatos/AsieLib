@@ -6,6 +6,8 @@ import java.util.EnumSet;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.Packets;
+import pl.asie.lib.network.PacketInput;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.client.model.ModelBiped;
@@ -51,9 +53,15 @@ public class EventKey implements ITickHandler {
 	
 	private static boolean isSpinning = false;
 	
-	private void scheduleSpin() {
-		if(isSpinning) return;
+	public void scheduleSpin() {
+		if(AsieLibMod.proxy.isClient() && isSpinning) return;
 		isSpinning = true;
+		try {
+			PacketInput packet = AsieLibMod.packet.create(Packets.NANO_NANO);
+			AsieLibMod.packet.sendToAllPlayers(packet);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@ForgeSubscribe
@@ -100,7 +108,7 @@ public class EventKey implements ITickHandler {
 
 	@Override
 	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.SERVER);
+		return EnumSet.of(TickType.CLIENT);
 	}
 
 	@Override
