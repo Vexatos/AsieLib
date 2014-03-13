@@ -53,9 +53,11 @@ public class EventKey implements ITickHandler {
 	
 	private static boolean isSpinning = false;
 	
-	public void scheduleSpin() {
-		if(AsieLibMod.proxy.isClient() && isSpinning) return;
+	public void scheduleSpinClient() {
 		isSpinning = true;
+	}
+	
+	public void scheduleSpin() {
 		try {
 			PacketInput packet = AsieLibMod.packet.create(Packets.NANO_NANO);
 			AsieLibMod.packet.sendToAllPlayers(packet);
