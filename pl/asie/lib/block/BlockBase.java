@@ -1,5 +1,6 @@
 package pl.asie.lib.block;
 
+import buildcraft.api.tools.IToolWrench;
 import pl.asie.lib.util.ItemUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -48,7 +49,7 @@ public abstract class BlockBase extends BlockContainer {
 	
 	// Vanilla
     public int getVanillaRedstoneValue(World world, int x, int y, int z) {
-    	return (world.isBlockIndirectlyGettingPowered(x, y, z) ? 1 : 0);
+    	return world.getBlockPowerInput(x, y, z);
     }
 	
 	@Override
@@ -164,8 +165,14 @@ public abstract class BlockBase extends BlockContainer {
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		if(!world.isRemote)
-			player.openGui(this.parent, this.gui, world, x, y, z);
+		if(player.isSneaking()) return false;
+		if(!world.isRemote) {
+			ItemStack held = player.inventory.getCurrentItem();
+			if(held.getItem() instanceof IToolWrench && this.rotateFrontSide) {
+				int meta = world.getBlockMetadata(x, y, z);
+				world.setBlockMetadataWithNotify(x, y, z, (meta & (~3)) | (((meta & 3) + 1) & 3), 2);
+			} else player.openGui(this.parent, this.gui, world, x, y, z);
+		}
 		return true;
 	}
 	

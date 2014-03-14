@@ -18,8 +18,8 @@ public class TileEntityBase extends TileEntity {
 	private int[] oldRedstoneSignal = new int[6];
 	
 	protected void onRedstoneSignal_internal(int side, int redstoneSignal) {
-		if(redstoneSignal == oldRedstoneSignal[side % 6]) return;
-		oldRedstoneSignal[side % 6] = redstoneSignal;
+		if(redstoneSignal == oldRedstoneSignal[side % 6] - 1000) return;
+		oldRedstoneSignal[side % 6] = redstoneSignal + 1000;
 		this.onRedstoneSignal(side, redstoneSignal);
 	}
 

@@ -37,6 +37,15 @@ public class PacketOutput {
 		return WorldUtils.getTileEntity(dimensionId, x, y, z);
 	}
 	
+	public TileEntity readTileEntityServer() throws IOException {
+		World world = null;
+		int dimensionId = readInt();
+		int x = readInt();
+		int y = readInt();
+		int z = readInt();
+		return WorldUtils.getTileEntityServer(dimensionId, x, y, z);
+	}
+	
 	public byte[] readByteArray() throws IOException {
 		return readByteArrayData(read.readUnsignedShort());
 	}

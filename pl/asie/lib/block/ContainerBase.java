@@ -16,6 +16,7 @@ public abstract class ContainerBase extends Container {
 		entity.openChest();
 	}
 	public int getSize() { return containerSize; }
+	public TileEntityInventory getEntity() { return entity; }
 	
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
@@ -57,4 +58,11 @@ public abstract class ContainerBase extends Container {
 			addSlotToContainer(new Slot(inventoryPlayer, i, startX + i * 18, startY + 58));
 		}
 	}
+	
+	@Override
+    public void onContainerClosed(EntityPlayer par1EntityPlayer)
+    {
+        super.onContainerClosed(par1EntityPlayer);
+        this.entity.closeChest();
+    }
 }

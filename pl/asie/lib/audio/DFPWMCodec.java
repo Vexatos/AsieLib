@@ -78,7 +78,8 @@ public class DFPWMCodec extends DFPWM {
 				
 		float distance = (float)Math.sqrt(dx*dx+dy*dy+dz*dz);
 		float gain = distance >= 20.0f ? 0.0f : (distance <= 4.0f ? 1.0f : 1.0f - ((distance - 4.0f) / 16.0f));
-
+		gain *= Minecraft.getMinecraft().gameSettings.soundVolume;
+				
 		// Set settings
 		AL10.alSourcei(source.get(0), AL10.AL_LOOPING, AL10.AL_FALSE);
 	    AL10.alSourcef(source.get(0), AL10.AL_PITCH,    1.0f          );

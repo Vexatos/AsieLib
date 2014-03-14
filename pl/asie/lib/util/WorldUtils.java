@@ -26,6 +26,17 @@ public class WorldUtils {
 		return world.getBlockTileEntity(x, y, z);
 	}
 	
+	public static TileEntity getTileEntityServer(int dimensionId, int x, int y, int z) {
+		World world = MinecraftServer.getServer().worldServerForDimension(dimensionId);
+		if(world == null) return null;
+		return world.getBlockTileEntity(x, y, z);
+	}
+	
+	public static boolean equalLocation(TileEntity a, TileEntity b) {
+		if(a == null || b == null || a.worldObj == null || b.worldObj == null) return false;
+		return a.xCoord == b.xCoord && a.yCoord == b.yCoord && a.zCoord == b.zCoord
+				&& a.worldObj.provider.dimensionId == b.worldObj.provider.dimensionId;
+	}
 	public static Block getBlock(World world, int x, int y, int z) {
 		return Block.blocksList[world.getBlockId(x, y, z)];
 	}
