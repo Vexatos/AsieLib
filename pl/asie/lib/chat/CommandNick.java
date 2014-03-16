@@ -10,7 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 
 public class CommandNick extends CommandBase
 {
@@ -41,9 +41,7 @@ public class CommandNick extends CommandBase
         	else target = sender.getCommandSenderName();
         	
         	AsieLibMod.nick.setNickname(target, newName);
-        	ChatMessageComponent cmc = new ChatMessageComponent();
-        	cmc.addKey("commands.nick.done");
-        	sender.sendChatToPlayer(cmc);
+        	sender.addChatMessage(new ChatComponentTranslation("commands.nick.done"));
         } else throw new WrongUsageException("commands.nick.usage", new Object[0]);
     }
     

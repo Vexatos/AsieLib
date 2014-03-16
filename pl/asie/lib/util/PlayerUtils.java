@@ -13,7 +13,7 @@ public class PlayerUtils {
 		for(Object o: MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
 			if(o instanceof EntityPlayer) {
 				EntityPlayer target = (EntityPlayer)o;
-				if(target.username.equals(name)) return target;
+				if(target.getCommandSenderName().equals(name)) return target;
 			}
 		}
 		return null;

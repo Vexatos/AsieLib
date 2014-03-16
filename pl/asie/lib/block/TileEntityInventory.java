@@ -18,7 +18,7 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 	public abstract void onInventoryUpdate(int slot);
 	
 	public void updateInventoryState(int slot) {
-		onInventoryChanged();
+		//onInventoryChanged();
 		onInventoryUpdate(slot);
 	}
 
@@ -66,13 +66,8 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 	}
 
 	@Override
-	public String getInvName() {
+	public String getInventoryName() {
 		return "asielib.inventory.null";
-	}
-
-	@Override
-	public boolean isInvNameLocalized() {
-		return false;
 	}
 
 	@Override
@@ -82,19 +77,19 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-        return this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) != this
+        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this
                 ? false : player.getDistanceSq( (double)this.xCoord+0.5D,
                                                 (double)this.yCoord+0.5D,
                                                 (double)this.zCoord+0.5D ) <= 64.0D;
 	}
 
 	@Override
-	public void openChest() {
+	public void openInventory() {
 		
 	}
 
 	@Override
-	public void closeChest() {
+	public void closeInventory() {
 
 	}
 
@@ -103,19 +98,23 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
 		return true;
 	}
 	
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
-            super.readFromNBT(tagCompound);
-            NBTTagList tagList = tagCompound.getTagList("Inventory");
-            this.inventory = new ItemStack[this.getSizeInventory()];
-            for (int i = 0; i < tagList.tagCount(); i++) {
-                    NBTTagCompound tag = (NBTTagCompound) tagList.tagAt(i);
-                    int slot = tag.getByte("Slot") & 255;
-                    if (slot >= 0 && slot < inventory.length) {
-                            inventory[slot] = ItemStack.loadItemStackFromNBT(tag);
-                    }
-            }
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound tagCompound) {
+		super.readFromNBT(tagCompound);
+		NBTTagList nbttaglist = tagCompound.getTagList("Items", 10);
+		this.inventory = new ItemStack[this.getSizeInventory()];
+
+		for (int i = 0; i < nbttaglist.tagCount(); ++i)
+		{
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbttagcompound1.getByte("Slot") & 255;
+
+			if (j >= 0 && j < this.inventory.length)
+			{
+				this.inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+			}
+		}
+	}
 
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
@@ -132,4 +131,9 @@ public abstract class TileEntityInventory extends TileEntityBase implements IInv
             }
             tagCompound.setTag("Inventory", itemList);
     }
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		return false;
+	}
 }

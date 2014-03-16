@@ -10,7 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 
 public class CommandMe extends CommandBase
 {
@@ -36,16 +36,15 @@ public class CommandMe extends CommandBase
     {
     	String nickname = "Console";
     	if(sender instanceof EntityPlayer) {
-    		nickname = ((EntityPlayer)sender).username;
+    		nickname = ((EntityPlayer)sender).getCommandSenderName();
     	}
         if (args.length > 0 && args[0].length() > 0) sendAction(nickname, StringUtils.join(args, " "));
         else throw new WrongUsageException("commands.me.usage", new Object[0]);
     }
     
     public static void sendAction(String nickname, String action) {
-        ChatMessageComponent chat = new ChatMessageComponent();
-        chat.addText("\u00a7" + AsieLibMod.instance.chat.colorAction + "* " + nickname + " " + action);
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(chat);
+        ChatComponentText cct = new ChatComponentText("\u00a7" + AsieLibMod.instance.chat.colorAction + "* " + nickname + " " + action);
+        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(cct);
     }
 
     /**

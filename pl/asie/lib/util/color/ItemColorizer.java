@@ -1,6 +1,5 @@
 package pl.asie.lib.util.color;
 
-import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -51,7 +50,7 @@ public class ItemColorizer {
 
         if (!nbttagcompound.hasKey("display"))
         {
-            nbttagcompound.setCompoundTag("display", nbttagcompound1);
+            nbttagcompound.setTag("display", nbttagcompound1);
         }
 
         nbttagcompound1.setInteger("color", par2);

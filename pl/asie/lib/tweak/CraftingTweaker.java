@@ -17,7 +17,7 @@ public class CraftingTweaker {
 		else if(from instanceof ItemStack && to instanceof ItemStack) {
 			ItemStack ifrom = (ItemStack)from;
 			ItemStack ito = (ItemStack)to;
-			return ifrom.itemID == ito.itemID && (ignoreMeta || ifrom.getItemDamage() == ito.getItemDamage());
+			return ifrom.getItem().equals(ito.getItem()) && (ignoreMeta || ifrom.getItemDamage() == ito.getItemDamage());
 		} else if(from instanceof String && to instanceof String) return ((String)from).equalsIgnoreCase((String)to);
 		else if(from instanceof ItemStack && to instanceof String) {
 			return OreDictionary.getOreID((ItemStack)from) == OreDictionary.getOreID((String)to);

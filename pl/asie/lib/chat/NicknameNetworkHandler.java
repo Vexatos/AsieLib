@@ -3,44 +3,42 @@ package pl.asie.lib.chat;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.Packets;
 import pl.asie.lib.api.chat.INicknameHandler;
-import pl.asie.lib.network.PacketInput;
+import pl.asie.lib.network.Packet;
 import pl.asie.lib.util.PlayerUtils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.NetLoginHandler;
-import net.minecraft.network.packet.NetHandler;
-import net.minecraft.network.packet.Packet1Login;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import cpw.mods.fml.common.network.IConnectionHandler;
-import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 
-public class NicknameNetworkHandler implements INicknameHandler, IConnectionHandler {
+public class NicknameNetworkHandler implements INicknameHandler {
 	
-	@Override
-	public void playerLoggedIn(Player player, NetHandler netHandler,
-			INetworkManager manager) {
-		if(player instanceof EntityPlayer)
-			AsieLibMod.nick.updateNickname(((EntityPlayer)player).username);
+	@SubscribeEvent
+	public void playerLoggedIn(PlayerLoggedInEvent event) {
+		if(event.player instanceof EntityPlayer)
+			AsieLibMod.nick.updateNickname(((EntityPlayer)event.player).getCommandSenderName());
 		
 		for(Object o: MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
 			if(o == null || !(o instanceof EntityPlayer)) continue;
 			EntityPlayer e = (EntityPlayer)o;
-			String username = e.username;
+			String username = e.getCommandSenderName();
 			String nickname = AsieLibMod.nick.getNickname(username);
 			if(!nickname.equals(username))
-				sendNicknamePacket(username, nickname, player);
+				sendNicknamePacket(username, nickname, event.player);
 		}
 	}
 	
-	private void sendNicknamePacket(String realname, String nickname, Player target) {
+	private void sendNicknamePacket(String realname, String nickname, EntityPlayer target) {
 		try {
-			PacketInput packet = AsieLibMod.packet.create(Packets.NICKNAME_CHANGE)
+			Packet packet = AsieLibMod.packet.create(Packets.NICKNAME_CHANGE)
 					.writeString(realname)
 					.writeString(nickname);
 			if(target == null)
-				AsieLibMod.packet.sendToAllPlayers(packet);
+				AsieLibMod.packet.sendToAll(packet);
 			else
-				AsieLibMod.packet.sendToPlayer(target, packet);
+				AsieLibMod.packet.sendTo(packet, (EntityPlayerMP)target);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -49,32 +47,5 @@ public class NicknameNetworkHandler implements INicknameHandler, IConnectionHand
 	@Override
 	public void onNicknameUpdate(String realname, String nickname) {
 		sendNicknamePacket(realname, nickname, null);
-	}
-
-	// We don't care.
-	
-	@Override
-	public String connectionReceived(NetLoginHandler netHandler,
-			INetworkManager manager) {
-		return null;
-	}
-
-	@Override
-	public void connectionOpened(NetHandler netClientHandler, String server,
-			int port, INetworkManager manager) {
-	}
-
-	@Override
-	public void connectionOpened(NetHandler netClientHandler,
-			MinecraftServer server, INetworkManager manager) {
-	}
-
-	@Override
-	public void connectionClosed(INetworkManager manager) {
-	}
-
-	@Override
-	public void clientLoggedIn(NetHandler clientHandler,
-			INetworkManager manager, Packet1Login login) {
 	}
 }

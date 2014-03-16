@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import com.google.common.collect.BiMap;
@@ -23,6 +22,7 @@ import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.util.MiscUtils;
 import pl.asie.lib.util.PlayerUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class NicknameRepository implements INicknameRepository {
 	protected BiMap<String, String> nicknames;
@@ -118,7 +118,7 @@ public class NicknameRepository implements INicknameRepository {
 		return gson.toJson(nicknames, gsonType);
 	}
 	
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void nameFormat(PlayerEvent.NameFormat event) {
 		event.displayname = getRawNickname(event.username);
 	}

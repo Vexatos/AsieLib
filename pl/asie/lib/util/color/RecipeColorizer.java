@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import net.minecraft.block.BlockColored;
 import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemEditableBook;
@@ -42,7 +42,7 @@ public class RecipeColorizer implements IRecipe
                 		|| targetItem.getClass().isInstance(stack.getItem())) {
                     targetStack = stack; // We need to be more specific here.
                 }
-                else if (stack.itemID == Item.dyePowder.itemID)
+                else if (stack.getItem().equals(Items.dye))
                     dyeList.add(stack);
             }
         }
@@ -70,10 +70,10 @@ public class RecipeColorizer implements IRecipe
                     targetStack = stack.copy();
                     targetStack.stackSize = 1;
                 } else {
-                    if (stack.itemID != Item.dyePowder.itemID)
+                    if (!stack.getItem().equals(Items.dye))
                        return null;
 
-                    float[] itemColor = EntitySheep.fleeceColorTable[BlockColored.getBlockFromDye(stack.getItemDamage())];
+                    float[] itemColor = EntitySheep.fleeceColorTable[15 - stack.getItemDamage()];
                     int red = (int)(itemColor[0] * 255.0F);
                     int green = (int)(itemColor[1] * 255.0F);
                     int blue = (int)(itemColor[2] * 255.0F);
@@ -102,7 +102,7 @@ public class RecipeColorizer implements IRecipe
 	            colorCount++;
 	        }
         } else if(sourceItems.contains(targetStack.getItem())) {
-        	targetStack.itemID = targetItem.itemID; // OVERWRITE!
+        	targetStack = new ItemStack(targetItem, targetStack.stackSize, targetStack.getItemDamage());
         }
         
         int red = color[0] / colorCount;

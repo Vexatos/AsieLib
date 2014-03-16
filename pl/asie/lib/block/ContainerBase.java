@@ -13,7 +13,7 @@ public abstract class ContainerBase extends Container {
 	public ContainerBase(TileEntityInventory entity, InventoryPlayer inventoryPlayer){
 		this.containerSize = entity.getSizeInventory();
 		this.entity = entity;
-		entity.openChest();
+		entity.openInventory();
 	}
 	public int getSize() { return containerSize; }
 	public TileEntityInventory getEntity() { return entity; }
@@ -63,6 +63,6 @@ public abstract class ContainerBase extends Container {
     public void onContainerClosed(EntityPlayer par1EntityPlayer)
     {
         super.onContainerClosed(par1EntityPlayer);
-        this.entity.closeChest();
+        this.entity.closeInventory();
     }
 }

@@ -25,9 +25,9 @@ public class SlotTyped extends Slot {
         			if(OreDictionary.itemMatches(target, stack, false)) return true;
         		}
         	} else if(o instanceof Block) {
-        		return (stack.itemID == ((Block)o).blockID);
+        		return (Block.getBlockFromItem(stack.getItem()).equals((Block)o));
         	} else if(o instanceof Item) {
-        		return (stack.itemID == ((Item)o).itemID);
+        		return (stack.getItem().equals((Item)o));
         	} else if(o instanceof ItemStack) {
         		return OreDictionary.itemMatches(((ItemStack)o), stack, true);
         	}

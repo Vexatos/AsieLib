@@ -16,8 +16,11 @@ public abstract class TweakBaseConfig extends TweakBase {
 
 	@Override
 	public boolean onRecipe(List recipeList, IRecipe recipe) {
+		return false;
+		/*
 		for(String s: types) {
-			ItemStack is = CrossModUtils.getItemStackFromConfig(s.split(",")[0], s.split(",")[1], s.split(",")[2], 1, 0, s.split(",")[1].equals("item"));
+			// TODO
+			//ItemStack is = CrossModUtils.getItemStackFromConfig(s.split(",")[0], s.split(",")[1], s.split(",")[2], 1, 0, s.split(",")[1].equals("item"));
 			String meta = s.split(",")[3];
 			if(meta.equals("all")) {
 				if(CraftingTweaker.removeOutputRecipe(recipeList, recipe, is, true)) return true;
@@ -26,7 +29,7 @@ public abstract class TweakBaseConfig extends TweakBase {
 				if(CraftingTweaker.removeOutputRecipe(recipeList, recipe, is, false)) return true;
 			}
 		}
-		return false;
+		return false;*/
 	}
 	
 	public TweakBaseConfig() {
@@ -58,13 +61,15 @@ public abstract class TweakBaseConfig extends TweakBase {
 	}
 	
 	private ItemStack getItemStack(String mod, String category, String name, int stackSize, int metadata) {
-		return CrossModUtils.getItemStackFromConfig(mod, category, name, stackSize, metadata, category.equals("item"));
+		return null;
+		// TODO
+		//return CrossModUtils.getItemStackFromConfig(mod, category, name, stackSize, metadata, category.equals("item"));
 	}
 	
 	public Block getBlock(String mod, String c, String name) {
 		ItemStack is = getItemStack(mod, c, name, 1, 0);
 		if(is != null && is.getItem() instanceof ItemBlock) {
-			return Block.blocksList[((ItemBlock)is.getItem()).itemID];
+			return Block.getBlockFromItem(is.getItem());
 		} else return null;
 	}
 	

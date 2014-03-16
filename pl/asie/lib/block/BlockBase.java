@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,19 +16,19 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class BlockBase extends BlockContainer {
 	private final Object parent;
 	private int gui = -1;
 	
-	public BlockBase(int id, Material material, Object parent) {
-		super(id, material);
+	public BlockBase(Material material, Object parent) {
+		super(material);
 		this.setCreativeTab(CreativeTabs.tabMisc);
 		this.setHardness(2.0F);
 		this.parent = parent;
@@ -36,11 +36,11 @@ public abstract class BlockBase extends BlockContainer {
 	
 	// Handler: Redstone
 	
-	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z) {
 		return false;
 	}
 	
-	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z) {
 		return false;
 	}
 
@@ -53,30 +53,28 @@ public abstract class BlockBase extends BlockContainer {
     }
 	
 	@Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int side) {
-		if(receivesRedstone(world, x, y, z, side)) {
-			TileEntity te = world.getBlockTileEntity(x, y, z);
+    public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
+		if(receivesRedstone(world, x, y, z)) {
+			TileEntity te = world.getTileEntity(x, y, z);
 			if(te != null && te instanceof TileEntityBase)
-				((TileEntityBase)te).onRedstoneSignal_internal(side, getVanillaRedstoneValue(world, x, y, z));
+				((TileEntityBase)te).onRedstoneSignal_internal(getVanillaRedstoneValue(world, x, y, z));
 		}
 	}
 	
 	@Override
 	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-		return (emitsRedstone(world, x, y, z, side) || receivesRedstone(world, x, y, z, side));
+		return (emitsRedstone(world, x, y, z) || receivesRedstone(world, x, y, z));
 	}
 
     @Override
 	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
-    	if(!emitsRedstone(access,x,y,z,side)) return 0;
-		TileEntity te = access.getBlockTileEntity(x, y, z);
+    	if(!emitsRedstone(access,x,y,z)) return 0;
+		TileEntity te = access.getTileEntity(x, y, z);
 		if(te != null && te instanceof TileEntityBase)
 			return ((TileEntityBase)te).requestCurrentRedstoneValue(side);
 		return 0;
     }
     
-	@Override
-    public TileEntity createNewTileEntity(World world) { return null; }
 	public abstract TileEntity createNewTileEntity(World world, int metadata);
 	
 	@Override
@@ -101,31 +99,31 @@ public abstract class BlockBase extends BlockContainer {
     {
         if (!world.isRemote)
         {
-            int l = world.getBlockId(x, y, z - 1);
-            int i1 = world.getBlockId(x, y, z + 1);
-            int j1 = world.getBlockId(x - 1, y, z);
-            int k1 = world.getBlockId(x + 1, y, z);
-	        int m = world.getBlockMetadata(x, y, z) & (~3);
-            byte b0 = 1;
+            Block block = world.getBlock(x, y, z - 1);
+            Block block1 = world.getBlock(x, y, z + 1);
+            Block block2 = world.getBlock(x - 1, y, z);
+            Block block3 = world.getBlock(x + 1, y, z);
+            int m = world.getBlockMetadata(x, y, z);
+            byte b0 = 3;
 
-            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
+            if (block.func_149730_j() && !block1.func_149730_j())
             {
-                b0 = 1;
+                b0 = 3;
             }
 
-            if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
-            {
-                b0 = 0;
-            }
-
-            if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
+            if (block1.func_149730_j() && !block.func_149730_j())
             {
                 b0 = 2;
             }
 
-            if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
+            if (block2.func_149730_j() && !block3.func_149730_j())
             {
-                b0 = 3;
+                b0 = 5;
+            }
+
+            if (block3.func_149730_j() && !block2.func_149730_j())
+            {
+                b0 = 4;
             }
 
             world.setBlockMetadataWithNotify(x, y, z, m | b0, 2);
@@ -168,7 +166,7 @@ public abstract class BlockBase extends BlockContainer {
 		if(player.isSneaking()) return false;
 		if(!world.isRemote) {
 			ItemStack held = player.inventory.getCurrentItem();
-			if(held.getItem() instanceof IToolWrench && this.rotateFrontSide) {
+			if(held != null && held.getItem() != null && held.getItem() instanceof IToolWrench && this.rotateFrontSide) {
 				int meta = world.getBlockMetadata(x, y, z);
 				world.setBlockMetadataWithNotify(x, y, z, (meta & (~3)) | (((meta & 3) + 1) & 3), 2);
 			} else player.openGui(this.parent, this.gui, world, x, y, z);
@@ -179,7 +177,7 @@ public abstract class BlockBase extends BlockContainer {
 	// Simple textures
 	
 	private String iconName = null;
-	private Icon icon = null;
+	private IIcon icon = null;
 	
 	public void setIconName(String name) {
 		iconName = name;
@@ -187,19 +185,19 @@ public abstract class BlockBase extends BlockContainer {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta) {
+	public IIcon getIcon(int side, int meta) {
 		return icon;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void registerIcons(IconRegister reg) {
+	public void registerBlockIcons(IIconRegister reg) {
 		if(iconName != null) icon = reg.registerIcon(iconName);
 	}
 	
 	// Block destroy unified handler and whatnot.
 	public void onBlockDestroyed(World world, int x, int y, int z, int meta) {
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		TileEntity tileEntity = world.getTileEntity(x, y, z);
 		if(tileEntity != null) {
 			if(tileEntity instanceof TileEntityBase) {
 				((TileEntityBase)tileEntity).onBlockDestroy();
@@ -224,8 +222,8 @@ public abstract class BlockBase extends BlockContainer {
 	}
 
     @Override
-	public void breakBlock(World world, int x, int y, int z, int id, int meta) {
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
     	this.onBlockDestroyed(world, x, y, z, meta);
-    	super.breakBlock(world, x, y, z, id, meta);
+    	super.breakBlock(world, x, y, z, block, meta);
     }
 }

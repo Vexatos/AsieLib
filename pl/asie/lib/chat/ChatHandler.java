@@ -4,16 +4,16 @@ import java.util.Date;
 import java.util.HashMap;
 
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.ConfigCategory;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
-import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.lib.EntityCoord;
@@ -49,7 +49,7 @@ public class ChatHandler {
 		else return ""+t;
 	}
 	
-	@ForgeSubscribe
+	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
 		if(!enableChatFeatures) return;
 		
@@ -58,7 +58,7 @@ public class ChatHandler {
 			return;
 		}
 		
-		ChatMessageComponent chat = new ChatMessageComponent();
+		ChatComponentText chat = null;
 		boolean disableRadius = false;
 		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username));
 		String message = event.message;
@@ -91,26 +91,25 @@ public class ChatHandler {
 		}
 		
 		if(event.message.startsWith("!") && enableShout) {
-			chat.addText(EnumChatFormatting.YELLOW + "[Shout] " + formattedMessage);
+			chat = new ChatComponentText(EnumChatFormatting.YELLOW + "[Shout] " + formattedMessage);
 			disableRadius = true;
 		} else {
-			chat.addText(formattedMessage);
+			chat = new ChatComponentText(formattedMessage);
 		}
 		
-		if(CHAT_RADIUS > 0 && !disableRadius) {
-			event.setCanceled(true); // Override regular sending
-			if(MinecraftServer.getServer() == null) return;
-			for(WorldServer ws: MinecraftServer.getServer().worldServers) {
-				if(ws.provider.dimensionId != dimensionId) continue;
-				for(Object o: ws.playerEntities) {
-					if(o instanceof EntityPlayer) {
-						EntityPlayer target = (EntityPlayer)o;
-						if(event.player == target || event.player.getDistanceToEntity(target) <= CHAT_RADIUS) {
-							target.sendChatToPlayer(chat);
-						}
+		boolean useRadius = CHAT_RADIUS > 0 && !disableRadius;
+		event.setCanceled(true); // Override regular sending
+		if(MinecraftServer.getServer() == null) return;
+		for(WorldServer ws: MinecraftServer.getServer().worldServers) {
+			if(useRadius && ws.provider.dimensionId != dimensionId) continue;
+			for(Object o: ws.playerEntities) {
+				if(o instanceof EntityPlayer) {
+					EntityPlayer target = (EntityPlayer)o;
+					if(!useRadius || event.player == target || event.player.getDistanceToEntity(target) <= CHAT_RADIUS) {
+						target.addChatMessage(chat);
 					}
 				}
 			}
-		} else event.component = chat;
+		}
 	}
 }

@@ -10,7 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 
 public class CommandRealname extends CommandBase
 {
@@ -34,9 +34,10 @@ public class CommandRealname extends CommandBase
 
     public void processCommand(ICommandSender sender, String[] args)
     {
-        if (args.length > 0 && args[0].length() > 0) {
+    	sender.addChatMessage(new ChatComponentText("TODO"));
+        /*if (args.length > 0 && args[0].length() > 0) {
         	String realname = AsieLibMod.nick.getUsername(args[0]);
-        	ChatMessageComponent cmc = new ChatMessageComponent();
+        	ChatComponentTranslation = new ChatCompoent();
         	if(realname != null) {
         		cmc.addKey("commands.realname.is");
         		cmc.addText(" " + realname);
@@ -44,7 +45,7 @@ public class CommandRealname extends CommandBase
         		cmc.addKey("commands.realname.isNot");
         	}
     		sender.sendChatToPlayer(cmc);
-        } else throw new WrongUsageException("commands.realname.usage", new Object[0]);
+        } else throw new WrongUsageException("commands.realname.usage", new Object[0]);*/
     }
     
     /**

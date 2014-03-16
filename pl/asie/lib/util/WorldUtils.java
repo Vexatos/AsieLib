@@ -10,39 +10,28 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class WorldUtils {
-	public static World getWorld(int dimensionId) {
-		if(AsieLibMod.proxy.isClient()) {
-			if(getCurrentClientDimension() != dimensionId) {
-				return null;
-			} else return Minecraft.getMinecraft().theWorld;
-		} else {
-			return MinecraftServer.getServer().worldServerForDimension(dimensionId);
-		}
-	}
-	
 	public static TileEntity getTileEntity(int dimensionId, int x, int y, int z) {
-		World world = getWorld(dimensionId);
+		World world = AsieLibMod.proxy.getWorld(dimensionId);
 		if(world == null) return null;
-		return world.getBlockTileEntity(x, y, z);
+		return world.getTileEntity(x, y, z);
 	}
 	
 	public static TileEntity getTileEntityServer(int dimensionId, int x, int y, int z) {
 		World world = MinecraftServer.getServer().worldServerForDimension(dimensionId);
 		if(world == null) return null;
-		return world.getBlockTileEntity(x, y, z);
+		return world.getTileEntity(x, y, z);
 	}
 	
 	public static boolean equalLocation(TileEntity a, TileEntity b) {
-		if(a == null || b == null || a.worldObj == null || b.worldObj == null) return false;
+		if(a == null || b == null || a.getWorldObj() == null || b.getWorldObj() == null) return false;
 		return a.xCoord == b.xCoord && a.yCoord == b.yCoord && a.zCoord == b.zCoord
-				&& a.worldObj.provider.dimensionId == b.worldObj.provider.dimensionId;
+				&& a.getWorldObj().provider.dimensionId == b.getWorldObj().provider.dimensionId;
 	}
 	public static Block getBlock(World world, int x, int y, int z) {
-		return Block.blocksList[world.getBlockId(x, y, z)];
+		return world.getBlock(x, y, z);
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public static int getCurrentClientDimension() {
-		return Minecraft.getMinecraft().theWorld.provider.dimensionId;
+		return AsieLibMod.proxy.getCurrentClientDimension();
 	}
 }

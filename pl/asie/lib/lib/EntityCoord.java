@@ -25,7 +25,7 @@ public class EntityCoord {
 	public TileEntity get() {
 		World world = DimensionManager.getWorld(dimensionID);
 		if(world == null) return null;
-		else return world.getBlockTileEntity(x, y, z);
+		else return world.getTileEntity(x, y, z);
 	}
 	
 	@Override

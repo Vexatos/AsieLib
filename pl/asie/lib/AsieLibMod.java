@@ -1,9 +1,10 @@
 package pl.asie.lib;
 
 import java.util.Random;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.chat.INicknameHandler;
@@ -11,8 +12,9 @@ import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
-import pl.asie.lib.network.PacketFactory;
-import pl.asie.lib.shinonome.EventKey;
+import pl.asie.lib.network.PacketHandler;
+import pl.asie.lib.shinonome.EventKeyClient;
+import pl.asie.lib.shinonome.EventKeyServer;
 import pl.asie.lib.shinonome.ItemKey;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
@@ -21,17 +23,15 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.1.4")
-@NetworkMod(channels={"asielib"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
+@Mod(modid="asielib", name="AsieLib", version="0.1.6")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -39,8 +39,9 @@ public class AsieLibMod extends AsieLibAPI {
 	public static ChatHandler chat;
 	public static NicknameRepository nick;
 	public static ItemKey itemKey;
-	public static PacketFactory packet;
-	public static EventKey key = new EventKey();
+	public static PacketHandler packet;
+	public static EventKeyClient keyClient = new EventKeyClient();
+	public static EventKeyServer keyServer = new EventKeyServer();
 	
 	@Instance(value="asielib")
 	public static AsieLibMod instance;
@@ -51,14 +52,13 @@ public class AsieLibMod extends AsieLibAPI {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		AsieLibAPI.instance = this;
-		log = Logger.getLogger("asielib");
-		log.setParent(FMLLog.getLogger());
-
+		log = LogManager.getLogger("asielib");
+		
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		
-		packet = new PacketFactory("asielib");
-		
+		packet = new PacketHandler("asielib");
+		packet.registerClient(NetworkHandlerClient.class);
 		chat = new ChatHandler(config);
 		nick = new NicknameRepository();
 		nick.loadNicknames();
@@ -70,20 +70,25 @@ public class AsieLibMod extends AsieLibAPI {
 			log.info("Hey, you! Yes, you! Thanks for using AsieLauncher! ~asie");
 		}
 		
-		itemKey = new ItemKey(config.getItem("hakase", 17500).getInt());
+		itemKey = new ItemKey();
 		GameRegistry.registerItem(itemKey, "item.asietweaks.key");
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(key);
+		if(proxy.isClient()) MinecraftForge.EVENT_BUS.register(keyClient);
+		MinecraftForge.EVENT_BUS.register(keyServer);
 		
-		NetworkRegistry.instance().registerConnectionHandler(new NicknameNetworkHandler());
+		MinecraftForge.EVENT_BUS.register(new NicknameNetworkHandler());
+	}
+	
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(keyClient);
 	}
 	
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
-		TickRegistry.registerTickHandler(key, Side.CLIENT);
     	chat.registerCommands(event);
 	}
 	

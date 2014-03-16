@@ -32,7 +32,7 @@ public class GuiHandler implements IGuiHandler {
 		try {
 			if(ID < 0 || ID >= containers.size()) return null;
 			else {
-				TileEntity te = world.getBlockTileEntity(x, y, z);
+				TileEntity te = world.getTileEntity(x, y, z);
 				if(!(te instanceof TileEntityInventory)) return null;
 				else return containers.get(ID).getConstructor(TileEntityInventory.class, InventoryPlayer.class).newInstance((TileEntityInventory)te, player.inventory);
 			}

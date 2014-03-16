@@ -11,16 +11,16 @@ public class TileEntityBase extends TileEntity {
 		
 	}
 	
-	public void onRedstoneSignal(int side, int signal) {
+	public void onRedstoneSignal(int signal) {
 		
 	}
 	
-	private int[] oldRedstoneSignal = new int[6];
+	private int oldRedstoneSignal = -1000;
 	
-	protected void onRedstoneSignal_internal(int side, int redstoneSignal) {
-		if(redstoneSignal == oldRedstoneSignal[side % 6] - 1000) return;
-		oldRedstoneSignal[side % 6] = redstoneSignal + 1000;
-		this.onRedstoneSignal(side, redstoneSignal);
+	protected void onRedstoneSignal_internal(int redstoneSignal) {
+		if(redstoneSignal == oldRedstoneSignal) return;
+		oldRedstoneSignal = redstoneSignal + 1000;
+		this.onRedstoneSignal(redstoneSignal);
 	}
 
 	public int requestCurrentRedstoneValue(int side) {
