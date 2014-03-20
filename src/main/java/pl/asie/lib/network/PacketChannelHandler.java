@@ -1,6 +1,6 @@
 package pl.asie.lib.network;
 
-import net.minecraft.client.Minecraft;
+import pl.asie.lib.AsieLibMod;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -27,15 +27,6 @@ public class PacketChannelHandler extends FMLIndexedMessageToMessageCodec<Packet
     public void decodeInto(ChannelHandlerContext ctx, ByteBuf data, Packet packet) {
         packet.fromBytes(data);
         INetHandler netHandler = ctx.channel().attr(NetworkRegistry.NET_HANDLER).get();
-        switch (FMLCommonHandler.instance().getEffectiveSide()) {
-	        case CLIENT:
-	            if(handlerClient != null)
-	            	handlerClient.onMessage(packet, netHandler, Minecraft.getMinecraft().thePlayer);
-	            break;
-	        case SERVER:
-	            if(handlerServer != null)
-	            	handlerServer.onMessage(packet, netHandler, ((NetHandlerPlayServer) netHandler).playerEntity);
-	            break;
-	    }
+        AsieLibMod.proxy.handlePacket(handlerClient, handlerServer, packet, netHandler);
     }
 }
