@@ -57,3 +57,19 @@ task deobfJar(type: Jar) {
         attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+            artifact deobfJar { classifier '' }
+        }
+    }
+    repositories {
+        maven {
+            url "${config.maven.url}"
+        }
+    }
+}
