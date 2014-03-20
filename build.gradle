@@ -17,7 +17,13 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.1.9"
+file "build.properties" withReader {
+    def prop = new Properties()
+    prop.load(it)
+    ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.asielib.version}"
 group= "pl.asie.lib" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AsieLib"
 
@@ -64,7 +70,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             artifact jar
-            artifact deobfJar { classifier '' }
+            artifact deobfJar
         }
     }
     repositories {
