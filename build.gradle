@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.1.7"
+version = "0.1.9"
 group= "pl.asie.lib" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AsieLib"
 
@@ -25,6 +25,14 @@ minecraft {
     version = "1.7.2-10.12.0.1047"
     assetDir = "eclipse/assets"
 }
+
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'pl.asie.lib.core.AsieLibCoremod'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 processResources
 {
     // replace stuff in mcmod.info, nothing else
@@ -38,5 +46,14 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest {
+        attributes 'FMLCorePlugin': 'pl.asie.lib.core.AsieLibCoremod'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
     }
 }

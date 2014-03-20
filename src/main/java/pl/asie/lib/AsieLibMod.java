@@ -34,7 +34,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.1.7")
+@Mod(modid="asielib", name="AsieLib", version="0.1.9")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Random rand = new Random();
@@ -61,10 +61,8 @@ public class AsieLibMod extends AsieLibAPI {
 		config.load();
 		
 		chat = new ChatHandler(config);
-		nick = new NicknameRepository();
-		nick.loadNicknames();
+
     	MinecraftForge.EVENT_BUS.register(chat);
-    	MinecraftForge.EVENT_BUS.register(nick);
     	MinecraftForge.EVENT_BUS.register(new AsieLibEvents());
     	
 		if(System.getProperty("user.dir").indexOf(".asielauncher") >= 0) {
@@ -84,6 +82,10 @@ public class AsieLibMod extends AsieLibAPI {
 		MinecraftForge.EVENT_BUS.register(keyServer);
 
 		packet = new PacketHandler("asielib", new NetworkHandlerClient(), null);
+		
+		nick = new NicknameRepository();
+		nick.loadNicknames();
+    	MinecraftForge.EVENT_BUS.register(nick);
 		
 		FMLCommonHandler.instance().bus().register(new NicknameNetworkHandler());
 	}
