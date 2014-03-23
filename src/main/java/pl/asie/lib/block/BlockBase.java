@@ -1,6 +1,7 @@
 package pl.asie.lib.block;
 
 import buildcraft.api.tools.IToolWrench;
+import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.util.ItemUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,6 +14,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -166,7 +168,8 @@ public abstract class BlockBase extends BlockContainer {
 		if(player.isSneaking()) return false;
 		if(!world.isRemote) {
 			ItemStack held = player.inventory.getCurrentItem();
-			if(held != null && held.getItem() != null && held.getItem() instanceof IToolWrench && this.rotateFrontSide) {
+			if(held != null && held.getItem() != null && AsieLibMod.integration.isWrench(held.getItem()) && this.rotateFrontSide) {
+				boolean wrenched = AsieLibMod.integration.wrench(held.getItem(), player, x, y, z);
 				int meta = world.getBlockMetadata(x, y, z);
 				world.setBlockMetadataWithNotify(x, y, z, (meta & (~3)) | (((meta & 3) + 1) & 3), 2);
 			} else player.openGui(this.parent, this.gui, world, x, y, z);

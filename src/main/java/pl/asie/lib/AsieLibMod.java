@@ -15,6 +15,7 @@ import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
+import pl.asie.lib.integration.Integration;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.shinonome.EventKeyClient;
 import pl.asie.lib.shinonome.EventKeyServer;
@@ -34,9 +35,10 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.1.9")
+@Mod(modid="asielib", name="AsieLib", version="0.1.11")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
+	public static Integration integration;
 	public static Random rand = new Random();
 	public static Logger log;
 	public static ChatHandler chat;
@@ -55,6 +57,7 @@ public class AsieLibMod extends AsieLibAPI {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		AsieLibAPI.instance = this;
+		integration = new Integration();
 		log = LogManager.getLogger("asielib");
 		
 		config = new Configuration(event.getSuggestedConfigurationFile());
