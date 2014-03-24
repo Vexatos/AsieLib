@@ -5,6 +5,8 @@ import java.util.EnumSet;
 
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.Packets;
 import pl.asie.lib.network.PacketInput;
@@ -27,48 +29,17 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 
-public class EventKey implements ITickHandler {
-	public boolean isEntityNano(Entity entity) {
-		return (entity != null && entity instanceof EntityPlayer && ((EntityPlayer)entity).username.equals("asiekierka"));
-	}
-	
-	private static long lastContainer = 0;
-	
-	@ForgeSubscribe
-	public void containerEvent(PlayerInteractEvent event) {
-		if(isEntityNano(event.entityPlayer) && event.action == Action.RIGHT_CLICK_BLOCK) {
-			Block block = Block.blocksList[event.entity.worldObj.getBlockId(event.x, event.y, event.z)];
-			TileEntity te = event.entity.worldObj.getBlockTileEntity(event.x, event.y, event.z);
-			if(block instanceof BlockContainer || (Math.random() < 0.50 && te != null) || (Math.random() < 0.01))
-				scheduleSpin();
-		}
-	}
-	
-	@ForgeSubscribe
-	public void damageEvent(LivingHurtEvent event) {
-		if(isEntityNano(event.entity) && event.ammount > 0.0F) {
-			scheduleSpin();
-		}
-	}
-	
+public class EventKeyClient implements ITickHandler {
 	private static boolean isSpinning = false;
 	
-	public void scheduleSpinClient() {
-		isSpinning = true;
-	}
-	
 	public void scheduleSpin() {
-		try {
-			PacketInput packet = AsieLibMod.packet.create(Packets.NANO_NANO);
-			AsieLibMod.packet.sendToAllPlayers(packet);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		isSpinning = true;
 	}
 
 	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
 	public void asieEvent(RenderPlayerEvent.SetArmorModel event) {
-		if(isEntityNano(event.entityPlayer) && event.slot == 1 && (event.stack == null || event.stack.getItem() == AsieLibMod.itemKey)) {
+		if(EventKeyServer.isEntityNano(event.entityPlayer) && event.slot == 1 && (event.stack == null || event.stack.getItem() == AsieLibMod.itemKey)) {
 			// Render the key on top.
 			ItemStack key = new ItemStack(AsieLibMod.itemKey, 1);
             event.renderer.bindTexture(RenderBiped.getArmorResource(event.entityPlayer, key, 1, null));

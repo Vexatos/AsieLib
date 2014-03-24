@@ -168,7 +168,7 @@ public abstract class BlockBase extends BlockContainer {
 		if(player.isSneaking()) return false;
 		if(!world.isRemote) {
 			ItemStack held = player.inventory.getCurrentItem();
-			if(held.getItem() instanceof IToolWrench && this.rotateFrontSide) {
+			if(held != null && held.getItem() != null && held.getItem() instanceof IToolWrench && this.rotateFrontSide) {
 				int meta = world.getBlockMetadata(x, y, z);
 				world.setBlockMetadataWithNotify(x, y, z, (meta & (~3)) | (((meta & 3) + 1) & 3), 2);
 			} else player.openGui(this.parent, this.gui, world, x, y, z);

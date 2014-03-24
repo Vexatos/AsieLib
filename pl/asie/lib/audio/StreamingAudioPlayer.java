@@ -14,18 +14,26 @@ import org.lwjgl.openal.AL10;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class DFPWMCodec extends DFPWM {
+public class StreamingAudioPlayer extends DFPWM {
 	public int lastPacketId;
 	private int receivedPackets;
 
 	private boolean isInitializedClient = false;
 	private IntBuffer source;
 	private ArrayList<IntBuffer> buffersPlayed;
+	private final int BUFFER_PACKETS, SAMPLE_RATE, FORMAT;
 	
-	public DFPWMCodec() {
+	public StreamingAudioPlayer(int sampleRate, boolean sixteenBit, boolean stereo, int bufferPackets) {
 		super();
 		lastPacketId = -9000;
 		receivedPackets = 0;
+		BUFFER_PACKETS = bufferPackets;
+		SAMPLE_RATE = sampleRate;
+		if(sixteenBit) {
+			FORMAT = stereo ? AL10.AL_FORMAT_STEREO16 : AL10.AL_FORMAT_MONO16;
+		} else {
+			FORMAT = stereo ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_MONO8;
+		}
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -50,6 +58,17 @@ public class DFPWMCodec extends DFPWM {
 	}
 	
 	@SideOnly(Side.CLIENT)
+	public float getDistance(int x, int y, int z) {
+		Vec3 pos = Minecraft.getMinecraft().thePlayer.getPosition(1.0f);
+		double dx = pos.xCoord - x;
+		double dy = pos.yCoord - y;
+		double dz = pos.zCoord - z;
+				
+		float distance = (float)Math.sqrt(dx*dx+dy*dy+dz*dz);
+		return distance;
+	}
+	
+	@SideOnly(Side.CLIENT)
 	public void playPacket(byte[] data, int x, int y, int z) {
 		if(!isInitializedClient || source == null) {
 			reset();
@@ -71,12 +90,7 @@ public class DFPWMCodec extends DFPWM {
 		}
 		
 		// Calculate distance
-		Vec3 pos = Minecraft.getMinecraft().thePlayer.getPosition(1.0f);
-		double dx = pos.xCoord - x;
-		double dy = pos.yCoord - y;
-		double dz = pos.zCoord - z;
-				
-		float distance = (float)Math.sqrt(dx*dx+dy*dy+dz*dz);
+		float distance = getDistance(x, y, z);
 		float gain = distance >= 20.0f ? 0.0f : (distance <= 4.0f ? 1.0f : 1.0f - ((distance - 4.0f) / 16.0f));
 		gain *= Minecraft.getMinecraft().gameSettings.soundVolume;
 				
@@ -89,12 +103,12 @@ public class DFPWMCodec extends DFPWM {
 	    AL10.alSourcef(source.get(0), AL10.AL_ROLLOFF_FACTOR, 0.0f);
 	    
 	    // Play audio
-	    AL10.alBufferData(buffer.get(0), AL10.AL_FORMAT_MONO8, (ByteBuffer)(BufferUtils.createByteBuffer(data.length).put(data).flip()), 32768);
+	    AL10.alBufferData(buffer.get(0), FORMAT, (ByteBuffer)(BufferUtils.createByteBuffer(data.length).put(data).flip()), SAMPLE_RATE);
 	    AL10.alSourceQueueBuffers(source.get(0), buffer);
 	    
 	    int state = AL10.alGetSourcei(source.get(0), AL10.AL_SOURCE_STATE);
-	    if(receivedPackets > 3 && gain > 0.0f && state != AL10.AL_PLAYING) AL10.alSourcePlay(source.get(0));
-	    else if(receivedPackets <= 3 || gain == 0.0f) AL10.alSourcePause(source.get(0));
+	    if(receivedPackets > BUFFER_PACKETS && state != AL10.AL_PLAYING) AL10.alSourcePlay(source.get(0));
+	    else if(receivedPackets <= BUFFER_PACKETS) AL10.alSourcePause(source.get(0));
 	    
 	    receivedPackets++;
 	    
@@ -106,18 +120,20 @@ public class DFPWMCodec extends DFPWM {
 		AL10.alSourceStop(source.get(0));
 		AL10.alDeleteSources(source);
 		int count = 0;
-		for(IntBuffer b: buffersPlayed) {
-			b.rewind();
-			for(int i = 0; i < b.limit(); i++) {
-				int buffer = b.get(i);
-				if(AL10.alIsBuffer(buffer)) {
-					AL10.alDeleteBuffers(buffer);
-					count++;
+		if(buffersPlayed != null) {
+			for(IntBuffer b: buffersPlayed) {
+				b.rewind();
+				for(int i = 0; i < b.limit(); i++) {
+					int buffer = b.get(i);
+					if(AL10.alIsBuffer(buffer)) {
+						AL10.alDeleteBuffers(buffer);
+						count++;
+					}
 				}
 			}
+			buffersPlayed.clear();
+			System.out.println("Cleaned " + count + " buffers.");
 		}
-		buffersPlayed.clear();
-		System.out.println("Cleaned " + count + " buffers.");
 	}
 	
 	public void stop() {

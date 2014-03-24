@@ -22,7 +22,7 @@ public class NetworkHandler extends NetworkHandlerBase implements IPacketHandler
 				if(isClient) AsieLibMod.nick.setNickname(username, nickname);
 				break;
 			case Packets.NANO_NANO:
-				if(isClient) AsieLibMod.key.scheduleSpinClient();
+				if(isClient) AsieLibMod.keyClient.scheduleSpin();
 				break;
 		}
 	}

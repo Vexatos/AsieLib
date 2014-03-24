@@ -10,18 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class WorldUtils {
-	public static World getWorld(int dimensionId) {
-		if(AsieLibMod.proxy.isClient()) {
-			if(getCurrentClientDimension() != dimensionId) {
-				return null;
-			} else return Minecraft.getMinecraft().theWorld;
-		} else {
-			return MinecraftServer.getServer().worldServerForDimension(dimensionId);
-		}
-	}
-	
 	public static TileEntity getTileEntity(int dimensionId, int x, int y, int z) {
-		World world = getWorld(dimensionId);
+		World world = AsieLibMod.proxy.getWorld(dimensionId);
 		if(world == null) return null;
 		return world.getBlockTileEntity(x, y, z);
 	}
@@ -41,8 +31,7 @@ public class WorldUtils {
 		return Block.blocksList[world.getBlockId(x, y, z)];
 	}
 	
-	@SideOnly(Side.CLIENT)
 	public static int getCurrentClientDimension() {
-		return Minecraft.getMinecraft().theWorld.provider.dimensionId;
+		return AsieLibMod.proxy.getCurrentClientDimension();
 	}
 }
