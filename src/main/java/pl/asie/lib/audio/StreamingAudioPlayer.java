@@ -121,18 +121,20 @@ public class StreamingAudioPlayer extends DFPWM {
 		AL10.alSourceStop(source.get(0));
 		AL10.alDeleteSources(source);
 		int count = 0;
-		for(IntBuffer b: buffersPlayed) {
-			b.rewind();
-			for(int i = 0; i < b.limit(); i++) {
-				int buffer = b.get(i);
-				if(AL10.alIsBuffer(buffer)) {
-					AL10.alDeleteBuffers(buffer);
-					count++;
+		if(buffersPlayed != null) {
+			for(IntBuffer b: buffersPlayed) {
+				b.rewind();
+				for(int i = 0; i < b.limit(); i++) {
+					int buffer = b.get(i);
+					if(AL10.alIsBuffer(buffer)) {
+						AL10.alDeleteBuffers(buffer);
+						count++;
+					}
 				}
 			}
+			buffersPlayed.clear();
+			System.out.println("Cleaned " + count + " buffers.");
 		}
-		buffersPlayed.clear();
-		System.out.println("Cleaned " + count + " buffers.");
 	}
 	
 	public void stop() {
