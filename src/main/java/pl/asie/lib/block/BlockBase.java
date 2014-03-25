@@ -2,6 +2,7 @@ package pl.asie.lib.block;
 
 import buildcraft.api.tools.IToolWrench;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.util.ItemUtils;
 import pl.asie.lib.util.MiscUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -93,15 +94,23 @@ public abstract class BlockBase extends BlockContainer {
         return createNewTileEntity(world, metadata);
     }
 
+	public int getFrontSide(int m) {
+		switch(this.rotation) {
+			case FOUR:
+				return (m & 3) + 2;
+			case SIX:
+				return (m & 7) % 6;
+			case NONE:
+			default:
+				return 2;
+		}
+	}
+	
+	public Rotation getRotation() { return this.rotation; }
 	
 	public int relToAbs(int side, int metadata) {
-		if(this.rotation == Rotation.NONE) return side;
-		int frontSide = (metadata & (rotation == Rotation.FOUR ? 3 : 7));
-		if(this.rotation == Rotation.FOUR) frontSide += 2;
-		
-		if(frontSide >= 2) return MiscUtils.getAbsoluteSide(side, frontSide);
-		
-		return 0; // TODO: implement Rotation6
+		int frontSide = getFrontSide(metadata);
+		return MiscUtils.getAbsoluteSide(side, frontSide);
  	}
 	
 	@SideOnly(Side.CLIENT)
@@ -122,15 +131,7 @@ public abstract class BlockBase extends BlockContainer {
 
 	public ForgeDirection getFacingDirection(World world, int x, int y, int z) {
 		int m = world.getBlockMetadata(x, y, z);
-		switch(this.rotation) {
-			case FOUR:
-				return ForgeDirection.getOrientation((m & 3)+2);
-			case SIX:
-				return ForgeDirection.getOrientation((m & 7) % 6);
-			case NONE:
-			default:
-				return null;
-		}
+		return ForgeDirection.getOrientation(getFrontSide(m));
 	}
 	
 	@Deprecated
@@ -179,6 +180,7 @@ public abstract class BlockBase extends BlockContainer {
 	            if ((double)y - d0 > 0.0D) return 0;
 	        }
     	}
+    	
         int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
         return ROT_TRANSFORM4[l];
     }
@@ -272,5 +274,11 @@ public abstract class BlockBase extends BlockContainer {
 	public void breakBlock(World world, int x, int y, int z, Block block, int meta) {
     	this.onBlockDestroyed(world, x, y, z, meta);
     	super.breakBlock(world, x, y, z, block, meta);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderType() {
+    	return BlockBaseRender.id();
     }
 }

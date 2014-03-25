@@ -15,6 +15,7 @@ import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
+import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.integration.Integration;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.shinonome.EventKeyClient;
@@ -81,6 +82,8 @@ public class AsieLibMod extends AsieLibAPI {
 		if(proxy.isClient()) {
 			MinecraftForge.EVENT_BUS.register(keyClient);
 			FMLCommonHandler.instance().bus().register(keyClient);
+			
+			new BlockBaseRender();
 		}
 		MinecraftForge.EVENT_BUS.register(keyServer);
 
