@@ -21,7 +21,8 @@ public class StreamingAudioPlayer extends DFPWM {
 	private boolean isInitializedClient = false;
 	private IntBuffer source;
 	private ArrayList<IntBuffer> buffersPlayed;
-	private final int BUFFER_PACKETS, SAMPLE_RATE, FORMAT;
+	private int SAMPLE_RATE;
+	private final int BUFFER_PACKETS, FORMAT;
 	
 	public StreamingAudioPlayer(int sampleRate, boolean sixteenBit, boolean stereo, int bufferPackets) {
 		super();
@@ -34,6 +35,10 @@ public class StreamingAudioPlayer extends DFPWM {
 		} else {
 			FORMAT = stereo ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_MONO8;
 		}
+	}
+	
+	public void setSampleRate(int rate) {
+		SAMPLE_RATE = rate;
 	}
 	
 	@SideOnly(Side.CLIENT)

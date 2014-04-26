@@ -6,9 +6,14 @@ import pl.asie.lib.AsieLibMod;
 
 public class MiscUtils {
 	private static final int[] sides = {2, 5, 3, 4};
-	
+	private static final int[][] handlingBT = {
+		{2, 3, 0, 1, 4, 5},
+		{3, 2, 1, 0, 5, 4}
+	};
 	public static int getAbsoluteSide(int side, int relativeFront) {
+		if(relativeFront < 2) return handlingBT[relativeFront][side];
 		if(side < 2) return side;
+				
 		int relativeFrontID = 0;
 		int sideID = 0;
 		for(int i = 0; i < 4; i++) {

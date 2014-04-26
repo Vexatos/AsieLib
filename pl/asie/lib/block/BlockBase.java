@@ -1,7 +1,10 @@
 package pl.asie.lib.block;
 
 import buildcraft.api.tools.IToolWrench;
+import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.util.ItemUtils;
+import pl.asie.lib.util.MiscUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -13,6 +16,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
@@ -24,6 +28,13 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 public abstract class BlockBase extends BlockContainer {
+	public enum Rotation {
+		NONE,
+		FOUR,
+		SIX
+	}
+	
+	private Rotation rotation = Rotation.NONE;
 	private final Object parent;
 	private int gui = -1;
 	
@@ -36,11 +47,11 @@ public abstract class BlockBase extends BlockContainer {
 	
 	// Handler: Redstone
 	
-	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z) {
 		return false;
 	}
 	
-	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z, int side) {
+	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z) {
 		return false;
 	}
 
@@ -53,30 +64,28 @@ public abstract class BlockBase extends BlockContainer {
     }
 	
 	@Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int side) {
-		if(receivesRedstone(world, x, y, z, side)) {
+    public void onNeighborBlockChange(World world, int x, int y, int z, int block) {
+		if(receivesRedstone(world, x, y, z)) {
 			TileEntity te = world.getBlockTileEntity(x, y, z);
 			if(te != null && te instanceof TileEntityBase)
-				((TileEntityBase)te).onRedstoneSignal_internal(side, getVanillaRedstoneValue(world, x, y, z));
+				((TileEntityBase)te).onRedstoneSignal_internal(getVanillaRedstoneValue(world, x, y, z));
 		}
 	}
 	
 	@Override
 	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-		return (emitsRedstone(world, x, y, z, side) || receivesRedstone(world, x, y, z, side));
+		return (emitsRedstone(world, x, y, z) || receivesRedstone(world, x, y, z));
 	}
 
     @Override
 	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
-    	if(!emitsRedstone(access,x,y,z,side)) return 0;
+    	if(!emitsRedstone(access,x,y,z)) return 0;
 		TileEntity te = access.getBlockTileEntity(x, y, z);
 		if(te != null && te instanceof TileEntityBase)
 			return ((TileEntityBase)te).requestCurrentRedstoneValue(side);
 		return 0;
     }
     
-	@Override
-    public TileEntity createNewTileEntity(World world) { return null; }
 	public abstract TileEntity createNewTileEntity(World world, int metadata);
 	
 	@Override
@@ -84,75 +93,120 @@ public abstract class BlockBase extends BlockContainer {
     {
         return createNewTileEntity(world, metadata);
     }
+	
+	@Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return createNewTileEntity(world, 0);
+    }
 
-	// Direction placement
-	
-	private boolean rotateFrontSide = false;
-	
-	public ForgeDirection getFacingDirection(World world, int x, int y, int z) {
-		if(!rotateFrontSide) return null;
-		int m = world.getBlockMetadata(x, y, z) & 3;
-		return ForgeDirection.getOrientation(m+2);
+	public int getFrontSide(int m) {
+		switch(this.rotation) {
+			case FOUR:
+				return (m & 3) + 2;
+			case SIX:
+				return (m & 7) % 6;
+			case NONE:
+			default:
+				return 2;
+		}
 	}
 	
-	public void setRotateFrontSide(boolean v) { rotateFrontSide = v; }
+	public Rotation getRotation() { return this.rotation; }
 	
-    private void setDefaultFrontSideDirection(World world, int x, int y, int z)
+	public int relToAbs(int side, int metadata) {
+		int frontSide = getFrontSide(metadata);
+		return MiscUtils.getAbsoluteSide(side, frontSide);
+ 	}
+	
+	@SideOnly(Side.CLIENT)
+	public Icon getAbsoluteIcon(int side, int metadata) {
+		return icon;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public Icon getAbsoluteIcon(World world, int x, int y, int z, int side, int metadata) {
+		return icon;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Icon getIcon(int side, int metadata) {
+		return this.getAbsoluteIcon(relToAbs(side, metadata), metadata);
+	}
+
+	public ForgeDirection getFacingDirection(World world, int x, int y, int z) {
+		int m = world.getBlockMetadata(x, y, z);
+		return ForgeDirection.getOrientation(getFrontSide(m));
+	}
+	
+	@Deprecated
+	public void setRotateFrontSide(boolean v) { this.rotation = Rotation.FOUR; }
+	public void setRotation(Rotation v) { this.rotation = v; }
+	
+    private void setDefaultRotation(World world, int x, int y, int z)
     {
-        if (!world.isRemote)
+        if (!world.isRemote && this.rotation != Rotation.NONE)
         {
-            int l = world.getBlockId(x, y, z - 1);
-            int i1 = world.getBlockId(x, y, z + 1);
-            int j1 = world.getBlockId(x - 1, y, z);
-            int k1 = world.getBlockId(x + 1, y, z);
-	        int m = world.getBlockMetadata(x, y, z) & (~3);
-            byte b0 = 1;
+            int block = world.getBlockId(x, y, z - 1);
+            int block1 = world.getBlockId(x, y, z + 1);
+            int block2 = world.getBlockId(x - 1, y, z);
+            int block3 = world.getBlockId(x + 1, y, z);
+            int m = world.getBlockMetadata(x, y, z);
+            byte b0 = 3;
 
-            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
-            {
-                b0 = 1;
-            }
+            if (Block.opaqueCubeLookup[block] && !Block.opaqueCubeLookup[block1]) b0 = 3;
+            else if (Block.opaqueCubeLookup[block1] && !Block.opaqueCubeLookup[block]) b0 = 2;
 
-            if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
-            {
-                b0 = 0;
-            }
+            if (Block.opaqueCubeLookup[block2] && !Block.opaqueCubeLookup[block3]) b0 = 5;
+            else if (Block.opaqueCubeLookup[block3] && !Block.opaqueCubeLookup[block2]) b0 = 4;
 
-            if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
-            {
-                b0 = 2;
-            }
-
-            if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
-            {
-                b0 = 3;
-            }
-
+            if(this.rotation == Rotation.SIX && y > 0 && y < 255) {
+                int block4 = world.getBlockId(x, y - 1, z);
+                int block5 = world.getBlockId(x, y + 1, z);
+                
+                if (Block.opaqueCubeLookup[block4] && !Block.opaqueCubeLookup[block5]) b0 = 1;
+                else if (Block.opaqueCubeLookup[block5] && !Block.opaqueCubeLookup[block4]) b0 = 0;
+            } else b0 -= 2;
+            
             world.setBlockMetadataWithNotify(x, y, z, m | b0, 2);
         }
+    }
+    
+    private static final int[] ROT_TRANSFORM4 = {2, 5, 3, 4};
+    
+    private int determineRotation(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
+    	if(this.rotation == Rotation.NONE) return 0;
+    	
+    	if(this.rotation == Rotation.SIX) {
+	        if (MathHelper.abs((float)entity.posX - (float)x) < 2.0F && MathHelper.abs((float)entity.posZ - (float)z) < 2.0F) {
+	            double d0 = entity.posY + 1.82D - (double)entity.yOffset;
+
+	            if (d0 - (double)y > 2.0D) return 1;
+	            if ((double)y - d0 > 0.0D) return 0;
+	        }
+    	}
+    	
+        int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+        return ROT_TRANSFORM4[l];
     }
     
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
     {
-    	if(rotateFrontSide) {
-	        int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
-	        int m = stack.getItemDamage() & (~3);
-	        if (l == 0) world.setBlockMetadataWithNotify(x, y, z, m | 0, 2);
-	        if (l == 1) world.setBlockMetadataWithNotify(x, y, z, m | 3, 2);
-	        if (l == 2) world.setBlockMetadataWithNotify(x, y, z, m | 1, 2);
-	        if (l == 3) world.setBlockMetadataWithNotify(x, y, z, m | 2, 2);
-	    }
+    	int rot = determineRotation(world, x, y, z, entity, stack);
+        int m = stack.getItemDamage();
+    	if(this.rotation == Rotation.SIX)
+    		world.setBlockMetadataWithNotify(x, y, z, (m & (~7)) | rot, 2);
+    	else if(this.rotation == Rotation.FOUR)
+    		world.setBlockMetadataWithNotify(x, y, z, (m & (~3)) | (rot - 2), 2);
     }
     
     @Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
         super.onBlockAdded(world, x, y, z);
-        if(rotateFrontSide) {
-        	this.setDefaultFrontSideDirection(world, x, y, z);
-        }
+        this.setDefaultRotation(world, x, y, z);
     }
 
 	// GUI handling
@@ -168,9 +222,15 @@ public abstract class BlockBase extends BlockContainer {
 		if(player.isSneaking()) return false;
 		if(!world.isRemote) {
 			ItemStack held = player.inventory.getCurrentItem();
-			if(held != null && held.getItem() != null && held.getItem() instanceof IToolWrench && this.rotateFrontSide) {
+			if(held != null && held.getItem() != null && (held.getItem() instanceof IToolWrench) && this.rotation != null) {
+				if(!((IToolWrench)held.getItem()).canWrench(player, x, y, z)) return false;
+				((IToolWrench)held.getItem()).wrenchUsed(player, x, y, z);
 				int meta = world.getBlockMetadata(x, y, z);
-				world.setBlockMetadataWithNotify(x, y, z, (meta & (~3)) | (((meta & 3) + 1) & 3), 2);
+				if(this.rotation == Rotation.FOUR) {
+					world.setBlockMetadataWithNotify(x, y, z, (meta & (~3)) | (((meta & 3) + 1) & 3), 2);
+				} else if(this.rotation == Rotation.SIX) {
+					world.setBlockMetadataWithNotify(x, y, z, (meta & (~7)) | (((meta & 7) + 1) % 6), 2);
+				}
 			} else player.openGui(this.parent, this.gui, world, x, y, z);
 		}
 		return true;
@@ -183,12 +243,6 @@ public abstract class BlockBase extends BlockContainer {
 	
 	public void setIconName(String name) {
 		iconName = name;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Icon getIcon(int side, int meta) {
-		return icon;
 	}
 	
 	@Override
@@ -224,8 +278,14 @@ public abstract class BlockBase extends BlockContainer {
 	}
 
     @Override
-	public void breakBlock(World world, int x, int y, int z, int id, int meta) {
+	public void breakBlock(World world, int x, int y, int z, int block, int meta) {
     	this.onBlockDestroyed(world, x, y, z, meta);
-    	super.breakBlock(world, x, y, z, id, meta);
+    	super.breakBlock(world, x, y, z, block, meta);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public int getRenderType() {
+    	return BlockBaseRender.id();
     }
 }

@@ -11,6 +11,7 @@ import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
+import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.network.PacketFactory;
 import pl.asie.lib.shinonome.EventKeyClient;
 import pl.asie.lib.shinonome.EventKeyServer;
@@ -31,8 +32,9 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
+import dan200.computercraft.api.ComputerCraftAPI;
 
-@Mod(modid="asielib", name="AsieLib", version="0.1.11")
+@Mod(modid="asielib", name="AsieLib", version="0.3.0")
 @NetworkMod(channels={"asielib"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
@@ -75,14 +77,21 @@ public class AsieLibMod extends AsieLibAPI {
 		
 		itemKey = new ItemKey(config.getItem("hakase", 17500).getInt());
 		GameRegistry.registerItem(itemKey, "item.asietweaks.key");
+		
+		ComputerCraftAPI.registerPeripheralProvider(new CC16PeripheralHandler());
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		if(proxy.isClient()) MinecraftForge.EVENT_BUS.register(keyClient);
+		if(proxy.isClient()) {
+			MinecraftForge.EVENT_BUS.register(keyClient);
+			new BlockBaseRender();
+		}
 		MinecraftForge.EVENT_BUS.register(keyServer);
 		
 		NetworkRegistry.instance().registerConnectionHandler(new NicknameNetworkHandler());
+		
+		config.save();
 	}
 	
 	@EventHandler
