@@ -23,6 +23,8 @@ public class StreamingAudioPlayer extends DFPWM {
 	private ArrayList<IntBuffer> buffersPlayed;
 	private int SAMPLE_RATE;
 	private final int BUFFER_PACKETS, FORMAT;
+	private float volume = 1.0F;
+	private float distance = 24.0F;
 	
 	public StreamingAudioPlayer(int sampleRate, boolean sixteenBit, boolean stereo, int bufferPackets) {
 		super();
@@ -35,6 +37,14 @@ public class StreamingAudioPlayer extends DFPWM {
 		} else {
 			FORMAT = stereo ? AL10.AL_FORMAT_STEREO8 : AL10.AL_FORMAT_MONO8;
 		}
+	}
+	
+	public void setDistance(float dist) {
+		this.distance = dist;
+	}
+	
+	public void setVolume(float vol) {
+		this.volume = vol;
 	}
 	
 	public void setSampleRate(int rate) {
@@ -96,9 +106,10 @@ public class StreamingAudioPlayer extends DFPWM {
 		
 		// Calculate distance
 		float distance = getDistance(x, y, z);
-		float gain = distance >= 20.0f ? 0.0f : (distance <= 4.0f ? 1.0f : 1.0f - ((distance - 4.0f) / 16.0f));
+		float gain = distance >= this.distance ? 0.0f : (distance <= (this.distance / 4.0f) ? 1.0f : 1.0f - ((distance - (this.distance / 4.0f)) / (this.distance * 0.75f)));
 		gain *= Minecraft.getMinecraft().gameSettings.soundVolume;
-				
+		gain *= volume;
+		
 		// Set settings
 		AL10.alSourcei(source.get(0), AL10.AL_LOOPING, AL10.AL_FALSE);
 	    AL10.alSourcef(source.get(0), AL10.AL_PITCH,    1.0f          );
