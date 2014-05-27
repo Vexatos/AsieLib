@@ -12,6 +12,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class BlockBaseRender implements ISimpleBlockRenderingHandler {
 	private static int renderId;
+	public static int renderPass;
 	
 	private static final int[][] ROTATION = {
 		{3, 3, 1, 2, 0, 0}, // Down

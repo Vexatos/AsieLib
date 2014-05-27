@@ -1,0 +1,7 @@
+commands.realname.usage=/realname <Spitzname>
+commands.realname.is=Der echte Name dieser Person ist
+commands.realname.isNot=Diese Person hat keinen echten Namen!
+commands.me.usage=/me <...>
+commands.nick.usage=/nick [Ziel] <Spitzname>
+commands.nick.done=Spitzname geändert!
+item.asielib.part_unknown=Unbekanntes Teil

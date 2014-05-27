@@ -23,11 +23,12 @@ public class ChatHandler {
 	private HashMap<String, String> actions = new HashMap<String, String>();
 	public boolean enableChatFeatures, enableShout, enableGreentext, enableColor;
 	public int CHAT_RADIUS;
-	public String colorAction, messageFormat;
+	public String colorAction, messageFormat, shoutPrefix;
 	
 	public ChatHandler(Configuration config) {
 		CHAT_RADIUS = config.get("chat", "chatRadius", 0).getInt();
 		enableShout = config.get("chat", "enableShout", true).getBoolean(true);
+		shoutPrefix = config.get("chat", "shoutPrefix", "[Shout]").getString();
 		enableChatFeatures = config.get("base", "enableChatTweaks", true).getBoolean(true);
 		enableColor = config.get("base", "enableColor", true).getBoolean(true);
 		config.get("chat", "enableGreentext", false).comment = ">implying anyone will ever turn this on";
@@ -91,7 +92,7 @@ public class ChatHandler {
 		}
 		
 		if(event.message.startsWith("!") && enableShout) {
-			chat = new ChatComponentText(EnumChatFormatting.YELLOW + "[Shout] " + formattedMessage);
+			chat = new ChatComponentText(EnumChatFormatting.YELLOW + shoutPrefix + " " + formattedMessage);
 			disableRadius = true;
 		} else {
 			chat = new ChatComponentText(formattedMessage);
