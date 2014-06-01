@@ -18,6 +18,7 @@ import pl.asie.lib.shinonome.EventKeyServer;
 import pl.asie.lib.shinonome.ItemKey;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -32,7 +33,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dan200.computercraft.api.ComputerCraftAPI;
 
 @Mod(modid="asielib", name="AsieLib", version="0.2.3")
 @NetworkMod(channels={"asielib"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
@@ -46,7 +46,8 @@ public class AsieLibMod extends AsieLibAPI {
 	public static PacketFactory packet;
 	public static EventKeyClient keyClient = new EventKeyClient();
 	public static EventKeyServer keyServer = new EventKeyServer();
-	
+	public static boolean BuildCraftPresent = false;
+
 	@Instance(value="asielib")
 	public static AsieLibMod instance;
 	
@@ -77,8 +78,6 @@ public class AsieLibMod extends AsieLibAPI {
 		
 		itemKey = new ItemKey(config.getItem("hakase", 17500).getInt());
 		GameRegistry.registerItem(itemKey, "item.asietweaks.key");
-		
-		ComputerCraftAPI.registerPeripheralProvider(new CC16PeripheralHandler());
 	}
 	
 	@EventHandler
@@ -96,6 +95,13 @@ public class AsieLibMod extends AsieLibAPI {
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		if (Loader.isModLoaded("ComputerCraft")) {
+			CC16PeripheralHandler.registerPeripheralProvider();
+		}
+		if (Loader.isModLoaded("BuildCraft|Core")) {
+			BuildCraftPresent = true;
+		}
+		
 		TickRegistry.registerTickHandler(keyClient, Side.CLIENT);
 	}
 	

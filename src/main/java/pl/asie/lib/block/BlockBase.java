@@ -222,7 +222,7 @@ public abstract class BlockBase extends BlockContainer {
 		if(player.isSneaking()) return false;
 		if(!world.isRemote) {
 			ItemStack held = player.inventory.getCurrentItem();
-			if(held != null && held.getItem() != null && (held.getItem() instanceof IToolWrench) && this.rotation != null) {
+			if(AsieLibMod.BuildCraftPresent && held != null && held.getItem() != null && (held.getItem() instanceof IToolWrench) && this.rotation != null) {
 				if(!((IToolWrench)held.getItem()).canWrench(player, x, y, z)) return false;
 				((IToolWrench)held.getItem()).wrenchUsed(player, x, y, z);
 				int meta = world.getBlockMetadata(x, y, z);
