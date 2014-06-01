@@ -53,7 +53,7 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void reset() {
+	public synchronized void reset() {
 		buffersPlayed = new ArrayList<IntBuffer>();
 		lastPacketId = -9000;
 		receivedPackets = 0;
@@ -61,7 +61,7 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public boolean initClient() {
+	public synchronized boolean initClient() {
 		source = BufferUtils.createIntBuffer(1);
 		AL10.alGenSources(source);
 		
@@ -85,7 +85,7 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void playPacket(byte[] data, int x, int y, int z) {
+	public synchronized void playPacket(byte[] data, int x, int y, int z) {
 		if(!isInitializedClient || source == null) {
 			reset();
 			initClient();
@@ -132,7 +132,7 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	private void stopClient() {
+	private synchronized void stopClient() {
 		AL10.alSourceStop(source.get(0));
 		AL10.alDeleteSources(source);
 		int count = 0;
@@ -152,7 +152,7 @@ public class StreamingAudioPlayer extends DFPWM {
 		}
 	}
 	
-	public void stop() {
+	public synchronized void stop() {
 		if(source != null) {
 			stopClient();
 		}
