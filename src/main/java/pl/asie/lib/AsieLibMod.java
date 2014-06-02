@@ -34,7 +34,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.2.3")
+@Mod(modid="asielib", name="AsieLib", version="0.2.4")
 @NetworkMod(channels={"asielib"}, clientSideRequired=true, packetHandler=NetworkHandler.class)
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;

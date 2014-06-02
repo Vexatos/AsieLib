@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import pl.asie.lib.AsieLibMod;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,5 +54,9 @@ public class CommandNick extends CommandBase
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
         return args.length >= 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
+    }
+    
+    public int compareTo(Object o) {
+        return ((ICommand)o).getCommandName().compareTo(this.getCommandName());
     }
 }
