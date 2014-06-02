@@ -1,0 +1,17 @@
+[
+{
+  "modid": "asielib",
+  "name": "asielib",
+  "description": "Utilities for asie's mods",
+  "version": "0.2.3",
+  "credits": "",
+  "logoFile": "",
+  "mcversion": "1.6.4",
+  "url": "",
+  "updateUrl": "",
+  "authors": [ "asiekierka" ],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": []
+}
+]
