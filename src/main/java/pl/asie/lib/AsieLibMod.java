@@ -20,6 +20,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -96,7 +97,8 @@ public class AsieLibMod extends AsieLibAPI {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		if (Loader.isModLoaded("ComputerCraft")) {
-			CC16PeripheralHandler.registerPeripheralProvider();
+			ModMetadata cc = Loader.instance().getIndexedModList().get("ComputerCraft").getMetadata();
+			if(cc.version.startsWith("1.6")) CC16PeripheralHandler.registerPeripheralProvider();
 		}
 		if (Loader.isModLoaded("BuildCraft|Core")) {
 			BuildCraftPresent = true;
