@@ -11,7 +11,7 @@ public class CC16PeripheralHandler implements IPeripheralProvider {
 	@Override
 	public IPeripheral getPeripheral(World world, int x, int y, int z, int side) {
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if(te.getClass().getSimpleName().startsWith("pl.asie") && te instanceof IPeripheral) return (IPeripheral)te;
+		if(te.getClass().getName().startsWith("pl.asie") && te instanceof IPeripheral) return (IPeripheral)te;
 		return null;
 	}
 
