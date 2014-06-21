@@ -108,7 +108,7 @@ public class StreamingAudioPlayer extends DFPWM {
 		// Calculate distance
 		float distance = getDistance(x, y, z);
 		float gain = distance >= 20.0f ? 0.0f : (distance <= 4.0f ? 1.0f : 1.0f - ((distance - 4.0f) / 16.0f));
-		gain *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.MUSIC);
+		gain *= Minecraft.getMinecraft().gameSettings.getSoundLevel(SoundCategory.RECORDS);
 				
 		// Set settings
 		AL10.alSourcei(source.get(0), AL10.AL_LOOPING, AL10.AL_FALSE);
