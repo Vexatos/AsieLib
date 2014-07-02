@@ -35,6 +35,8 @@ public class ChatHandler {
 		enableGreentext = config.get("chat", "enableGreentext", false).getBoolean(false);
 		colorAction = config.get("chat", "colorMe", "5").getString();
 		messageFormat = config.get("chat", "formatMessage", "<%u> %m").getString();
+		
+		config.save();
 	}
 	
 	public void registerCommands(FMLServerStartingEvent event) {
