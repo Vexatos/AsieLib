@@ -36,7 +36,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.2.3")
+@Mod(modid="asielib", name="AsieLib", version="0.2.5")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;
@@ -99,6 +99,7 @@ public class AsieLibMod extends AsieLibAPI {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		//TickRegistry.registerTickHandler(keyClient, Side.CLIENT);
+		config.save();
 	}
 	
 	@EventHandler
