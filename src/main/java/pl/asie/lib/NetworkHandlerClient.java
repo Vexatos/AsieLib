@@ -2,6 +2,7 @@ package pl.asie.lib;
 
 import java.io.IOException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
 import pl.asie.lib.network.MessageHandlerBase;
@@ -25,6 +26,16 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 			case Packets.NANO_NANO:
 				AsieLibMod.keyClient.scheduleSpin();
 				break;
+			case Packets.SPAWN_PARTICLE: {
+		        double x = packet.readFloat();
+		        double y = packet.readFloat();
+		        double z = packet.readFloat();
+		        double vx = packet.readFloat();
+		        double vy = packet.readFloat();
+		        double vz = packet.readFloat();
+		        String name = packet.readString();
+		        Minecraft.getMinecraft().thePlayer.getEntityWorld().spawnParticle(name, x, y, z, vx, vy, vz);
+			} break;
 		}
 	}
 }

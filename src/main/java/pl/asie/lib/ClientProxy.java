@@ -36,14 +36,19 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override
 	public void handlePacket(MessageHandlerBase client, MessageHandlerBase server, Packet packet, INetHandler handler) {
-        switch (FMLCommonHandler.instance().getEffectiveSide()) {
-	        case CLIENT:
-	            if(client != null)
-	            	client.onMessage(packet, handler, (EntityPlayer)Minecraft.getMinecraft().thePlayer);
-	            break;
-	        case SERVER:
-	        	super.handlePacket(client, server, packet, handler);
-	        	break;
-	    }
+		try {
+	        switch (FMLCommonHandler.instance().getEffectiveSide()) {
+		        case CLIENT:
+		            if(client != null)
+		            	client.onMessage(packet, handler, (EntityPlayer)Minecraft.getMinecraft().thePlayer);
+		            break;
+		        case SERVER:
+		        	super.handlePacket(client, server, packet, handler);
+		        	break;
+		    }
+		} catch(Exception e) {
+			AsieLibMod.log.warn("Caught a network exception! Is someone sending malformed packets?");
+			e.printStackTrace();
+		}
 	}
 }

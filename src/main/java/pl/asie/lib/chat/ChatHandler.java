@@ -29,7 +29,7 @@ public class ChatHandler {
 		CHAT_RADIUS = config.get("chat", "chatRadius", 0).getInt();
 		enableShout = config.get("chat", "enableShout", true).getBoolean(true);
 		shoutPrefix = config.get("chat", "shoutPrefix", "[Shout]").getString();
-		enableChatFeatures = config.get("base", "enableChatTweaks", true).getBoolean(true);
+		enableChatFeatures = config.get("base", "enableChatTweaks", false).getBoolean(false);
 		enableColor = config.get("base", "enableColor", true).getBoolean(true);
 		config.get("chat", "enableGreentext", false).comment = ">implying anyone will ever turn this on";
 		enableGreentext = config.get("chat", "enableGreentext", false).getBoolean(false);
@@ -52,8 +52,6 @@ public class ChatHandler {
 	
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
-		if(!enableChatFeatures) return;
-		
 		if(CHAT_RADIUS < 0) { // Chat disabled altogether
 			event.setCanceled(true);
 			return;

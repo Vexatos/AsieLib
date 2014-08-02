@@ -1,8 +1,11 @@
 package pl.asie.lib.util;
 
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.Packets;
+import pl.asie.lib.network.Packet;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
@@ -34,4 +37,14 @@ public class WorldUtils {
 	public static int getCurrentClientDimension() {
 		return AsieLibMod.proxy.getCurrentClientDimension();
 	}
+	
+	public static void sendParticlePacket(String name, World worldObj, double x, double y, double z, double vx, double vy, double vz) {
+		try {
+			Packet pkt = AsieLibMod.packet.create(Packets.SPAWN_PARTICLE)
+				.writeFloat((float)x).writeFloat((float)y).writeFloat((float)z)
+				.writeFloat((float)vx).writeFloat((float)vy).writeFloat((float)vz)
+				.writeString(name);
+			AsieLibMod.packet.sendToAllAround(pkt, new TargetPoint(worldObj.provider.dimensionId, x, y, z, 64.0D));
+		} catch(Exception e) { e.printStackTrace(); }
+    }
 }
