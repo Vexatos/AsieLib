@@ -36,7 +36,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.2.8")
+@Mod(modid="asielib", name="AsieLib", version="0.2.11")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;
@@ -94,6 +94,10 @@ public class AsieLibMod extends AsieLibAPI {
     	MinecraftForge.EVENT_BUS.register(nick);
 		
 		FMLCommonHandler.instance().bus().register(new NicknameNetworkHandler());
+		
+		if(config.get("tweaks", "dyeItemNamesInAnvil", true).getBoolean(true)) {
+			MinecraftForge.EVENT_BUS.register(new AnvilDyeTweak());
+		}
 	}
 	
 	@EventHandler
