@@ -36,7 +36,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
-@Mod(modid="asielib", name="AsieLib", version="0.2.11")
+@Mod(modid="asielib", name="AsieLib", version="0.3.0")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;

@@ -1,16 +1,37 @@
 package pl.asie.lib.block;
 
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBase extends TileEntity {
-	public void onWorldUnload() {
-		
+	// Remote NBT data management
+	public void readFromRemoteNBT(NBTTagCompound tag) {
+		this.readFromNBT(tag);
+	}
+	public void writeToRemoteNBT(NBTTagCompound tag) { }
+	
+	@Override
+	public net.minecraft.network.Packet getDescriptionPacket() {
+		NBTTagCompound tag = new NBTTagCompound();
+		this.writeToRemoteNBT(tag);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, tag);
 	}
 	
-	public void onBlockDestroy() {
-		
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound tag = pkt.func_148857_g();
+		if(tag != null)
+			this.readFromRemoteNBT(tag);
 	}
 	
+	// Dummy functions
+	@Deprecated
+	public void onWorldUnload() { }
+	public void onBlockDestroy() { }
+	
+	// Redstone management (TODO: Move to TileMachine)
 	public void onRedstoneSignal(int signal) {
 		
 	}

@@ -28,7 +28,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.entity.player.PlayerOpenContainerEvent;
 
 public class EventKeyServer {
-	private static final boolean SECRET_DEV_STUFF = true;
+	private static final boolean SECRET_DEV_STUFF = false;
 	
 	public static boolean isEntityNano(Entity entity) {
 		return (entity != null && entity instanceof EntityPlayer && (SECRET_DEV_STUFF || ((EntityPlayer)entity).getCommandSenderName().equals("asiekierka")));

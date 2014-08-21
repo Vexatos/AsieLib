@@ -3,8 +3,10 @@ package pl.asie.lib.block;
 import buildcraft.api.tools.IToolWrench;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.client.BlockBaseRender;
+import pl.asie.lib.tile.TileMachine;
 import pl.asie.lib.util.ItemUtils;
 import pl.asie.lib.util.MiscUtils;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -47,8 +49,13 @@ public abstract class BlockBase extends BlockContainer {
 	
 	// Handler: Redstone
 	
+	@Deprecated
 	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z) {
 		return false;
+	}
+	
+	public boolean emitsRedstone(IBlockAccess world, int x, int y, int z, int side) {
+		return this.emitsRedstone(world, x, y, z);
 	}
 	
 	public boolean receivesRedstone(IBlockAccess world, int x, int y, int z) {
@@ -70,16 +77,21 @@ public abstract class BlockBase extends BlockContainer {
 			if(te != null && te instanceof TileEntityBase)
 				((TileEntityBase)te).onRedstoneSignal_internal(getVanillaRedstoneValue(world, x, y, z));
 		}
+		if(Loader.isModLoaded("ProjRed|Core")) {
+			TileEntity tile = world.getTileEntity(x, y, z);
+			if(tile != null &&tile instanceof TileMachine)
+				((TileMachine)tile).onProjectRedBundledInputChanged();
+		}
 	}
 	
 	@Override
 	public boolean canConnectRedstone(IBlockAccess world, int x, int y, int z, int side) {
-		return (emitsRedstone(world, x, y, z) || receivesRedstone(world, x, y, z));
+		return (emitsRedstone(world, x, y, z, side) || receivesRedstone(world, x, y, z));
 	}
 
     @Override
 	public int isProvidingWeakPower(IBlockAccess access, int x, int y, int z, int side) {
-    	if(!emitsRedstone(access,x,y,z)) return 0;
+    	if(!emitsRedstone(access,x,y,z,side)) return 0;
 		TileEntity te = access.getTileEntity(x, y, z);
 		if(te != null && te instanceof TileEntityBase)
 			return ((TileEntityBase)te).requestCurrentRedstoneValue(side);
