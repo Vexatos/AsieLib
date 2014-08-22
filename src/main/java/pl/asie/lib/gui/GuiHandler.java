@@ -2,7 +2,9 @@ package pl.asie.lib.gui;
 
 import java.util.ArrayList;
 
+import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.block.ContainerBase;
+import pl.asie.lib.block.TileEntityBase;
 import pl.asie.lib.block.TileEntityInventory;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,8 +35,11 @@ public class GuiHandler implements IGuiHandler {
 			if(ID < 0 || ID >= containers.size()) return null;
 			else {
 				TileEntity te = world.getTileEntity(x, y, z);
-				if(!(te instanceof TileEntityInventory)) return null;
-				else return containers.get(ID).getConstructor(TileEntityInventory.class, InventoryPlayer.class).newInstance((TileEntityInventory)te, player.inventory);
+				if(te == null || !(te instanceof TileEntityBase)) {
+					AsieLibMod.log.warn("Invalid TE for requested ContainerBase! This is a bug!");
+					return null;
+				}
+				else return containers.get(ID).getConstructor(TileEntityBase.class, InventoryPlayer.class).newInstance((TileEntityBase)te, player.inventory);
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

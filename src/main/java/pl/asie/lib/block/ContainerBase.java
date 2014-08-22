@@ -3,20 +3,31 @@ package pl.asie.lib.block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public abstract class ContainerBase extends Container {
 	private final int containerSize;
-	private final TileEntityInventory entity;
+	private final TileEntityBase entity;
+	private final IInventory inventory;
 	
-	public ContainerBase(TileEntityInventory entity, InventoryPlayer inventoryPlayer){
-		this.containerSize = entity.getSizeInventory();
+	public ContainerBase(TileEntityBase entity, InventoryPlayer inventoryPlayer){
 		this.entity = entity;
+		if(entity instanceof IInventory) {
+			this.inventory = ((IInventory)entity);
+		} else this.inventory = null;
+		
+		if(inventory != null) {
+			this.containerSize = inventory.getSizeInventory();
+		} else {
+			this.containerSize = 0;
+		}
 		entity.openInventory();
 	}
 	public int getSize() { return containerSize; }
-	public TileEntityInventory getEntity() { return entity; }
+	public TileEntityBase getEntity() { return entity; }
+	public IInventory getInventoryObject() { return inventory; }
 	
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
@@ -25,6 +36,8 @@ public abstract class ContainerBase extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
+		if(inventory == null) return null;
+		
 		ItemStack stack = null;
 		Slot slotObject = (Slot)inventorySlots.get(slot);
 		if(slotObject != null && slotObject.getHasStack()) {

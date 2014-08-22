@@ -1,11 +1,26 @@
 package pl.asie.lib.block;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBase extends TileEntity {
+	// Base functions for containers
+	public void openInventory() {
+		
+	}
+	public void closeInventory() {
+		
+	}
+	public boolean isUseableByPlayer(EntityPlayer player) {
+        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this
+        ? false : player.getDistanceSq( (double)this.xCoord+0.5D,
+                                        (double)this.yCoord+0.5D,
+                                        (double)this.zCoord+0.5D ) <= 64.0D;
+	}
+	
 	// Remote NBT data management
 	public void readFromRemoteNBT(NBTTagCompound tag) {
 		this.readFromNBT(tag);

@@ -12,6 +12,8 @@ import cpw.mods.fml.common.Optional;
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic"),
 	@Optional.Interface(iface = "mrtjp.projectred.api.IBundledTile", modid = "ProjRed|Core")
 })
-public interface IProvidesBundledRedstone extends IBundledEmitter, IBundledUpdatable, IConnectable, IBundledTile {
-
+public interface IBundledRedstoneProvider extends IBundledEmitter, IBundledUpdatable, IConnectable, IBundledTile {
+	public boolean canBundledConnectTo(int side, int face);
+	public byte[] getBundledOutput(int side, int face);
+	public void onBundledInputChange(int side, int face, byte[] data);
 }

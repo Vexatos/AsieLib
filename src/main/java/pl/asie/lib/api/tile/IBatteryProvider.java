@@ -11,7 +11,7 @@ import cpw.mods.fml.common.Optional;
 	@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2"),
 	@Optional.Interface(iface = "ic2classic.api.energy.tile.IEnergySink", modid = "IC2-Classic")
 })
-public interface IProvidesBattery extends
+public interface IBatteryProvider extends
 	IEnergyHandler, /* RF */
 	IEnergySink, ic2classic.api.energy.tile.IEnergySink, /* IC2 */
 	IPowerReceptor /* BuildCraft */

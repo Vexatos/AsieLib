@@ -10,9 +10,9 @@ import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2classic.api.Direction;
-import pl.asie.lib.api.provider.IBundledRedstoneProvider;
-import pl.asie.lib.api.provider.IInventoryProvider;
-import pl.asie.lib.api.provider.IBatteryProvider;
+import pl.asie.lib.api.tile.IBattery;
+import pl.asie.lib.api.tile.IBundledRedstoneProvider;
+import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.block.TileEntityBase;
 import pl.asie.lib.util.EnergyConverter;
@@ -28,6 +28,8 @@ import mrtjp.projectred.api.ProjectRedAPI;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,42 +43,41 @@ import cpw.mods.fml.common.Optional;
 public class TileMachine extends TileEntityBase implements
 	IConnectable /* RedLogic */
 {
+	private IBattery battery;
 	private IBundledRedstoneProvider brP;
-	private IInventoryProvider invP;
-	private IBatteryProvider pP;
+	private ItemStack[] items;
 	
 	public TileMachine() {
 	}
 	
+	public IBattery getBatteryProvider() { return battery; }
 	public IBundledRedstoneProvider getBundledRedstoneProvider() { return brP; }
-	public IInventoryProvider getInventoryProvider() { return invP; }
-	public IBatteryProvider getBatteryProvider() { return pP; }
 	
-	public void registerBundledRedstoneProvider(IBundledRedstoneProvider p) {
-		this.brP = p;
+	protected void registerBundledRedstone(IBundledRedstoneProvider brP) {
+		this.brP = brP;
 	}
 	
-	public void registerInventoryProvider(IInventoryProvider p) {
-		this.invP = p;
+	protected void registerBattery(IBattery p) {
+		this.battery = p;
 	}
 	
-	public void registerBatteryProvider(IBatteryProvider p) {
-		this.pP = p;
+	protected void createInventory(int slots) {
+		this.items = new ItemStack[slots];
 	}
 	
 	@Override
 	public void validate() {
 		super.validate();
-		if(Loader.isModLoaded("BuildCraft|Core") && this.pP != null) this.initBC();
-		if(Loader.isModLoaded("IC2") && this.pP != null) this.initIC();
-		if(Loader.isModLoaded("IC2-Classic") && this.pP != null) this.initICClassic();
+		if(Loader.isModLoaded("BuildCraft|Core") && this.battery != null) this.initBC();
+		if(Loader.isModLoaded("IC2") && this.battery != null) this.initIC();
+		if(Loader.isModLoaded("IC2-Classic") && this.battery != null) this.initICClassic();
 	}
 	
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if(Loader.isModLoaded("IC2") && this.pP != null) this.deinitIC();
-		if(Loader.isModLoaded("IC2-Classic") && this.pP != null) this.deinitICClassic();
+		if(Loader.isModLoaded("IC2") && this.battery != null) this.deinitIC();
+		if(Loader.isModLoaded("IC2-Classic") && this.battery != null) this.deinitICClassic();
 	}
 
 	
@@ -88,7 +89,7 @@ public class TileMachine extends TileEntityBase implements
 				&& ((BlockBase)this.blockType).emitsRedstone(worldObj, xCoord, yCoord, zCoord, fromDirection))
 			return true;
 		else if(wire instanceof IBundledWire) {
-			if(this.brP != null) return this.brP.canConnectTo(fromDirection, blockFace);
+			if(this.brP != null) return this.brP.canBundledConnectTo(fromDirection, blockFace);
 			else return false;
 		}
 		
@@ -107,7 +108,7 @@ public class TileMachine extends TileEntityBase implements
 			for(int side = 0; side < 6; side++) {
 				IBundledEmitter be = null;
 				for(int face = -1; face < 6; face++) {
-					if(this.brP.canConnectTo(side, face)) {
+					if(this.brP.canBundledConnectTo(side, face)) {
 						if(be == null) {
 							ForgeDirection fd = ForgeDirection.values()[side];
 							TileEntity t = worldObj.getTileEntity(xCoord+fd.offsetX, yCoord+fd.offsetY, zCoord+fd.offsetZ);
@@ -124,28 +125,28 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = "RedLogic")
 	public byte[] getBundledCableStrength(int blockFace, int toDirection) {
-		if(this.brP != null && this.brP.canConnectTo(toDirection, blockFace))
+		if(this.brP != null && this.brP.canBundledConnectTo(toDirection, blockFace))
 			return this.brP.getBundledOutput(toDirection, blockFace);
 		else return null;
 	}
 	
 	@Optional.Method(modid = "ProjRed|Core")
 	public byte[] getBundledSignal(int side) {
-		if(this.brP != null && this.brP.canConnectTo(side, -1))
+		if(this.brP != null && this.brP.canBundledConnectTo(side, -1))
 			return this.brP.getBundledOutput(side, -1);
 		else return null;
 	}
 
 	@Optional.Method(modid = "ProjRed|Core")
 	public boolean canConnectBundled(int side) {
-		return this.brP.canConnectTo(side, -1);
+		return this.brP.canBundledConnectTo(side, -1);
 	}
 	
 	@Optional.Method(modid = "ProjRed|Core")
 	public void onProjectRedBundledInputChanged() {
 		if(this.brP != null) {
 			for(int i = 0; i < 6; i++) {
-				if(!this.brP.canConnectTo(i, -1)) continue;
+				if(!this.brP.canBundledConnectTo(i, -1)) continue;
 				byte[] data = ProjectRedAPI.transmissionAPI.getBundledInput(worldObj, xCoord, yCoord, zCoord, i);
 				if(data != null) this.brP.onBundledInputChange(i, -1, data);
 			}
@@ -155,13 +156,34 @@ public class TileMachine extends TileEntityBase implements
 	// Inventory
 	
 	public void closeInventory() {
-		if(this.invP != null) this.invP.onClose();
+	}
+
+	public void openInventory() {
 	}
 	
-	public ItemStack decrStackSize(int arg0, int arg1) {
-		if(this.invP != null && arg0 >= 0 && arg0 < this.invP.getSize())
-			return this.invP.decrStackSize(arg0, arg1);
-		else return null;
+	public void onSlotUpdate(int slot) {
+		
+	}
+	
+	public ItemStack decrStackSize(int slot, int amount) {
+		if(this.items != null && this.items[slot] != null) {
+			ItemStack stack;
+			if(this.items[slot].stackSize <= amount) {
+				stack = this.items[slot];
+				this.items[slot] = null;
+		        this.onSlotUpdate(slot);
+				return stack;
+			} else {
+				stack = this.items[slot].splitStack(amount);
+
+				if (this.items[slot].stackSize == 0)
+					this.items[slot] = null;
+
+		        this.onSlotUpdate(slot);
+
+				return stack;
+			}
+		} else return null;
 	}
 	
 	public String getInventoryName() {
@@ -173,20 +195,20 @@ public class TileMachine extends TileEntityBase implements
 	}
 	
 	public int getSizeInventory() {
-		if(this.invP != null) return this.invP.getSize();
+		if(this.items != null) return this.items.length;
 		else return 0;
 	}
 	
-	public ItemStack getStackInSlot(int arg0) {
-		if(this.invP != null && arg0 >= 0 && arg0 < this.invP.getSize())
-			return this.invP.getStackInSlot(arg0);
+	public ItemStack getStackInSlot(int slot) {
+		if(this.items != null && slot >= 0 && slot < this.items.length)
+			return this.items[slot];
 		else return null;
 	}
 	
-	public ItemStack getStackInSlotOnClosing(int arg0) {
-		if(this.invP != null && arg0 >= 0 && arg0 < this.invP.getSize()) {
-			ItemStack is = this.invP.getStackInSlot(arg0);
-			this.setInventorySlotContents(arg0, null);
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		if(this.items != null && slot >= 0 && slot < this.items.length) {
+			ItemStack is = this.getStackInSlot(slot);
+			this.setInventorySlotContents(slot, null);
 			return is;
 		} else return null;
 	}
@@ -195,44 +217,31 @@ public class TileMachine extends TileEntityBase implements
 		return false;
 	}
 	
-	public boolean isItemValidForSlot(int arg0, ItemStack arg1) {
-		if(this.invP != null && arg0 >= 0 && arg0 < this.invP.getSize())
-			return this.invP.isItemValidForSlot(arg0, arg1);
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		if(this.items != null && slot >= 0 && slot < this.items.length)
+			return true;
 		else return false;
 	}
 	
-	public boolean isUseableByPlayer(EntityPlayer arg0) {
-		if(this.invP != null) return this.invP.isUseableByPlayer(arg0);
-		else return false;
-	}
-
-	public void openInventory() {
-		if(this.invP != null) this.invP.onOpen();
-	}
-	
-	public void setInventorySlotContents(int arg0, ItemStack arg1) {
-		if(this.invP != null && arg0 >= 0 && arg0 < this.invP.getSize()) {
-			this.invP.setInventorySlotContents(arg0, arg1);
-			this.invP.onSlotUpdate(arg0);
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		if(this.items != null && slot >= 0 && slot < this.items.length) {
+			this.items[slot] = stack;
+			this.onSlotUpdate(slot);
 		}
 	}
 	
 	public boolean canExtractItem(int arg0, ItemStack arg1, int arg2) {
-		if(this.invP != null && arg0 >= 0 && arg0 < 6 && arg2 >= 0 && arg2 < this.invP.getSize())
-			return this.invP.canExtractItem(arg0, arg1, arg2);
-		else return false;
+		return true;
 	}
 	
 	public boolean canInsertItem(int arg0, ItemStack arg1, int arg2) {
-		if(this.invP != null && arg0 >= 0 && arg0 < 6 && arg2  >= 0 && arg2 < this.invP.getSize())
-			return this.invP.canInsertItem(arg0, arg1, arg2);
-		else return false;
+		return true;
 	}
 	
 	public int[] getAccessibleSlotsFromSide(int arg0) {
-		if(this.invP != null && arg0 >= 0 && arg0 < 6)
-			return this.invP.getAccessibleSlotsFromSide(arg0);
-		else return new int[]{};
+		int[] slots = new int[this.items.length];
+		for(int i = 0; i < slots.length; i++) slots[i] = i;
+		return slots;
 	}
 
 	// Energy (MJ)
@@ -257,8 +266,8 @@ public class TileMachine extends TileEntityBase implements
 	@Optional.Method(modid = "BuildCraft|Core")
 	public void doWork(PowerHandler workProvider) {
 		double insertedMj = mjPower.useEnergy(0.0, mjPower.getMaxEnergyStored(), true);
-		if(this.pP != null) {
-			this.pP.insert(-1, EnergyConverter.convertEnergy(insertedMj, "MJ", "RF"), true);
+		if(this.battery != null) {
+			this.battery.insert(-1, EnergyConverter.convertEnergy(insertedMj, "MJ", "RF"), true);
 		}
 	}
 
@@ -271,31 +280,31 @@ public class TileMachine extends TileEntityBase implements
 	// Energy (RF)
 	
 	public boolean canConnectEnergy(ForgeDirection from) {
-		if(this.pP != null) return this.pP.canInsert(from.ordinal(), "RF");
+		if(this.battery != null) return this.battery.canInsert(from.ordinal(), "RF");
 		else return false;
 	}
 
 	public int receiveEnergy(ForgeDirection from, int maxReceive,
 			boolean simulate) {
-		if(this.pP != null && this.pP.canInsert(from.ordinal(), "RF"))
-			return (int)Math.floor(this.pP.insert(from.ordinal(), maxReceive, simulate));
+		if(this.battery != null && this.battery.canInsert(from.ordinal(), "RF"))
+			return (int)Math.floor(this.battery.insert(from.ordinal(), maxReceive, simulate));
 		else return 0;
 	}
 	
 	public int extractEnergy(ForgeDirection from, int maxExtract,
 			boolean simulate) {
-		if(this.pP != null && this.pP.canExtract(from.ordinal(), "RF"))
-			return (int)Math.floor(this.pP.extract(from.ordinal(), maxExtract, simulate));
+		if(this.battery != null && this.battery.canExtract(from.ordinal(), "RF"))
+			return (int)Math.floor(this.battery.extract(from.ordinal(), maxExtract, simulate));
 		else return 0;
 	}
 	
 	public int getEnergyStored(ForgeDirection from) {
-		if(this.pP != null) return (int)Math.floor(this.pP.getEnergyStored());
+		if(this.battery != null) return (int)Math.floor(this.battery.getEnergyStored());
 		else return 0;
 	}
 	
 	public int getMaxEnergyStored(ForgeDirection from) {
-		if(this.pP != null) return (int)Math.floor(this.pP.getMaxEnergyStored());
+		if(this.battery != null) return (int)Math.floor(this.battery.getMaxEnergyStored());
 		else return 0;
 	}
 	
@@ -318,24 +327,24 @@ public class TileMachine extends TileEntityBase implements
 	@Optional.Method(modid = "IC2")
 	public boolean acceptsEnergyFrom(TileEntity emitter,
 			ForgeDirection direction) {
-		if(this.pP != null) return this.pP.canInsert(direction.ordinal(), "EU");
+		if(this.battery != null) return this.battery.canInsert(direction.ordinal(), "EU");
 		else return false;
 	}
 
 	@Optional.Method(modid = "IC2")
 	public double injectEnergy(ForgeDirection directionFrom, double amount,
 			double voltage) {
-		if(this.pP != null) {
+		if(this.battery != null) {
 			double amountRF = EnergyConverter.convertEnergy(amount, "EU", "RF");
-			double injectedRF = this.pP.insert(directionFrom.ordinal(), amountRF, false);
+			double injectedRF = this.battery.insert(directionFrom.ordinal(), amountRF, false);
 			return amount - EnergyConverter.convertEnergy(injectedRF, "RF", "EU");
 		} else return amount;
 	}
 
 	@Optional.Method(modid = "IC2")
 	public double getDemandedEnergy() {
-		if(this.pP != null)
-			return EnergyConverter.convertEnergy(pP.getMaxEnergyInserted(), "RF", "EU");
+		if(this.battery != null)
+			return EnergyConverter.convertEnergy(battery.getMaxEnergyInserted(), "RF", "EU");
 		else return 0.0;
 	}
 
@@ -362,7 +371,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = "IC2-Classic")
 	public boolean acceptsEnergyFrom(TileEntity arg0, Direction arg1) {
-		if(this.pP != null) return this.pP.canInsert(arg1.toSideValue(), "EU");
+		if(this.battery != null) return this.battery.canInsert(arg1.toSideValue(), "EU");
 		else return false;
 	}
 
@@ -373,7 +382,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = "IC2-Classic")
 	public int demandsEnergy() {
-		if(this.pP != null) return (int)Math.floor(EnergyConverter.convertEnergy(pP.getMaxEnergyInserted(), "RF", "EU"));
+		if(this.battery != null) return (int)Math.floor(EnergyConverter.convertEnergy(battery.getMaxEnergyInserted(), "RF", "EU"));
 		else return 0;
 	}
 
@@ -384,10 +393,49 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = "IC2-Classic")
 	public int injectEnergy(Direction arg0, int amount) {
-		if(this.pP != null) {
+		if(this.battery != null) {
 			double amountRF = EnergyConverter.convertEnergy(amount, "EU", "RF");
-			double injectedRF = this.pP.insert(arg0.toSideValue(), amountRF, false);
+			double injectedRF = this.battery.insert(arg0.toSideValue(), amountRF, false);
 			return amount - (int)Math.floor(EnergyConverter.convertEnergy(injectedRF, "RF", "EU"));
 		} else return amount;
 	}
+	
+	// NBT
+	@Override
+	public void readFromNBT(NBTTagCompound tagCompound) {
+		super.readFromNBT(tagCompound);
+		if(this.items != null) {
+			NBTTagList nbttaglist = tagCompound.getTagList("Inventory", 10);
+			this.items = new ItemStack[this.getSizeInventory()];
+	
+			for (int i = 0; i < nbttaglist.tagCount(); ++i)
+			{
+				NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+				int j = nbttagcompound1.getByte("Slot") & 255;
+	
+				if (j >= 0 && j < this.items.length)
+				{
+					this.items[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+				}
+			}
+		}
+	}
+
+    @Override
+    public void writeToNBT(NBTTagCompound tagCompound) {
+            super.writeToNBT(tagCompound);
+    		if(this.items != null) {
+	            NBTTagList itemList = new NBTTagList();
+	            for (int i = 0; i < items.length; i++) {
+	                    ItemStack stack = items[i];
+	                    if (stack != null) {
+	                            NBTTagCompound tag = new NBTTagCompound();
+	                            tag.setByte("Slot", (byte) i);
+	                            stack.writeToNBT(tag);
+	                            itemList.appendTag(tag);
+	                    }
+	            }
+	            tagCompound.setTag("Inventory", itemList);
+    		}
+    }
 }

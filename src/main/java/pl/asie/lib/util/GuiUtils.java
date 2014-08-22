@@ -1,12 +1,12 @@
 package pl.asie.lib.util;
 
-import pl.asie.lib.block.TileEntityInventory;
+import pl.asie.lib.block.TileEntityBase;
 import pl.asie.lib.gui.GuiBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class GuiUtils {
-	public static TileEntityInventory currentTileEntity() {
+	public static TileEntityBase currentTileEntity() {
 		GuiScreen gc = Minecraft.getMinecraft().currentScreen;
 		if(gc instanceof GuiBase) {
 			return ((GuiBase)gc).container.getEntity();

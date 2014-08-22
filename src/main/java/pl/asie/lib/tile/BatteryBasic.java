@@ -1,21 +1,21 @@
 package pl.asie.lib.tile;
 
-import pl.asie.lib.api.provider.IBatteryProvider;
+import pl.asie.lib.api.tile.IBattery;
 
-public class BatteryProviderBasic implements IBatteryProvider {
+public class BatteryBasic implements IBattery {
 	private double energy, maxEnergy, maxInsert, maxExtract;
 	
-	public BatteryProviderBasic(double maxEng, double maxExt, double maxIns) {
+	public BatteryBasic(double maxEng, double maxExt, double maxIns) {
 		this.maxEnergy = maxEng;
 		this.maxInsert = maxExt;
 		this.maxExtract = maxIns;
 	}
 	
-	public BatteryProviderBasic(double maxEng, double maxIO) {
+	public BatteryBasic(double maxEng, double maxIO) {
 		this(maxEng, maxIO, maxIO);
 	}
 	
-	public BatteryProviderBasic(double maxEng) {
+	public BatteryBasic(double maxEng) {
 		this(maxEng, maxEng, maxEng);
 	}
 	
