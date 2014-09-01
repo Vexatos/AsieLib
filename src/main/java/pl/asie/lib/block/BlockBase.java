@@ -1,12 +1,19 @@
 package pl.asie.lib.block;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cofh.api.block.IBlockInfo;
+import gregtech.api.interfaces.IDebugableBlock;
 import buildcraft.api.tools.IToolWrench;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.api.tile.IInformationProvider;
 import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.tile.TileMachine;
 import pl.asie.lib.util.ItemUtils;
 import pl.asie.lib.util.MiscUtils;
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -22,6 +29,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.Explosion;
@@ -29,7 +38,13 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class BlockBase extends BlockContainer {
+@Optional.InterfaceList({
+	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = "gregtech_addon"),
+	@Optional.Interface(iface = "cofh.api.block.IBlockInfo", modid = "CoFHLib")
+})
+public abstract class BlockBase extends BlockContainer implements
+	IBlockInfo, IDebugableBlock
+{
 	public enum Rotation {
 		NONE,
 		FOUR,
@@ -293,4 +308,30 @@ public abstract class BlockBase extends BlockContainer {
     public int getRenderType() {
     	return BlockBaseRender.id();
     }
+
+    /* IInformationProvider boilerplate code */
+    
+	@Override
+	public ArrayList<String> getDebugInfo(EntityPlayer aPlayer, int aX, int aY,
+			int aZ, int aLogLevel) {
+		TileEntity te = aPlayer.worldObj.getTileEntity(aX, aY, aZ);
+		ArrayList<String> data = new ArrayList<String>();
+		if(te instanceof IInformationProvider) {
+			((IInformationProvider)te).getInformation(aPlayer, ForgeDirection.UNKNOWN, data, true);
+		}
+		return data;
+	}
+
+	@Override
+	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
+			ForgeDirection side, EntityPlayer player,
+			List<IChatComponent> info, boolean debug) {
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(te instanceof IInformationProvider) {
+			ArrayList<String> data = new ArrayList<String>();
+			((IInformationProvider)te).getInformation(player, side, data, true);
+			for(String s: data)
+				info.add(new ChatComponentText(s));
+		}
+	}
 }

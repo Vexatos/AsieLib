@@ -1,5 +1,8 @@
 package pl.asie.lib.tile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
 import buildcraft.api.power.IPowerReceptor;
@@ -13,6 +16,7 @@ import ic2.api.energy.tile.IEnergyTile;
 import ic2classic.api.Direction;
 import pl.asie.lib.api.tile.IBattery;
 import pl.asie.lib.api.tile.IBundledRedstoneProvider;
+import pl.asie.lib.api.tile.IInformationProvider;
 import pl.asie.lib.api.tile.IInventoryProvider;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.block.TileEntityBase;
@@ -32,6 +36,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -464,5 +470,32 @@ public class TileMachine extends TileEntityBase implements
 	public int getInfoMaxEnergyStored() {
 		if(this.battery != null) return (int)Math.round(battery.getMaxEnergyStored());
 		else return 0;
+	}
+
+	@Optional.Method(modid = "CoFHLib")
+	public void getTileInfo(List<IChatComponent> info, ForgeDirection side,
+			EntityPlayer player, boolean debug) {
+		if(this instanceof IInformationProvider) {
+			IInformationProvider p = (IInformationProvider)this;
+			ArrayList<String> data = new ArrayList<String>();
+			p.getInformation(player, side, data, debug);
+			for(String s: data)
+				info.add(new ChatComponentText(s));
+		}
+	}
+
+	@Optional.Method(modid = "gregtech_addon")
+	public boolean isGivingInformation() {
+		return (this instanceof IInformationProvider);
+	}
+
+	@Optional.Method(modid = "gregtech_addon")
+	public String[] getInfoData() {
+		if(this instanceof IInformationProvider) {
+			IInformationProvider p = (IInformationProvider)this;
+			ArrayList<String> data = new ArrayList<String>();
+			p.getInformation(null, ForgeDirection.UNKNOWN, data, false);
+			return data.toArray(new String[data.size()]);
+		} else return new String[]{};
 	}
 }
