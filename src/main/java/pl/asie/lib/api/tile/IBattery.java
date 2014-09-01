@@ -1,5 +1,6 @@
 package pl.asie.lib.api.tile;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /*
@@ -14,4 +15,9 @@ public interface IBattery {
 	public double getMaxEnergyExtracted();
 	public boolean canInsert(int side, String type);
 	public boolean canExtract(int side, String type);
+	public void readFromNBT(NBTTagCompound tag);
+	public void writeToNBT(NBTTagCompound tag);
+	public void onTick();
+	public double getEnergyUsage();
+	public double getMaxEnergyUsage();
 }

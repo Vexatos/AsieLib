@@ -49,6 +49,8 @@ public class AsieLibMod extends AsieLibAPI {
 	public static EventKeyClient keyClient = new EventKeyClient();
 	public static EventKeyServer keyServer = new EventKeyServer();
 	
+	public static boolean ENABLE_DYNAMIC_ENERGY_CALCULATION;
+	
 	@Instance(value="asielib")
 	public static AsieLibMod instance;
 	
@@ -68,6 +70,9 @@ public class AsieLibMod extends AsieLibAPI {
 
     	if(chat.enableChatFeatures) MinecraftForge.EVENT_BUS.register(chat);
     	MinecraftForge.EVENT_BUS.register(new AsieLibEvents());
+    	
+    	ENABLE_DYNAMIC_ENERGY_CALCULATION =
+    			config.getBoolean("general", "enableDynamicEnergyUsageCalculation", true, "If you want to disable dynamic generation of current/peak energy usage, use this.");
     	
 		if(System.getProperty("user.dir").indexOf(".asielauncher") >= 0) {
 			log.info("Hey, you! Yes, you! Thanks for using AsieLauncher! ~asie");

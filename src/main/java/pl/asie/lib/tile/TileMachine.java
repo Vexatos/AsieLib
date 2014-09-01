@@ -1,6 +1,7 @@
 package pl.asie.lib.tile;
 
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.tileentity.IEnergyInfo;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
@@ -404,6 +405,7 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
+        if(this.battery != null) this.battery.readFromNBT(tagCompound);
 		if(this.items != null) {
 			NBTTagList nbttaglist = tagCompound.getTagList("Inventory", 10);
 			this.items = new ItemStack[this.getSizeInventory()];
@@ -424,6 +426,7 @@ public class TileMachine extends TileEntityBase implements
     @Override
     public void writeToNBT(NBTTagCompound tagCompound) {
             super.writeToNBT(tagCompound);
+            if(this.battery != null) this.battery.writeToNBT(tagCompound);
     		if(this.items != null) {
 	            NBTTagList itemList = new NBTTagList();
 	            for (int i = 0; i < items.length; i++) {
@@ -438,4 +441,28 @@ public class TileMachine extends TileEntityBase implements
 	            tagCompound.setTag("Inventory", itemList);
     		}
     }
+
+	@Optional.Method(modid = "CoFHLib")
+	public int getInfoEnergyPerTick() {
+		if(this.battery != null) return (int)Math.round(battery.getEnergyUsage());
+		else return 0;
+	}
+
+	@Optional.Method(modid = "CoFHLib")
+	public int getInfoMaxEnergyPerTick() {
+		if(this.battery != null) return (int)Math.round(battery.getMaxEnergyUsage());
+		else return 0;
+	}
+
+	@Optional.Method(modid = "CoFHLib")
+	public int getInfoEnergyStored() {
+		if(this.battery != null) return (int)Math.round(battery.getEnergyStored());
+		else return 0;
+	}
+
+	@Optional.Method(modid = "CoFHLib")
+	public int getInfoMaxEnergyStored() {
+		if(this.battery != null) return (int)Math.round(battery.getMaxEnergyStored());
+		else return 0;
+	}
 }

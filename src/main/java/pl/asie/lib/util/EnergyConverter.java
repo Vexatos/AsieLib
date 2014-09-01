@@ -10,6 +10,8 @@ public class EnergyConverter {
 		energyConversionRates.put("MJ", 1.0);
 		energyConversionRates.put("EU", 2.5);
 		energyConversionRates.put("AE", 5.0);
+		energyConversionRates.put("OC", 1.0);
+		energyConversionRates.put("COAL", 1.0);
 	}
 	
 	public static double convertEnergy(double in, String from, String to) {

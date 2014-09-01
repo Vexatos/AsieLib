@@ -1,5 +1,7 @@
 package pl.asie.lib.tile;
 
+import net.minecraft.nbt.NBTTagCompound;
+import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tile.IBattery;
 
 public class BatteryBasic implements IBattery {
@@ -68,4 +70,46 @@ public class BatteryBasic implements IBattery {
 		return (maxExtract > 0.0);
 	}
 
+	private double[] averageUsage = new double[8];
+	private double lastEnergy = 0.0;
+	private double peakEnergyUsage = 0.0;
+	private byte avgUsPtr = -1;
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		if(tag.hasKey("bb_energy")) energy = tag.getDouble("bb_energy");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		tag.setDouble("bb_energy", energy);
+	}
+
+	@Override
+	public void onTick() {
+		if(!AsieLibMod.ENABLE_DYNAMIC_ENERGY_CALCULATION) {
+			return;
+		} else if(avgUsPtr == -1) {
+			lastEnergy = energy;
+			avgUsPtr++;
+		} else {
+			double p = this.energy - lastEnergy;
+			lastEnergy = energy;
+			if(p > peakEnergyUsage) peakEnergyUsage = p;
+			averageUsage[avgUsPtr++] = p;
+			avgUsPtr &= 7;
+		}
+	}
+
+	@Override
+	public double getEnergyUsage() {
+		double z = 0;
+		for(int i = 0; i < 8; i++) z += averageUsage[i];
+		return z / 8.0;
+	}
+
+	@Override
+	public double getMaxEnergyUsage() {
+		return peakEnergyUsage;
+	}
 }
