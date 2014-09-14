@@ -1,34 +1,21 @@
 package pl.asie.lib.block;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cofh.api.block.IBlockInfo;
-import gregtech.api.interfaces.IDebugableBlock;
-import buildcraft.api.tools.IToolWrench;
-import pl.asie.lib.AsieLibMod;
-import pl.asie.lib.api.tile.IInformationProvider;
-import pl.asie.lib.client.BlockBaseRender;
-import pl.asie.lib.tile.TileMachine;
-import pl.asie.lib.util.ItemUtils;
-import pl.asie.lib.util.MiscUtils;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.api.interfaces.IDebugableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IIcon;
@@ -37,6 +24,15 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.api.tile.IInformationProvider;
+import pl.asie.lib.client.BlockBaseRender;
+import pl.asie.lib.tile.TileMachine;
+import pl.asie.lib.util.ItemUtils;
+import pl.asie.lib.util.MiscUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = "gregtech"),

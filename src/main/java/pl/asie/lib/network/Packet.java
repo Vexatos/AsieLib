@@ -1,23 +1,16 @@
 package pl.asie.lib.network;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Type;
-
-import pl.asie.lib.util.WorldUtils;
-
 import com.google.gson.Gson;
-
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import pl.asie.lib.util.WorldUtils;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
 
 public class Packet implements IMessage {
 	private final ByteBuf write;

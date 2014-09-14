@@ -1,12 +1,12 @@
 package pl.asie.lib.util;
 
-import pl.asie.lib.AsieLibMod;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import pl.asie.lib.AsieLibMod;
 
 public class ItemUtils {
     public static void dropItems(World world, int x, int y, int z, IInventory inventory) {

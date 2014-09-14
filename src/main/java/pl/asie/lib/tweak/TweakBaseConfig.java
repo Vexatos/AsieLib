@@ -1,15 +1,13 @@
 package pl.asie.lib.tweak;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
-import pl.asie.lib.util.CrossModUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class TweakBaseConfig extends TweakBase {
 	private ArrayList<String> types;

@@ -1,17 +1,14 @@
 package pl.asie.lib.chat;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.Packets;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.network.Packet;
-import pl.asie.lib.util.PlayerUtils;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent.ServerConnectionFromClientEvent;
 
 public class NicknameNetworkHandler implements INicknameHandler {
 	

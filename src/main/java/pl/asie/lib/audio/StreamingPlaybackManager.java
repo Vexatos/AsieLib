@@ -2,8 +2,6 @@ package pl.asie.lib.audio;
 
 import java.util.HashMap;
 
-import pl.asie.lib.audio.StreamingAudioPlayer;
-
 public abstract class StreamingPlaybackManager {
 	private final boolean isClient;
 	

@@ -1,14 +1,20 @@
 package pl.asie.lib;
 
-import java.util.Random;
-
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.jcraft.jogg.Packet;
-
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.MinecraftForge;
 import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
@@ -21,20 +27,8 @@ import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.shinonome.EventKeyClient;
 import pl.asie.lib.shinonome.EventKeyServer;
 import pl.asie.lib.shinonome.ItemKey;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
+
+import java.util.Random;
 
 @Mod(modid="asielib", name="AsieLib", version="0.3.0")
 public class AsieLibMod extends AsieLibAPI {

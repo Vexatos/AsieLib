@@ -1,9 +1,9 @@
 package pl.asie.lib.core;
 
-import java.util.Arrays;
-
 import cpw.mods.fml.common.DummyModContainer;
 import cpw.mods.fml.common.ModMetadata;
+
+import java.util.Arrays;
 
 public class AsieLibCoremodContainer extends DummyModContainer {
 	public AsieLibCoremodContainer() {

@@ -1,7 +1,6 @@
 package pl.asie.lib.api.tile;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.ForgeDirection;
 
 /*
  * Interface heavily inspired by CoFH (RF) and IC2 (EU) APIs.

@@ -1,8 +1,8 @@
 package pl.asie.lib.util;
 
-import java.io.File;
-
 import pl.asie.lib.AsieLibMod;
+
+import java.io.File;
 
 public class MiscUtils {
 	private static final int[] sides = {2, 5, 3, 4};

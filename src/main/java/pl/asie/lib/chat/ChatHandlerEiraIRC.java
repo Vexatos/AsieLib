@@ -1,9 +1,9 @@
 package pl.asie.lib.chat;
 
+import cpw.mods.fml.common.Optional;
 import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.Optional;
 
 public class ChatHandlerEiraIRC {
 	@Optional.Method(modid="eirairc")

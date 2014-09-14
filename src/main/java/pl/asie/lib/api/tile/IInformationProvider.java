@@ -1,14 +1,12 @@
 package pl.asie.lib.api.tile;
 
-import gregtech.api.interfaces.tileentity.IGregTechDeviceInformation;
-
-import java.util.List;
-
 import cofh.api.tileentity.ITileInfo;
 import cpw.mods.fml.common.Optional;
+import gregtech.api.interfaces.tileentity.IGregTechDeviceInformation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.List;
 
 /**
  * Loosely inspired by CoFH's ITileInfo and generally serves as a wrapper for that and some other APIs.

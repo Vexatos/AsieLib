@@ -1,25 +1,16 @@
 package pl.asie.lib.network;
 
-import io.netty.channel.ChannelFutureListener;
-
-import java.io.IOException;
-import java.util.EnumMap;
-
-import pl.asie.lib.util.PlayerUtils;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.SimpleChannelHandlerWrapper;
-import cpw.mods.fml.common.network.simpleimpl.SimpleIndexedCodec;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.INetHandler;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+
+import java.io.IOException;
+import java.util.EnumMap;
 
 public class PacketHandler {
     private EnumMap<Side, FMLEmbeddedChannel> channels;

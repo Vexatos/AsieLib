@@ -1,12 +1,10 @@
 package pl.asie.lib.api.tile;
 
-import mods.immibis.redlogic.api.wiring.IBundledEmitter;
-import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
+import cpw.mods.fml.common.Optional;
 import mods.immibis.redlogic.api.wiring.IConnectable;
 import mods.immibis.redlogic.api.wiring.IRedstoneEmitter;
 import mods.immibis.redlogic.api.wiring.IRedstoneUpdatable;
 import mrtjp.projectred.api.IBundledTile;
-import cpw.mods.fml.common.Optional;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IRedstoneEmitter", modid = "RedLogic"),

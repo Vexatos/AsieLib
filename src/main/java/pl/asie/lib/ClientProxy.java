@@ -1,19 +1,14 @@
 package pl.asie.lib;
 
-import java.io.File;
-
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import pl.asie.lib.network.MessageHandlerBase;
-import pl.asie.lib.network.Packet;
-import pl.asie.lib.shinonome.EventKeyClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetHandler;
-import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
+import pl.asie.lib.network.MessageHandlerBase;
+import pl.asie.lib.network.Packet;
+
+import java.io.File;
 
 public class ClientProxy extends CommonProxy {
 	public boolean isClient() { return true; }

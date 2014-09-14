@@ -1,10 +1,10 @@
 package pl.asie.lib.integration;
 
 import buildcraft.api.tools.IToolWrench;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 
 public class Integration {
 	private boolean bcLoaded = false;

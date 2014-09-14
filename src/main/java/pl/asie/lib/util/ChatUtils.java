@@ -1,7 +1,5 @@
 package pl.asie.lib.util;
 
-import net.minecraft.util.EnumChatFormatting;
-
 public class ChatUtils {
 	private static int[] dyeToChatArray = {
 		0, 4, 2, 0, 1, 5, 3, 7, 8, 13, 10, 14, 9, 5, 6, 15

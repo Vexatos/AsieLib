@@ -10,8 +10,6 @@ also the main() function takes unsigned 8-bit data and converts it to suit
 
 package pl.asie.lib.audio;
 
-import java.util.*;
-
 public class DFPWM
 {
 	private final int RESP_INC = 7;

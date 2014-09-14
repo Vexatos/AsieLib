@@ -1,9 +1,9 @@
 package pl.asie.lib.util;
 
-import pl.asie.lib.block.TileEntityBase;
-import pl.asie.lib.gui.GuiBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import pl.asie.lib.block.TileEntityBase;
+import pl.asie.lib.gui.GuiBase;
 
 public class GuiUtils {
 	public static TileEntityBase currentTileEntity() {

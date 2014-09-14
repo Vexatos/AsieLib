@@ -1,10 +1,7 @@
 package pl.asie.lib.util;
 
-import java.util.Iterator;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 
 public class PlayerUtils {
 	public static EntityPlayer find(String name) {

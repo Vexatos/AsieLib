@@ -1,28 +1,22 @@
 package pl.asie.lib.chat;
 
-import java.util.Date;
-import java.util.HashMap;
-
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.blay09.mods.eirairc.api.event.RelayChat;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.lib.AsieLibMod;
-import pl.asie.lib.lib.EntityCoord;
 import pl.asie.lib.util.ChatUtils;
-import cpw.mods.fml.common.Optional;;
+
+import java.util.Date;
+import java.util.HashMap;
+
+;
 public class ChatHandler {
 	private HashMap<String, String> actions = new HashMap<String, String>();
 	public boolean enableChatFeatures, enableShout, enableGreentext, enableColor;

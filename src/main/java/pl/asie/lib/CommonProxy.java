@@ -1,17 +1,13 @@
 package pl.asie.lib;
 
-import java.io.File;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import pl.asie.lib.network.MessageHandlerBase;
-import pl.asie.lib.network.Packet;
-import pl.asie.lib.shinonome.EventKeyClient;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.INetHandler;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import pl.asie.lib.network.MessageHandlerBase;
+import pl.asie.lib.network.Packet;
+
+import java.io.File;
 
 public class CommonProxy {
 	public boolean isClient() { return false; }

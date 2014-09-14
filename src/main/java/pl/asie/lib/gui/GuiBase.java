@@ -1,11 +1,9 @@
 package pl.asie.lib.gui;
 
-import org.lwjgl.opengl.GL11;
-
-import pl.asie.lib.block.ContainerBase;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.GL11;
+import pl.asie.lib.block.ContainerBase;
 
 public class GuiBase extends GuiContainer {
 	private final ResourceLocation texture;

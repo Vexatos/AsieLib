@@ -1,11 +1,10 @@
 package pl.asie.lib.api.tile;
 
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
 import buildcraft.api.power.IPowerReceptor;
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.tileentity.IEnergyInfo;
 import cpw.mods.fml.common.Optional;
+import ic2.api.energy.tile.IEnergySink;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "buildcraft.api.power.IPowerReceptor", modid = "BuildCraft|Core"),

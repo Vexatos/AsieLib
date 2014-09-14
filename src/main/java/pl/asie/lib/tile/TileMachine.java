@@ -1,37 +1,22 @@
 package pl.asie.lib.tile;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import cofh.api.energy.IEnergyHandler;
-import cofh.api.tileentity.IEnergyInfo;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.power.PowerHandler.Type;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import ic2classic.api.Direction;
-import pl.asie.lib.api.tile.IBattery;
-import pl.asie.lib.api.tile.IBundledRedstoneProvider;
-import pl.asie.lib.api.tile.IInformationProvider;
-import pl.asie.lib.api.tile.IInventoryProvider;
-import pl.asie.lib.block.BlockBase;
-import pl.asie.lib.block.TileEntityBase;
-import pl.asie.lib.util.EnergyConverter;
 import mods.immibis.redlogic.api.wiring.IBareRedstoneWire;
 import mods.immibis.redlogic.api.wiring.IBundledEmitter;
-import mods.immibis.redlogic.api.wiring.IBundledUpdatable;
 import mods.immibis.redlogic.api.wiring.IBundledWire;
 import mods.immibis.redlogic.api.wiring.IConnectable;
-import mods.immibis.redlogic.api.wiring.IRedstoneWire;
 import mods.immibis.redlogic.api.wiring.IWire;
-import mrtjp.projectred.api.IBundledTile;
 import mrtjp.projectred.api.ProjectRedAPI;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -41,8 +26,15 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
+import pl.asie.lib.api.tile.IBattery;
+import pl.asie.lib.api.tile.IBundledRedstoneProvider;
+import pl.asie.lib.api.tile.IInformationProvider;
+import pl.asie.lib.block.BlockBase;
+import pl.asie.lib.block.TileEntityBase;
+import pl.asie.lib.util.EnergyConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic")

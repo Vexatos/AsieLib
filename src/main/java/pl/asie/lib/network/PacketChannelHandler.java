@@ -1,21 +1,16 @@
 package pl.asie.lib.network;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
-import pl.asie.lib.AsieLibMod;
-import net.minecraft.network.INetHandler;
-import net.minecraft.network.NetHandlerPlayServer;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.internal.FMLProxyPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
-import io.netty.util.AttributeKey;
-import io.netty.channel.ChannelHandler.Sharable;
+import net.minecraft.network.INetHandler;
+import pl.asie.lib.AsieLibMod;
+
+import java.util.List;
 
 @Sharable
 public class PacketChannelHandler extends MessageToMessageCodec<FMLProxyPacket, Packet> {

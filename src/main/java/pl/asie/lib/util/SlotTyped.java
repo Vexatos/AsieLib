@@ -1,9 +1,9 @@
 package pl.asie.lib.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 

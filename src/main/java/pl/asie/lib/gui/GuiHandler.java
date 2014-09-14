@@ -1,17 +1,15 @@
 package pl.asie.lib.gui;
 
-import java.util.ArrayList;
-
-import pl.asie.lib.AsieLibMod;
-import pl.asie.lib.block.ContainerBase;
-import pl.asie.lib.block.TileEntityBase;
-import pl.asie.lib.block.TileEntityInventory;
-import net.minecraft.client.gui.Gui;
+import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.IGuiHandler;
+import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.block.ContainerBase;
+import pl.asie.lib.block.TileEntityBase;
+
+import java.util.ArrayList;
 
 public class GuiHandler implements IGuiHandler {
 	private final ArrayList<Class<? extends ContainerBase>> containers;

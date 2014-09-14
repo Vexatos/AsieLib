@@ -1,18 +1,16 @@
 package pl.asie.lib.chat;
 
-import net.minecraft.command.ICommand;
-
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
-import pl.asie.lib.AsieLibMod;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
+import org.apache.commons.lang3.StringUtils;
+import pl.asie.lib.AsieLibMod;
+
+import java.util.List;
 
 public class CommandMe extends CommandBase
 {

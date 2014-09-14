@@ -1,29 +1,23 @@
 package pl.asie.lib.chat;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.event.entity.player.PlayerEvent;
-
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
-
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.util.MiscUtils;
 import pl.asie.lib.util.PlayerUtils;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.lang.reflect.Type;
+import java.util.HashSet;
 
 public class NicknameRepository implements INicknameRepository {
 	protected BiMap<String, String> nicknames;

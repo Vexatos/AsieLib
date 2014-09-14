@@ -1,12 +1,9 @@
 package pl.asie.lib.shinonome;
 
-import java.util.Date;
-
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import org.lwjgl.opengl.GL11;
 
 public class ModelKey extends ModelBiped {
 	private static final int DELTA_Y = 0;

@@ -1,8 +1,8 @@
 package pl.asie.lib.tweak;
 
-import java.util.List;
-
 import net.minecraft.item.crafting.IRecipe;
+
+import java.util.List;
 
 public abstract class TweakBase {
 	public abstract String getConfigKey();
