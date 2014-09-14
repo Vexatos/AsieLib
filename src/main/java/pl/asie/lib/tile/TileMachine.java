@@ -253,7 +253,7 @@ public class TileMachine extends TileEntityBase implements
 
 	// Energy (MJ)
 
-    @Optional.Method(modid = "BuildCraft|Core")
+	@Optional.Method(modid = "BuildCraft|Core")
 	public void initializeBC(PowerHandler power) { }
 	
 	private PowerHandler mjPower;
