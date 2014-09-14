@@ -39,7 +39,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = "gregtech_addon"),
+	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = "gregtech"),
 	@Optional.Interface(iface = "cofh.api.block.IBlockInfo", modid = "CoFHLib")
 })
 public abstract class BlockBase extends BlockContainer implements

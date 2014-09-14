@@ -16,7 +16,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  *
  */
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IGregTechDeviceInformation", modid = "gregtech_addon"),
+	@Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IGregTechDeviceInformation", modid = "gregtech"),
 	@Optional.Interface(iface = "cofh.api.tileentity.ITileInfo", modid = "CoFHLib")
 })
 public interface IInformationProvider extends ITileInfo, IGregTechDeviceInformation {

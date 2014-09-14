@@ -252,7 +252,8 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	// Energy (MJ)
-	
+
+    @Optional.Method(modid = "BuildCraft|Core")
 	public void initializeBC(PowerHandler power) { }
 	
 	private PowerHandler mjPower;
@@ -484,12 +485,12 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "gregtech_addon")
+	@Optional.Method(modid = "gregtech")
 	public boolean isGivingInformation() {
 		return (this instanceof IInformationProvider);
 	}
 
-	@Optional.Method(modid = "gregtech_addon")
+	@Optional.Method(modid = "gregtech")
 	public String[] getInfoData() {
 		if(this instanceof IInformationProvider) {
 			IInformationProvider p = (IInformationProvider)this;
