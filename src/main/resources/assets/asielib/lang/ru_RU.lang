@@ -1,0 +1,7 @@
+commands.realname.usage=/realname <ник>
+commands.realname.is=Настоящее имя этого человека
+commands.realname.isNot=У этого человека нет настоящего имени!
+commands.me.usage=/me <...>
+commands.nick.usage=/nick [цель] <ник>
+commands.nick.done=Ник изменён!
+item.asielib.part_unknown=Неизвестная часть
