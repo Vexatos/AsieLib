@@ -308,6 +308,7 @@ public abstract class BlockBase extends BlockContainer implements
     /* IInformationProvider boilerplate code */
     
 	@Override
+	@Optional.Method(modid = "gregtech")
 	public ArrayList<String> getDebugInfo(EntityPlayer aPlayer, int aX, int aY,
 			int aZ, int aLogLevel) {
 		TileEntity te = aPlayer.worldObj.getTileEntity(aX, aY, aZ);
@@ -319,6 +320,7 @@ public abstract class BlockBase extends BlockContainer implements
 	}
 
 	@Override
+	@Optional.Method(modid = "CoFHLib")
 	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
 			ForgeDirection side, EntityPlayer player,
 			List<IChatComponent> info, boolean debug) {

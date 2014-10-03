@@ -30,7 +30,7 @@ import pl.asie.lib.shinonome.ItemKey;
 
 import java.util.Random;
 
-@Mod(modid="asielib", name="AsieLib", version="0.3.0")
+@Mod(modid="asielib", name="AsieLib", version="0.3.2", useMetadata = true)
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;
@@ -66,12 +66,12 @@ public class AsieLibMod extends AsieLibAPI {
     	MinecraftForge.EVENT_BUS.register(new AsieLibEvents());
     	
     	ENABLE_DYNAMIC_ENERGY_CALCULATION =
-    			config.getBoolean("general", "enableDynamicEnergyUsageCalculation", true, "If you want to disable dynamic generation of current/peak energy usage, use this.");
+    			config.getBoolean("enableDynamicEnergyUsageCalculation", "general", true, "If you want to disable dynamic generation of current/peak energy usage, use this.");
     	
-		if(System.getProperty("user.dir").indexOf(".asielauncher") >= 0) {
+		if(System.getProperty("user.dir").contains(".asielauncher")) {
 			log.info("Hey, you! Yes, you! Thanks for using AsieLauncher! ~asie");
 		}
-		
+
 		itemKey = new ItemKey();
 		GameRegistry.registerItem(itemKey, "item.asietweaks.key");
 	}

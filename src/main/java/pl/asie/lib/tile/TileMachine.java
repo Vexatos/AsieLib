@@ -17,6 +17,7 @@ import mods.immibis.redlogic.api.wiring.IConnectable;
 import mods.immibis.redlogic.api.wiring.IWire;
 import mrtjp.projectred.api.ProjectRedAPI;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -40,7 +41,7 @@ import java.util.List;
 	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic")
 })
 public class TileMachine extends TileEntityBase implements
-	IConnectable /* RedLogic */
+	IConnectable, ISidedInventory /* RedLogic */
 {
 	private IBattery battery;
 	private IBundledRedstoneProvider brP;

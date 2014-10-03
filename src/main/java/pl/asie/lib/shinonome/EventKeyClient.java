@@ -15,7 +15,7 @@ import pl.asie.lib.AsieLibMod;
 
 public class EventKeyClient {
 	private static boolean isSpinning = false;
-	
+
 	public void scheduleSpin() {
 		isSpinning = true;
 	}
@@ -47,10 +47,8 @@ public class EventKeyClient {
 				e.printStackTrace();
 				event.result = 0;
 			}
-            return;
 		} else if(event.stack != null && event.stack.getItem() == AsieLibMod.itemKey) {
 			event.result = 0;
-			return;
 		}
 	}
 
