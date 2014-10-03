@@ -4,4 +4,4 @@ commands.realname.isNot=Tento člověk nemá pravé jméno!
 commands.me.usage=/me <...>
 commands.nick.usage=/nick [cíl] <uživatelské jméno>
 commands.nick.done=Uživatelské jméno změněno!
-item.asielib.part_unknown=Neznámá část
+item.asielib.unknown.name=Neznámá část

@@ -73,7 +73,7 @@ public class AsieLibMod extends AsieLibAPI {
 		}
 
 		itemKey = new ItemKey();
-		GameRegistry.registerItem(itemKey, "item.asietweaks.key");
+		//GameRegistry.registerItem(itemKey, "item.asietweaks.key");
 	}
 	
 	@EventHandler

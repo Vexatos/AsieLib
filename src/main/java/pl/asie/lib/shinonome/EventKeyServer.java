@@ -13,10 +13,9 @@ import pl.asie.lib.Packets;
 import pl.asie.lib.network.Packet;
 
 public class EventKeyServer {
-	private static final boolean SECRET_DEV_STUFF = false;
 
 	public static boolean isEntityNano(Entity entity) {
-		return (entity != null && entity instanceof EntityPlayer && (SECRET_DEV_STUFF || entity.getCommandSenderName().equals("asiekierka")));
+		return (entity != null && entity instanceof EntityPlayer && (entity.getCommandSenderName().equals("asiekierka")));
 	}
 	
 	@SubscribeEvent

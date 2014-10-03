@@ -23,7 +23,7 @@ public class EventKeyClient {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void asieEvent(RenderPlayerEvent.SetArmorModel event) {
-		if(EventKeyServer.isEntityNano(event.entityPlayer) && event.slot == 1 && (event.stack == null || event.stack.getItem() == AsieLibMod.itemKey)) {
+		if(EventKeyServer.isEntityNano(event.entityPlayer) && event.slot == 1 /*&& (event.stack == null || event.stack.getItem() == AsieLibMod.itemKey)*/) {
 			// Render the key on top.
 			ItemStack key = new ItemStack(AsieLibMod.itemKey, 1);
 			try {

@@ -4,4 +4,4 @@ commands.realname.isNot=Cette personne n'a pas de vrai nom!
 commands.me.usage=/me <...>
 commands.nick.usage=/nick [target] <nickname>
 commands.nick.done=Surnom Changé!
-item.asielib.part_unknown=Morceau Inconnu
+item.asielib.unknown.name=Morceau Inconnu

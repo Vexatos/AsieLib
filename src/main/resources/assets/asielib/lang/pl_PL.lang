@@ -4,4 +4,4 @@ commands.realname.isNot=Ta osoba nie ma pseudonimu!
 commands.me.usage=/me <...>
 commands.nick.usage=/nick [cel] <pseudonim>
 commands.nick.done=Pseudonim zmieniony!
-item.asielib.part_unknown=Nieznana Część
+item.asielib.unknown.name=Nieznana Część

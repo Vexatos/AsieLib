@@ -4,4 +4,4 @@ commands.realname.isNot=У этого человека нет настоящег
 commands.me.usage=/me <...>
 commands.nick.usage=/nick [цель] <ник>
 commands.nick.done=Ник изменён!
-item.asielib.part_unknown=Неизвестная часть
+item.asielib.unknown.name=Неизвестная часть
