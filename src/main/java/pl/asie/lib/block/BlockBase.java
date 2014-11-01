@@ -239,8 +239,8 @@ public abstract class BlockBase extends BlockContainer implements
 		if(player.isSneaking()) return false;
 		if(!world.isRemote) {
 			ItemStack held = player.inventory.getCurrentItem();
-			if(held != null && held.getItem() != null && AsieLibMod.integration.isWrench(held.getItem()) && this.rotation != null) {
-				boolean wrenched = AsieLibMod.integration.wrench(held.getItem(), player, x, y, z);
+			if(held != null && held.getItem() != null && AsieLibMod.integration.isWrench(held) && this.rotation != null) {
+				boolean wrenched = AsieLibMod.integration.wrench(held, player, x, y, z);
 				int meta = world.getBlockMetadata(x, y, z);
 				if(this.rotation == Rotation.FOUR) {
 					world.setBlockMetadataWithNotify(x, y, z, (meta & (~3)) | (((meta & 3) + 1) & 3), 2);

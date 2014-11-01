@@ -7,7 +7,6 @@ public class EnergyConverter {
 	
 	static {
 		energyConversionRates.put("RF", 10.0);
-		energyConversionRates.put("MJ", 1.0);
 		energyConversionRates.put("EU", 2.5);
 		energyConversionRates.put("AE", 5.0);
 		energyConversionRates.put("OC", 1.0);

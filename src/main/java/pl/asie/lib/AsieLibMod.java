@@ -29,7 +29,7 @@ import pl.asie.lib.shinonome.ItemKey;
 
 import java.util.Random;
 
-@Mod(modid="asielib", name="AsieLib", version="0.3.2", useMetadata = true)
+@Mod(modid="asielib", name="AsieLib", version="0.3.3", useMetadata = true)
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;
