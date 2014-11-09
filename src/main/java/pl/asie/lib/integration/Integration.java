@@ -3,7 +3,6 @@ package pl.asie.lib.integration;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
 import cpw.mods.fml.common.ModAPIManager;
-import cpw.mods.fml.common.Optional;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,12 +16,10 @@ public class Integration {
 		cofhLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
 	}
 
-	@Optional.Method(modid = "BuildCraft|Core")
 	private boolean bc_isWrench(Item item) {
 		return (item instanceof IToolWrench);
 	}
 
-	@Optional.Method(modid = "BuildCraft|Core")
 	private boolean bc_wrench(Item item, EntityPlayer player, int x, int y, int z) {
 		if(item instanceof IToolWrench) {
 			IToolWrench wrench = (IToolWrench) item;
