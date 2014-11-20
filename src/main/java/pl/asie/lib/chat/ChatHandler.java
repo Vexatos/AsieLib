@@ -1,6 +1,7 @@
 package pl.asie.lib.chat;
 
 import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
@@ -97,7 +98,7 @@ public class ChatHandler {
 		boolean useRadius = CHAT_RADIUS > 0 && !disableRadius;
 		event.setCanceled(true); // Override regular sending
 		
-		if(!useRadius && Loader.isModLoaded("eirairc")) {
+		if(!useRadius && ModAPIManager.INSTANCE.hasAPI("EiraIRC|API")) {
 			ChatHandlerEiraIRC.eiraircRelay(event.player, username, message);
 		}
 		

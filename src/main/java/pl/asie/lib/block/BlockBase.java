@@ -36,7 +36,7 @@ import java.util.List;
 
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = "gregtech"),
-	@Optional.Interface(iface = "cofh.api.block.IBlockInfo", modid = "CoFHLib")
+	@Optional.Interface(iface = "cofh.api.block.IBlockInfo", modid = "CoFHAPI|block")
 })
 public abstract class BlockBase extends BlockContainer implements
 	IBlockInfo, IDebugableBlock {
@@ -373,7 +373,7 @@ public abstract class BlockBase extends BlockContainer implements
 	}
 
 	@Override
-	@Optional.Method(modid = "CoFHLib")
+	@Optional.Method(modid = "CoFHAPI|block")
 	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
 		ForgeDirection side, EntityPlayer player,
 		List<IChatComponent> info, boolean debug) {

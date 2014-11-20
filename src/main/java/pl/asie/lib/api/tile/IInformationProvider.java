@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Optional.InterfaceList({
 	@Optional.Interface(iface = "gregtech.api.interfaces.tileentity.IGregTechDeviceInformation", modid = "gregtech"),
-	@Optional.Interface(iface = "cofh.api.tileentity.ITileInfo", modid = "CoFHLib")
+	@Optional.Interface(iface = "cofh.api.tileentity.ITileInfo", modid = "CoFHAPI|tileentity")
 })
 public interface IInformationProvider extends ITileInfo, IGregTechDeviceInformation {
 	public void getInformation(EntityPlayer player, ForgeDirection side, List<String> info, boolean debug);

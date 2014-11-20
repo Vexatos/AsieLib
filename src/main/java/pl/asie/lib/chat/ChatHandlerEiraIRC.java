@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ChatHandlerEiraIRC {
-	@Optional.Method(modid="eirairc")
+	@Optional.Method(modid="EiraIRC|API")
 	protected static void eiraircRelay(EntityPlayerMP player, String username,
 			String message) {
 		MinecraftForge.EVENT_BUS.post(new RelayChat(new CommandSenderDummy(player, username), message));

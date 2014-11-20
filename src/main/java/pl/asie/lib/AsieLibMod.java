@@ -30,7 +30,7 @@ import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
 
 import java.util.Random;
 
-@Mod(modid = "asielib", name = "AsieLib", version = "0.3.3", useMetadata = true)
+@Mod(modid = "asielib", name = "AsieLib", version = "0.3.4", useMetadata = true)
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;

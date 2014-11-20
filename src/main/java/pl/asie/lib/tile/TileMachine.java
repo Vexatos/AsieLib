@@ -478,7 +478,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHLib")
+	@Optional.Method(modid = "CoFHAPI|tileentity")
 	public int getInfoEnergyPerTick() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getEnergyUsage());
@@ -487,7 +487,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHLib")
+	@Optional.Method(modid = "CoFHAPI|tileentity")
 	public int getInfoMaxEnergyPerTick() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getMaxEnergyUsage());
@@ -496,7 +496,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHLib")
+	@Optional.Method(modid = "CoFHAPI|tileentity")
 	public int getInfoEnergyStored() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getEnergyStored());
@@ -505,7 +505,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHLib")
+	@Optional.Method(modid = "CoFHAPI|tileentity")
 	public int getInfoMaxEnergyStored() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getMaxEnergyStored());
@@ -514,7 +514,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHLib")
+	@Optional.Method(modid = "CoFHAPI|tileentity")
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side,
 		EntityPlayer player, boolean debug) {
 		if(this instanceof IInformationProvider) {
