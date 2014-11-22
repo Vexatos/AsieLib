@@ -27,6 +27,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tile.IInformationProvider;
 import pl.asie.lib.client.BlockBaseRender;
+import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tile.TileMachine;
 import pl.asie.lib.util.ItemUtils;
 import pl.asie.lib.util.MiscUtils;
@@ -35,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = "gregtech"),
-	@Optional.Interface(iface = "cofh.api.block.IBlockInfo", modid = "CoFHAPI|block")
+	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = Mods.GregTech),
+	@Optional.Interface(iface = "cofh.api.block.IBlockInfo", modid = Mods.API.CoFHBlocks)
 })
 public abstract class BlockBase extends BlockContainer implements
 	IBlockInfo, IDebugableBlock {
@@ -90,7 +91,7 @@ public abstract class BlockBase extends BlockContainer implements
 				((TileEntityBase) te).onRedstoneSignal_internal(getVanillaRedstoneValue(world, x, y, z));
 			}
 		}
-		if(Loader.isModLoaded("ProjRed|Core")) {
+		if(Loader.isModLoaded(Mods.ProjectRed)) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile != null && tile instanceof TileMachine) {
 				((TileMachine) tile).onProjectRedBundledInputChanged();
@@ -361,7 +362,7 @@ public abstract class BlockBase extends BlockContainer implements
     /* IInformationProvider boilerplate code */
 
 	@Override
-	@Optional.Method(modid = "gregtech")
+	@Optional.Method(modid = Mods.GregTech)
 	public ArrayList<String> getDebugInfo(EntityPlayer aPlayer, int aX, int aY,
 		int aZ, int aLogLevel) {
 		TileEntity te = aPlayer.worldObj.getTileEntity(aX, aY, aZ);
@@ -373,7 +374,7 @@ public abstract class BlockBase extends BlockContainer implements
 	}
 
 	@Override
-	@Optional.Method(modid = "CoFHAPI|block")
+	@Optional.Method(modid = Mods.API.CoFHBlocks)
 	public void getBlockInfo(IBlockAccess world, int x, int y, int z,
 		ForgeDirection side, EntityPlayer player,
 		List<IChatComponent> info, boolean debug) {

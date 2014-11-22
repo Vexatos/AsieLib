@@ -27,13 +27,14 @@ import pl.asie.lib.api.tile.IBundledRedstoneProvider;
 import pl.asie.lib.api.tile.IInformationProvider;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.block.TileEntityBase;
+import pl.asie.lib.reference.Mods;
 import pl.asie.lib.util.EnergyConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = "RedLogic")
+	@Optional.Interface(iface = "mods.immibis.redlogic.api.wiring.IConnectable", modid = Mods.RedLogic)
 })
 public class TileMachine extends TileEntityBase implements
 	IConnectable, ISidedInventory /* RedLogic */ {
@@ -67,10 +68,10 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void validate() {
 		super.validate();
-		if(Loader.isModLoaded("IC2") && this.battery != null) {
+		if(Loader.isModLoaded(Mods.IC2) && this.battery != null) {
 			this.initIC();
 		}
-		if(Loader.isModLoaded("IC2-Classic") && this.battery != null) {
+		if(Loader.isModLoaded(Mods.IC2Classic) && this.battery != null) {
 			this.initICClassic();
 		}
 	}
@@ -78,17 +79,17 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if(Loader.isModLoaded("IC2") && this.battery != null) {
+		if(Loader.isModLoaded(Mods.IC2) && this.battery != null) {
 			this.deinitIC();
 		}
-		if(Loader.isModLoaded("IC2-Classic") && this.battery != null) {
+		if(Loader.isModLoaded(Mods.IC2) && this.battery != null) {
 			this.deinitICClassic();
 		}
 	}
 
 	// (Bundled) Redstone
 
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid = Mods.RedLogic)
 	public boolean connects(IWire wire, int blockFace, int fromDirection) {
 		if(wire instanceof IBareRedstoneWire && this.blockType != null
 			&& ((BlockBase) this.blockType).emitsRedstone(worldObj, xCoord, yCoord, zCoord, fromDirection)) {
@@ -104,13 +105,13 @@ public class TileMachine extends TileEntityBase implements
 		return false;
 	}
 
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid = Mods.RedLogic)
 	public boolean connectsAroundCorner(IWire wire, int blockFace,
 		int fromDirection) {
 		return false;
 	}
 
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid = Mods.RedLogic)
 	public void onBundledInputChanged() {
 		if(this.brP != null) {
 			for(int side = 0; side < 6; side++) {
@@ -133,7 +134,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "RedLogic")
+	@Optional.Method(modid = Mods.RedLogic)
 	public byte[] getBundledCableStrength(int blockFace, int toDirection) {
 		if(this.brP != null && this.brP.canBundledConnectTo(toDirection, blockFace)) {
 			return this.brP.getBundledOutput(toDirection, blockFace);
@@ -142,7 +143,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "ProjRed|Core")
+	@Optional.Method(modid = Mods.ProjectRed)
 	public byte[] getBundledSignal(int side) {
 		if(this.brP != null && this.brP.canBundledConnectTo(side, -1)) {
 			return this.brP.getBundledOutput(side, -1);
@@ -151,12 +152,12 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "ProjRed|Core")
+	@Optional.Method(modid = Mods.ProjectRed)
 	public boolean canConnectBundled(int side) {
 		return this.brP.canBundledConnectTo(side, -1);
 	}
 
-	@Optional.Method(modid = "ProjRed|Core")
+	@Optional.Method(modid = Mods.ProjectRed)
 	public void onProjectRedBundledInputChanged() {
 		if(this.brP != null) {
 			for(int i = 0; i < 6; i++) {
@@ -324,7 +325,7 @@ public class TileMachine extends TileEntityBase implements
 
 	private boolean didInitIC2 = false;
 
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = Mods.IC2)
 	public void initIC() {
 		if(!didInitIC2) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) this));
@@ -332,7 +333,7 @@ public class TileMachine extends TileEntityBase implements
 		didInitIC2 = true;
 	}
 
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = Mods.IC2)
 	public void deinitIC() {
 		if(didInitIC2) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) this));
@@ -340,7 +341,7 @@ public class TileMachine extends TileEntityBase implements
 		didInitIC2 = false;
 	}
 
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = Mods.IC2)
 	public boolean acceptsEnergyFrom(TileEntity emitter,
 		ForgeDirection direction) {
 		if(this.battery != null) {
@@ -350,7 +351,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = Mods.IC2)
 	public double injectEnergy(ForgeDirection directionFrom, double amount,
 		double voltage) {
 		if(this.battery != null) {
@@ -362,7 +363,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = Mods.IC2)
 	public double getDemandedEnergy() {
 		if(this.battery != null) {
 			return EnergyConverter.convertEnergy(battery.getMaxEnergyInserted(), "RF", "EU");
@@ -371,7 +372,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "IC2")
+	@Optional.Method(modid = Mods.IC2)
 	public int getSinkTier() {
 		return Integer.MAX_VALUE;
 	}
@@ -380,7 +381,7 @@ public class TileMachine extends TileEntityBase implements
 
 	private boolean didInitIC2C = false;
 
-	@Optional.Method(modid = "IC2-Classic")
+	@Optional.Method(modid = Mods.IC2Classic)
 	private void initICClassic() {
 		if(!didInitIC2C) {
 			MinecraftForge.EVENT_BUS.post(new ic2classic.api.energy.event.EnergyTileLoadEvent((ic2classic.api.energy.tile.IEnergyTile) this));
@@ -388,7 +389,7 @@ public class TileMachine extends TileEntityBase implements
 		didInitIC2C = true;
 	}
 
-	@Optional.Method(modid = "IC2-Classic")
+	@Optional.Method(modid = Mods.IC2Classic)
 	private void deinitICClassic() {
 		if(didInitIC2C) {
 			MinecraftForge.EVENT_BUS.post(new ic2classic.api.energy.event.EnergyTileUnloadEvent((ic2classic.api.energy.tile.IEnergyTile) this));
@@ -396,7 +397,7 @@ public class TileMachine extends TileEntityBase implements
 		didInitIC2C = false;
 	}
 
-	@Optional.Method(modid = "IC2-Classic")
+	@Optional.Method(modid = Mods.IC2Classic)
 	public boolean acceptsEnergyFrom(TileEntity arg0, Direction arg1) {
 		if(this.battery != null) {
 			return this.battery.canInsert(arg1.toSideValue(), "EU");
@@ -405,12 +406,12 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "IC2-Classic")
+	@Optional.Method(modid = Mods.IC2Classic)
 	public boolean isAddedToEnergyNet() {
 		return didInitIC2C;
 	}
 
-	@Optional.Method(modid = "IC2-Classic")
+	@Optional.Method(modid = Mods.IC2Classic)
 	public int demandsEnergy() {
 		if(this.battery != null) {
 			return (int) Math.floor(EnergyConverter.convertEnergy(battery.getMaxEnergyInserted(), "RF", "EU"));
@@ -419,12 +420,12 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "IC2-Classic")
+	@Optional.Method(modid = Mods.IC2Classic)
 	public int getMaxSafeInput() {
 		return Integer.MAX_VALUE;
 	}
 
-	@Optional.Method(modid = "IC2-Classic")
+	@Optional.Method(modid = Mods.IC2Classic)
 	public int injectEnergy(Direction arg0, int amount) {
 		if(this.battery != null) {
 			double amountRF = EnergyConverter.convertEnergy(amount, "EU", "RF");
@@ -478,7 +479,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHAPI|tileentity")
+	@Optional.Method(modid = Mods.API.CoFHTileEntities)
 	public int getInfoEnergyPerTick() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getEnergyUsage());
@@ -487,7 +488,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHAPI|tileentity")
+	@Optional.Method(modid = Mods.API.CoFHTileEntities)
 	public int getInfoMaxEnergyPerTick() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getMaxEnergyUsage());
@@ -496,7 +497,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHAPI|tileentity")
+	@Optional.Method(modid = Mods.API.CoFHTileEntities)
 	public int getInfoEnergyStored() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getEnergyStored());
@@ -505,7 +506,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHAPI|tileentity")
+	@Optional.Method(modid = Mods.API.CoFHTileEntities)
 	public int getInfoMaxEnergyStored() {
 		if(this.battery != null) {
 			return (int) Math.round(battery.getMaxEnergyStored());
@@ -514,7 +515,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "CoFHAPI|tileentity")
+	@Optional.Method(modid = Mods.API.CoFHTileEntities)
 	public void getTileInfo(List<IChatComponent> info, ForgeDirection side,
 		EntityPlayer player, boolean debug) {
 		if(this instanceof IInformationProvider) {
@@ -527,12 +528,12 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
-	@Optional.Method(modid = "gregtech")
+	@Optional.Method(modid = Mods.GregTech)
 	public boolean isGivingInformation() {
 		return (this instanceof IInformationProvider);
 	}
 
-	@Optional.Method(modid = "gregtech")
+	@Optional.Method(modid = Mods.GregTech)
 	public String[] getInfoData() {
 		if(this instanceof IInformationProvider) {
 			IInformationProvider p = (IInformationProvider) this;

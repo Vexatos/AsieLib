@@ -23,6 +23,7 @@ import pl.asie.lib.chat.NicknameRepository;
 import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.integration.Integration;
 import pl.asie.lib.network.PacketHandler;
+import pl.asie.lib.reference.Mods;
 import pl.asie.lib.shinonome.EventKeyClient;
 import pl.asie.lib.shinonome.EventKeyServer;
 import pl.asie.lib.shinonome.ItemKey;
@@ -30,7 +31,7 @@ import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
 
 import java.util.Random;
 
-@Mod(modid = "asielib", name = "AsieLib", version = "0.3.5", useMetadata = true, dependencies = "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")
+@Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "0.3.5", useMetadata = true, dependencies = "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;
@@ -45,7 +46,7 @@ public class AsieLibMod extends AsieLibAPI {
 
 	public static boolean ENABLE_DYNAMIC_ENERGY_CALCULATION;
 
-	@Instance(value = "asielib")
+	@Instance(value = Mods.AsieLib)
 	public static AsieLibMod instance;
 
 	@SidedProxy(clientSide = "pl.asie.lib.ClientProxy", serverSide = "pl.asie.lib.CommonProxy")
@@ -55,7 +56,7 @@ public class AsieLibMod extends AsieLibAPI {
 	public void preInit(FMLPreInitializationEvent event) {
 		AsieLibAPI.instance = this;
 		integration = new Integration();
-		log = LogManager.getLogger("asielib");
+		log = LogManager.getLogger(Mods.AsieLib);
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
@@ -87,7 +88,7 @@ public class AsieLibMod extends AsieLibAPI {
 		}
 		MinecraftForge.EVENT_BUS.register(keyServer);
 
-		packet = new PacketHandler("asielib", new NetworkHandlerClient(), null);
+		packet = new PacketHandler(Mods.AsieLib, new NetworkHandlerClient(), null);
 
 		if(config.get("enchantments", "usefulBaneOfArthropods", false,
 			"Might make Bane Of Arthropods actually useful (Experimental)").getBoolean(false)) {
