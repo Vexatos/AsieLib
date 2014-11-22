@@ -3,6 +3,7 @@ package pl.asie.lib.integration;
 import buildcraft.api.tools.IToolWrench;
 import cofh.api.item.IToolHammer;
 import cpw.mods.fml.common.ModAPIManager;
+import crazypants.enderio.api.tool.ITool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,10 +11,12 @@ import net.minecraft.item.ItemStack;
 public class Integration {
 	private boolean bcLoaded = false;
 	private boolean cofhLoaded = false;
+	private boolean eioLoaded = false;
 
 	public Integration() {
 		bcLoaded = ModAPIManager.INSTANCE.hasAPI("BuildCraftAPI|tools");
 		cofhLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|item");
+		eioLoaded = ModAPIManager.INSTANCE.hasAPI("EnderIOAPI|Tools");
 	}
 
 	private boolean bc_isWrench(Item item) {
@@ -31,28 +34,45 @@ public class Integration {
 		return false;
 	}
 
-	private boolean cofh_isHammer(ItemStack item) {
-		return (item.getItem() instanceof IToolHammer);
+	private boolean cofh_isHammer(ItemStack stack) {
+		return (stack.getItem() instanceof IToolHammer);
 	}
 
-	private boolean cofh_hammer(ItemStack item, EntityPlayer player, int x, int y, int z) {
-		if(item.getItem() instanceof IToolHammer) {
-			IToolHammer hammer = (IToolHammer) item.getItem();
-			if(hammer.isUsable(item, player, x, y, z)) {
-				hammer.toolUsed(item, player, x, y, z);
+	private boolean cofh_hammer(ItemStack stack, EntityPlayer player, int x, int y, int z) {
+		if(stack.getItem() instanceof IToolHammer) {
+			IToolHammer hammer = (IToolHammer) stack.getItem();
+			if(hammer.isUsable(stack, player, x, y, z)) {
+				hammer.toolUsed(stack, player, x, y, z);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public boolean isWrench(ItemStack item) {
-		return (bcLoaded && bc_isWrench(item.getItem()))
-			|| (cofhLoaded && cofh_isHammer(item));
+	private boolean eio_isTool(ItemStack stack) {
+		return (stack.getItem() instanceof ITool);
 	}
 
-	public boolean wrench(ItemStack item, EntityPlayer player, int x, int y, int z) {
-		return (bcLoaded && bc_wrench(item.getItem(), player, x, y, z))
-			|| (cofhLoaded && cofh_hammer(item, player, x, y, z));
+	private boolean eio_tool(ItemStack stack, EntityPlayer player, int x, int y, int z) {
+		if(stack.getItem() instanceof ITool) {
+			ITool tool = ((ITool) stack.getItem());
+			if(tool.canUse(stack, player, x, y, z)) {
+				tool.used(stack, player, x, y, z);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isWrench(ItemStack stack) {
+		return (bcLoaded && bc_isWrench(stack.getItem()))
+			|| (eioLoaded && eio_isTool(stack))
+			|| (cofhLoaded && cofh_isHammer(stack));
+	}
+
+	public boolean wrench(ItemStack stack, EntityPlayer player, int x, int y, int z) {
+		return (bcLoaded && bc_wrench(stack.getItem(), player, x, y, z))
+			|| (eioLoaded && eio_tool(stack, player, x, y, z))
+			|| (cofhLoaded && cofh_hammer(stack, player, x, y, z));
 	}
 }
