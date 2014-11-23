@@ -11,9 +11,9 @@ import net.minecraft.util.IIcon;
 import java.util.List;
 
 public class ItemMultiple extends Item {
-	private final String mod;
-	private final String[] parts;
-	private final IIcon[] partIcons;
+	protected final String mod;
+	protected final String[] parts;
+	protected final IIcon[] partIcons;
 	
 	public ItemMultiple(String mod, String[] parts) {
 		super();
@@ -50,9 +50,10 @@ public class ItemMultiple extends Item {
 		if(stack == null) return "item.asielib.unknown";
         else return "item." + this.mod + "." + this.parts[stack.getItemDamage() % parts.length];
     }
-	
+
 	@Override
 	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("unchecked")
     public void getSubItems(Item item, CreativeTabs tabs, List list) {
 		for(int i = 0; i < parts.length; i++) {
 			list.add(new ItemStack(item, 1, i));
