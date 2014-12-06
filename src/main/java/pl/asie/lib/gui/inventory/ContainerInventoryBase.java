@@ -1,4 +1,4 @@
-package pl.asie.lib.block;
+package pl.asie.lib.gui.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -7,40 +7,55 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-@Deprecated
-public abstract class ContainerBase extends Container {
+/**
+ * @author Vexatos
+ */
+public class ContainerInventoryBase extends Container {
 	private final int containerSize;
-	private final TileEntityBase entity;
 	private final IInventory inventory;
-	
-	public ContainerBase(TileEntityBase entity, InventoryPlayer inventoryPlayer){
-		this.entity = entity;
-		if(entity instanceof IInventory) {
-			this.inventory = ((IInventory)entity);
-		} else this.inventory = null;
-		
+	private final InventoryPlayer inventoryPlayer;
+
+	public ContainerInventoryBase(IInventory inventory, InventoryPlayer inventoryPlayer) {
+		this.inventoryPlayer = inventoryPlayer;
 		if(inventory != null) {
-			this.containerSize = inventory.getSizeInventory();
+			this.inventory = inventory;
+		} else {
+			this.inventory = null;
+		}
+
+		if(this.inventory != null) {
+			this.containerSize = this.inventory.getSizeInventory();
+			inventory.openInventory();
 		} else {
 			this.containerSize = 0;
 		}
-		entity.openInventory();
 	}
-	public int getSize() { return containerSize; }
-	public TileEntityBase getEntity() { return entity; }
-	public IInventory getInventoryObject() { return inventory; }
-	
+
+	public int getSize() {
+		return containerSize;
+	}
+
+	public IInventory getInventoryObject() {
+		return inventory;
+	}
+
+	public InventoryPlayer getInventoryPlayer(){
+		return inventoryPlayer;
+	}
+
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-		return this.entity.isUseableByPlayer(player);
+		return player == this.inventoryPlayer.player;
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-		if(inventory == null) return null;
-		
+		if(inventory == null) {
+			return null;
+		}
+
 		ItemStack stack = null;
-		Slot slotObject = (Slot)inventorySlots.get(slot);
+		Slot slotObject = (Slot) inventorySlots.get(slot);
 		if(slotObject != null && slotObject.getHasStack()) {
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
@@ -48,8 +63,7 @@ public abstract class ContainerBase extends Container {
 				if(!this.mergeItemStack(stackInSlot, getSize(), inventorySlots.size(), true)) {
 					return null;
 				}
-			}
-			else if(!this.mergeItemStack(stackInSlot, 0, getSize(), false)) {
+			} else if(!this.mergeItemStack(stackInSlot, 0, getSize(), false)) {
 				return null;
 			}
 			if(stackInSlot.stackSize == 0) {
@@ -62,21 +76,20 @@ public abstract class ContainerBase extends Container {
 	}
 
 	public void bindPlayerInventory(InventoryPlayer inventoryPlayer, int startX, int startY) {
-		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 9; j++) {
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 9; j++) {
 				addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9,
-						startX + j * 18, startY + i * 18));
+					startX + j * 18, startY + i * 18));
 			}
 		}
-		for (int i = 0; i < 9; i++) {
+		for(int i = 0; i < 9; i++) {
 			addSlotToContainer(new Slot(inventoryPlayer, i, startX + i * 18, startY + 58));
 		}
 	}
-	
+
 	@Override
-    public void onContainerClosed(EntityPlayer par1EntityPlayer)
-    {
-        super.onContainerClosed(par1EntityPlayer);
-        this.entity.closeInventory();
-    }
+	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
+		super.onContainerClosed(par1EntityPlayer);
+		this.inventory.closeInventory();
+	}
 }

@@ -5,6 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 import pl.asie.lib.block.ContainerBase;
 
+@Deprecated
 public class GuiBase extends GuiContainer {
 	private final ResourceLocation texture;
 	public int xCenter, yCenter;
