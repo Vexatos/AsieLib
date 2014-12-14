@@ -23,7 +23,7 @@ public class TileEntityBase extends TileEntity {
 	}
 	
 	// Remote NBT data management
-	public void readFromRemoteNBT(NBTTagCompound tag) {	}
+	public void readFromRemoteNBT(NBTTagCompound tag) { }
 	public void writeToRemoteNBT(NBTTagCompound tag) { }
 	
 	@Override
