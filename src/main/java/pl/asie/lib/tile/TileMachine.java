@@ -209,7 +209,7 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	public String getInventoryName() {
-		return this.blockType.getUnlocalizedName() + ".inventory";
+		return this.blockType != null ? this.blockType.getUnlocalizedName() + ".inventory" : null;
 	}
 
 	public int getInventoryStackLimit() {
