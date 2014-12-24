@@ -18,9 +18,6 @@ public class NetworkHandlerClient extends MessageHandlerBase {
 				String nickname = packet.readString();
 				AsieLibMod.nick.setNickname(username, nickname);
 				break;
-			case Packets.NANO_NANO:
-				AsieLibMod.keyClient.scheduleSpin();
-				break;
 			case Packets.SPAWN_PARTICLE: {
 		        double x = packet.readFloat();
 		        double y = packet.readFloat();

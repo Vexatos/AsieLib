@@ -24,14 +24,11 @@ import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.integration.Integration;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.reference.Mods;
-import pl.asie.lib.shinonome.EventKeyClient;
-import pl.asie.lib.shinonome.EventKeyServer;
-import pl.asie.lib.shinonome.ItemKey;
 import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
 
 import java.util.Random;
 
-@Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "0.3.6", useMetadata = true, dependencies = "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")
+@Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "0.3.7", useMetadata = true, dependencies = "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
 	public static Integration integration;
@@ -39,10 +36,7 @@ public class AsieLibMod extends AsieLibAPI {
 	public static Logger log;
 	public static ChatHandler chat;
 	public static NicknameRepository nick;
-	public static ItemKey itemKey;
 	public static PacketHandler packet;
-	public static EventKeyClient keyClient = new EventKeyClient();
-	public static EventKeyServer keyServer = new EventKeyServer();
 
 	public static boolean ENABLE_DYNAMIC_ENERGY_CALCULATION;
 
@@ -63,8 +57,9 @@ public class AsieLibMod extends AsieLibAPI {
 
 		chat = new ChatHandler(config);
 
-		if(chat.enableChatFeatures)
+		if(chat.enableChatFeatures) {
 			MinecraftForge.EVENT_BUS.register(chat);
+		}
 		MinecraftForge.EVENT_BUS.register(new AsieLibEvents());
 
 		ENABLE_DYNAMIC_ENERGY_CALCULATION =
@@ -73,20 +68,14 @@ public class AsieLibMod extends AsieLibAPI {
 		if(System.getProperty("user.dir").contains(".asielauncher")) {
 			log.info("Hey, you! Yes, you! Thanks for using AsieLauncher! ~asie");
 		}
-
-		itemKey = new ItemKey();
-		//GameRegistry.registerItem(itemKey, "item.asietweaks.key");
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		if(proxy.isClient()) {
-			MinecraftForge.EVENT_BUS.register(keyClient);
-			FMLCommonHandler.instance().bus().register(keyClient);
 
 			new BlockBaseRender();
 		}
-		MinecraftForge.EVENT_BUS.register(keyServer);
 
 		packet = new PacketHandler(Mods.AsieLib, new NetworkHandlerClient(), null);
 
@@ -126,8 +115,9 @@ public class AsieLibMod extends AsieLibAPI {
 	}
 
 	public void registerNicknameHandler(INicknameHandler handler) {
-		if(nick != null)
+		if(nick != null) {
 			nick.addHandler(handler);
+		}
 	}
 
 	public INicknameRepository getNicknameRepository() {
