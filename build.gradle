@@ -29,18 +29,11 @@ archivesBaseName = "AsieLib"
 
 minecraft {
     version = "1.7.10-10.13.0.1208"
-    assetDir = "eclipse/assets"
+    runDir = "eclipse/assets"
 }
 
 dependencies {
     compile "com.gregoriust.gregtech:gregtech_1.7.10:5.05.06:dev"
-}
-
-jar {
-    manifest {
-        attributes 'FMLCorePlugin': 'pl.asie.lib.core.AsieLibCoremod'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
 }
 
 processResources
@@ -60,13 +53,16 @@ processResources
 }
 
 task deobfJar(type: Jar) {
-    from sourceSets.main.output
+    from sourceSets.main.output.classesDir
     classifier = 'deobf'
-    manifest {
-        attributes 'FMLCorePlugin': 'pl.asie.lib.core.AsieLibCoremod'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
 }
+
+task makeJars << {
+    description = 'Creates the mod files'
+}
+makeJars.dependsOn clean, build, deobfJar
+build.shouldRunAfter clean
+deobfJar.shouldRunAfter build
 
 apply plugin: 'maven-publish'
 
