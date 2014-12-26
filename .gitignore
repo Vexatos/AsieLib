@@ -6,6 +6,7 @@
 
 # files
 !/.gitignore
+!/changelog.md
 !/README.md
 !/build.gradle
 !/build.properties
