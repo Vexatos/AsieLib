@@ -7,6 +7,7 @@ import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.util.Vec3;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.AL10;
+import pl.asie.lib.AsieLibMod;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -148,7 +149,7 @@ public class StreamingAudioPlayer extends DFPWM {
 				}
 			}
 			buffersPlayed.clear();
-			System.out.println("Cleaned " + count + " buffers.");
+			AsieLibMod.log.debug("Cleaned " + count + " buffers.");
 		} }
 	}
 	

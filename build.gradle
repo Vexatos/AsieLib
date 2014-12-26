@@ -23,23 +23,31 @@ file "build.properties" withReader {
     ext.config = new ConfigSlurper().parse prop
 }
 
-version = "${config.asielib.version}"
+version = "${config.minecraft.version}-${config.asielib.version}"
 group= "pl.asie.lib" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AsieLib"
 
 minecraft {
-    version = "1.7.10-10.13.0.1208"
-    assetDir = "eclipse/assets"
+    version = "${config.minecraft.version}-${config.forge.version}"
+    runDir = "eclipse/assets"
+
+    replaceIn "pl/asie/lib/AsieLibMod.java"
+    replace "@VERSION@", "${config.asielib.version}"
 }
 
 dependencies {
-    compile "com.gregoriust.gregtech:gregtech_1.7.10:5.05.06:dev"
+    compile "com.gregoriust.gregtech:${config.gregtech.version}:dev"
 }
 
-jar {
-    manifest {
-        attributes 'FMLCorePlugin': 'pl.asie.lib.core.AsieLibCoremod'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
+sourceSets{
+    main{
+        output.resourcesDir = 'build/classes/main'
+    }
+}
+apply plugin: 'idea'
+idea {
+    module {
+        outputDir = file('build/classes/main')
     }
 }
 
@@ -60,13 +68,16 @@ processResources
 }
 
 task deobfJar(type: Jar) {
-    from sourceSets.main.output
+    from sourceSets.main.output.classesDir
     classifier = 'deobf'
-    manifest {
-        attributes 'FMLCorePlugin': 'pl.asie.lib.core.AsieLibCoremod'
-        attributes 'FMLCorePluginContainsFMLMod': 'true'
-    }
 }
+
+task makeJars << {
+    description = 'Creates the mod files'
+}
+makeJars.dependsOn clean, build, deobfJar
+build.shouldRunAfter clean
+deobfJar.shouldRunAfter build
 
 apply plugin: 'maven-publish'
 

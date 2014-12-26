@@ -15,16 +15,15 @@ public class TileEntityBase extends TileEntity {
 		
 	}
 	public boolean isUseableByPlayer(EntityPlayer player) {
-        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this
-        ? false : player.getDistanceSq( (double)this.xCoord+0.5D,
-                                        (double)this.yCoord+0.5D,
-                                        (double)this.zCoord+0.5D ) <= 64.0D;
+        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) == this
+			&& player.getDistanceSq(
+			(double) this.xCoord + 0.5D,
+			(double) this.yCoord + 0.5D,
+			(double) this.zCoord + 0.5D) <= 64.0D;
 	}
 	
 	// Remote NBT data management
-	public void readFromRemoteNBT(NBTTagCompound tag) {
-		this.readFromNBT(tag);
-	}
+	public void readFromRemoteNBT(NBTTagCompound tag) { }
 	public void writeToRemoteNBT(NBTTagCompound tag) { }
 	
 	@Override
@@ -50,12 +49,24 @@ public class TileEntityBase extends TileEntity {
 	public void onRedstoneSignal(int signal) {
 		
 	}
-	
-	private int oldRedstoneSignal = -1000;
+
+	protected int oldRedstoneSignal = -1;
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		super.readFromNBT(tag);
+		this.oldRedstoneSignal = tag.getInteger("old_redstone");
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		super.writeToNBT(tag);
+		tag.setInteger("old_redstone", this.oldRedstoneSignal);
+	}
 	
 	protected void onRedstoneSignal_internal(int redstoneSignal) {
 		if(redstoneSignal == oldRedstoneSignal) return;
-		oldRedstoneSignal = redstoneSignal + 1000;
+		oldRedstoneSignal = redstoneSignal;
 		this.onRedstoneSignal(redstoneSignal);
 	}
 

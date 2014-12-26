@@ -109,14 +109,15 @@ public class EnchantmentTweak {
 	}
 
 	private static boolean hasBaneEnchantment(ItemStack stack) {
-		if(stack.stackTagCompound == null) {
-			stack.setTagCompound(new NBTTagCompound());
-		}
-
-		if(!stack.stackTagCompound.hasKey("ench", 9)) {
+		if(stack.getTagCompound() == null || stack.getTagCompound().hasNoTags()) {
 			return false;
 		}
-		NBTTagList list = stack.stackTagCompound.getTagList("ench", 10);
+
+		if(!stack.getTagCompound().hasKey("ench", 9)) {
+			return false;
+		}
+
+		NBTTagList list = stack.getTagCompound().getTagList("ench", 10);
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			if(tag != null && tag.getShort("id") == bane.effectId) {
@@ -127,15 +128,15 @@ public class EnchantmentTweak {
 	}
 
 	private static boolean addBaneEnchantment(ItemStack stack, int level) {
-		if(stack.stackTagCompound == null) {
+		if(stack.getTagCompound() == null) {
 			stack.setTagCompound(new NBTTagCompound());
 		}
 
-		if(!stack.stackTagCompound.hasKey("ench", 9)) {
-			stack.stackTagCompound.setTag("ench", new NBTTagList());
+		if(!stack.getTagCompound().hasKey("ench", 9)) {
+			stack.getTagCompound().setTag("ench", new NBTTagList());
 		}
 
-		NBTTagList list = stack.stackTagCompound.getTagList("ench", 10);
+		NBTTagList list = stack.getTagCompound().getTagList("ench", 10);
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = list.getCompoundTagAt(i);
 			if(tag != null && tag.getShort("id") == Enchantment.baneOfArthropods.effectId
