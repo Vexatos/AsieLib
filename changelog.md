@@ -1,7 +1,7 @@
 ==== 0.3.8 ====
 
   * CHANGED: **AsieLib is not a coremod anymore!**
-  * FIXED: Overcomplicated Redstone Behavious
+  * FIXED: Overcomplicated Redstone behaviour
   * FIXED: Weird issues with NBT tags that were causing problems
 
 ==== 0.3.7 ====
