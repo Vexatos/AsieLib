@@ -1,6 +1,7 @@
 ==== 0.3.9 ====
 
-  * FIXED: /nick command now works properly now!
+  * FIXED: /nick command should work properly now!
+  * CHANGED: Re-added /realname command
 
 ==== 0.3.8 ====
 
