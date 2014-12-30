@@ -46,11 +46,11 @@ public class NicknameRepository implements INicknameRepository {
 	}
 	
 	public void updateNickname(String username) {
-		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
 		EntityPlayer player = PlayerUtils.find(username);
 		if(player != null) {
 			player.refreshDisplayName();
 		}
+		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
 		String nickname = getNickname(username);
 		for(INicknameHandler handler: handlers) {
 			handler.onNicknameUpdate(username, nickname);
