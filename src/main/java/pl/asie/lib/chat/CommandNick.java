@@ -40,7 +40,7 @@ public class CommandNick extends CommandBase
         	
         	AsieLibMod.nick.setNickname(target, newName);
         	sender.addChatMessage(new ChatComponentTranslation("commands.nick.done"));
-        } else throw new WrongUsageException("commands.nick.usage", new Object[0]);
+        } else throw new WrongUsageException("commands.nick.usage");
     }
     
     /**

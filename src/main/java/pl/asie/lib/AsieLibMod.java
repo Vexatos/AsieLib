@@ -89,7 +89,6 @@ public class AsieLibMod extends AsieLibAPI {
 		}
 
 		nick = new NicknameRepository();
-		nick.loadNicknames();
 		MinecraftForge.EVENT_BUS.register(nick);
 
 		FMLCommonHandler.instance().bus().register(new NicknameNetworkHandler());
@@ -107,6 +106,7 @@ public class AsieLibMod extends AsieLibAPI {
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
 		chat.registerCommands(event);
+		nick.loadNicknames();
 	}
 
 	@EventHandler

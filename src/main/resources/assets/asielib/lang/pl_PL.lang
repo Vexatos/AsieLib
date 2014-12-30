@@ -1,5 +1,5 @@
 commands.realname.usage=/realname <pseudonim>
-commands.realname.is=Prawdziwy nick tej osoby to
+commands.realname.is=Prawdziwy nick tej osoby to %s
 commands.realname.isNot=Ta osoba nie ma pseudonimu!
 commands.me.usage=/me <...>
 commands.nick.usage=/nick [cel] <pseudonim>

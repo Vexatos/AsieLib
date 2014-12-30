@@ -36,14 +36,14 @@ public class CommandMe extends CommandBase
     {
     	String nickname = "Console";
     	if(sender instanceof EntityPlayer) {
-    		nickname = ((EntityPlayer)sender).getCommandSenderName();
+    		nickname = sender.getCommandSenderName();
     	}
         if (args.length > 0 && args[0].length() > 0) sendAction(nickname, StringUtils.join(args, " "));
-        else throw new WrongUsageException("commands.me.usage", new Object[0]);
+        else throw new WrongUsageException("commands.me.usage");
     }
     
     public static void sendAction(String nickname, String action) {
-        ChatComponentText cct = new ChatComponentText("\u00a7" + AsieLibMod.instance.chat.colorAction + "* " + nickname + " " + action);
+        ChatComponentText cct = new ChatComponentText("\u00a7" + AsieLibMod.chat.colorAction + "* " + nickname + " " + action);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(cct);
     }
 

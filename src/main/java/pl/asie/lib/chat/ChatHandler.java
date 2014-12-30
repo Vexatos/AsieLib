@@ -1,6 +1,5 @@
 package pl.asie.lib.chat;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -14,10 +13,9 @@ import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.util.ChatUtils;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 
-;
 public class ChatHandler {
 	private HashMap<String, String> actions = new HashMap<String, String>();
 	public boolean enableChatFeatures, enableShout, enableGreentext, enableColor;
@@ -33,7 +31,7 @@ public class ChatHandler {
 		config.get("chat", "enableGreentext", false).comment = ">implying anyone will ever turn this on";
 		enableGreentext = config.get("chat", "enableGreentext", false).getBoolean(false);
 		colorAction = config.get("chat", "colorMe", "5").getString();
-		messageFormat = config.get("chat", "formatMessage", "<%u> %m").getString();
+		messageFormat = config.get("chat", "formatMessage", "<%u> %m", "%u - username; %m - message; %w - dimension; %H - hours; %M - minutes; %S - seconds").getString();
 	}
 	
 	public void registerCommands(FMLServerStartingEvent event) {
@@ -68,15 +66,15 @@ public class ChatHandler {
 			message = EnumChatFormatting.GREEN + message;
 		}
 		
-		Date now = new Date();
+		Calendar now = Calendar.getInstance();
 		String formattedMessage = EnumChatFormatting.RESET + messageFormat;
 		try {
 			formattedMessage = formattedMessage.replaceAll("%u", username)
 				.replaceAll("%m", message)
 				.replaceAll("%w", event.player.worldObj.provider.getDimensionName())
-				.replaceAll("%H", pad(now.getHours()))
-				.replaceAll("%M", pad(now.getMinutes()))
-				.replaceAll("%S", pad(now.getSeconds()));
+				.replaceAll("%H", pad(now.get(Calendar.HOUR_OF_DAY)))
+				.replaceAll("%M", pad(now.get(Calendar.MINUTE)))
+				.replaceAll("%S", pad(now.get(Calendar.SECOND)));
 		} catch(Exception e) {
 			e.printStackTrace();
 			formattedMessage = EnumChatFormatting.RESET + "<" + username + "" + EnumChatFormatting.RESET + "> " + message;

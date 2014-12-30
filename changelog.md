@@ -1,3 +1,7 @@
+==== 0.3.9 ====
+
+  * FIXED: /nick command now works properly now!
+
 ==== 0.3.8 ====
 
   * CHANGED: **AsieLib is not a coremod anymore!**

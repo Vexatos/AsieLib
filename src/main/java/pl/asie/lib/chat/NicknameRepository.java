@@ -5,12 +5,14 @@ import com.google.common.collect.HashBiMap;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.google.gson.reflect.TypeToken;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
-import pl.asie.lib.util.MiscUtils;
 import pl.asie.lib.util.PlayerUtils;
 
 import java.io.File;
@@ -30,7 +32,6 @@ public class NicknameRepository implements INicknameRepository {
 		gson = new Gson();
 		gsonType = new TypeToken<HashBiMap<String, String>>(){}.getType();
 		nicknames = HashBiMap.create();
-		nicknameFile = new File(MiscUtils.getMinecraftDirectory(), "nicknames.json");
 	}
 	
 	public void setNickname(String username, String nickname) {
@@ -45,6 +46,7 @@ public class NicknameRepository implements INicknameRepository {
 	}
 	
 	public void updateNickname(String username) {
+		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
 		EntityPlayer player = PlayerUtils.find(username);
 		if(player != null) {
 			player.refreshDisplayName();
@@ -57,7 +59,7 @@ public class NicknameRepository implements INicknameRepository {
 	
 	public String getUsername(String nickname) {
 		BiMap<String, String> usernames = nicknames.inverse();
-		return usernames.containsKey(nickname) ? nicknames.get(nickname) : null;
+		return usernames.containsKey(nickname) ? usernames.get(nickname) : null;
 	}
 	
 	public String getNickname(String username) {
@@ -70,6 +72,7 @@ public class NicknameRepository implements INicknameRepository {
 	}
 	
 	public void loadNicknames(String data) {
+		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
 		try {
 			nicknames = gson.fromJson(data, gsonType);
 			for(String username: nicknames.keySet()) {
@@ -82,6 +85,8 @@ public class NicknameRepository implements INicknameRepository {
 	}
 	
 	public void loadNicknames() {
+		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
+		nicknameFile = new File(DimensionManager.getCurrentSaveRootDirectory(), "nicknames.json");
 		nicknames = HashBiMap.create();
 		if(!nicknameFile.exists()) {
 			return;
@@ -100,6 +105,7 @@ public class NicknameRepository implements INicknameRepository {
 	}
 	
 	public void saveNicknames() {
+		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
 		try {
 			FileWriter fw = new FileWriter(nicknameFile);
 			fw.write(toString());
