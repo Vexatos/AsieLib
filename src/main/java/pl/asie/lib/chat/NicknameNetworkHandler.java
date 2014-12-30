@@ -56,16 +56,14 @@ public class NicknameNetworkHandler implements INicknameHandler {
 		}
 	}
 
-	private void sendNicknamePacket(String realname, String nickname, EntityPlayer target) {
+	private void sendNicknamePacket(String realname, String nickname) {
+		//AsieLibMod.log.info("Trying to change " + realname + " to " + nickname);
 		try {
 			Packet packet = AsieLibMod.packet.create(Packets.NICKNAME_CHANGE)
 				.writeString(realname)
 				.writeString(nickname);
-			if(target == null) {
-				AsieLibMod.packet.sendToAll(packet);
-			} else {
-				AsieLibMod.packet.sendTo(packet, (EntityPlayerMP) target);
-			}
+
+			AsieLibMod.packet.sendToAll(packet);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -73,6 +71,6 @@ public class NicknameNetworkHandler implements INicknameHandler {
 
 	@Override
 	public void onNicknameUpdate(String realname, String nickname) {
-		sendNicknamePacket(realname, nickname, null);
+		sendNicknamePacket(realname, nickname);
 	}
 }

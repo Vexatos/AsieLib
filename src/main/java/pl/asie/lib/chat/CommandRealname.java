@@ -27,6 +27,11 @@ public class CommandRealname extends CommandBase {
 		return "commands.realname.usage";
 	}
 
+	@Override
+	public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_) {
+		return true;
+	}
+
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(args.length > 0 && args[0].length() > 0) {
 			String realname = AsieLibMod.nick.getUsername(args[0]);

@@ -91,7 +91,9 @@ public class AsieLibMod extends AsieLibAPI {
 		nick = new NicknameRepository();
 		MinecraftForge.EVENT_BUS.register(nick);
 
-		FMLCommonHandler.instance().bus().register(new NicknameNetworkHandler());
+		NicknameNetworkHandler nicknameHandler = new NicknameNetworkHandler();
+		registerNicknameHandler(nicknameHandler);
+		FMLCommonHandler.instance().bus().register(nicknameHandler);
 
 		if(config.get("tweaks", "dyeItemNamesInAnvil", true).getBoolean(true)) {
 			MinecraftForge.EVENT_BUS.register(new AnvilDyeTweak());

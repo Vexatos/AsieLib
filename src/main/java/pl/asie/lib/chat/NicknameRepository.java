@@ -35,6 +35,7 @@ public class NicknameRepository implements INicknameRepository {
 	}
 	
 	public void setNickname(String username, String nickname) {
+		//AsieLibMod.log.info("Trying to set " + username + " to nickname " + nickname);
 		if(nickname.equals("-") && nicknames.containsKey(username)) {
 			nicknames.remove(username);
 		} else {
@@ -47,7 +48,9 @@ public class NicknameRepository implements INicknameRepository {
 	
 	public void updateNickname(String username) {
 		EntityPlayer player = PlayerUtils.find(username);
+		//AsieLibMod.log.info("Trying to update nickname " + username);
 		if(player != null) {
+			//AsieLibMod.log.info("Trying to update display name " + username);
 			player.refreshDisplayName();
 		}
 		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
