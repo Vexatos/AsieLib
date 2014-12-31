@@ -12,36 +12,39 @@ import pl.asie.lib.AsieLibMod;
 
 import java.util.List;
 
-public class CommandMe extends CommandBase
-{
-	public String getCommandName()
-    {
-        return "me";
-    }
+public class CommandMe extends CommandBase {
 
-    /**
-     * Return the required permission level for this command.
-     */
-    public int getRequiredPermissionLevel()
-    {
-        return 0;
-    }
+	@Override
+	public String getCommandName() {
+		return "me";
+	}
 
-    public String getCommandUsage(ICommandSender par1ICommandSender)
-    {
-        return "commands.me.usage";
-    }
+	/**
+	 * Return the required permission level for this command.
+	 */
+	@Override
+	public int getRequiredPermissionLevel() {
+		return 0;
+	}
+
+	@Override
+	public String getCommandUsage(ICommandSender par1ICommandSender) {
+		return "commands.me.usage";
+	}
 
     public void processCommand(ICommandSender sender, String[] args)
     {
     	String nickname = "Console";
     	if(sender instanceof EntityPlayer) {
     		nickname = sender.getCommandSenderName();
+			if(AsieLibMod.nick != null && AsieLibMod.nick.nicknames != null) {
+				nickname = AsieLibMod.nick.getRawNickname(nickname);
+			}
     	}
         if (args.length > 0 && args[0].length() > 0) sendAction(nickname, StringUtils.join(args, " "));
-        else throw new WrongUsageException("commands.me.usage");
+        else throw new WrongUsageException(this.getCommandUsage(sender));
     }
-    
+
     public static void sendAction(String nickname, String action) {
         ChatComponentText cct = new ChatComponentText("\u00a7" + AsieLibMod.chat.colorAction + "* " + nickname + " " + action);
         MinecraftServer.getServer().getConfigurationManager().sendChatMsg(cct);
@@ -52,7 +55,7 @@ public class CommandMe extends CommandBase
      */
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        return args.length >= 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
+        return ChatHandler.addTabUsernameCompletionOptions(args);
     }
 
     public int compareTo(Object par1Obj)

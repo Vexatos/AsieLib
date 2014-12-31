@@ -3,6 +3,7 @@ package pl.asie.lib.chat;
 import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
@@ -15,6 +16,7 @@ import pl.asie.lib.util.ChatUtils;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class ChatHandler {
 	private HashMap<String, String> actions = new HashMap<String, String>();
@@ -112,5 +114,18 @@ public class ChatHandler {
 				}
 			}
 		}
+	}
+
+	public static List addTabUsernameCompletionOptions(String[] args) {
+		if(args == null || args.length < 1) {
+			return null;
+		}
+		String[] names = MinecraftServer.getServer().getAllUsernames().clone();
+		if(AsieLibMod.nick != null && AsieLibMod.nick.nicknames != null) {
+			for(int i = 0; i < names.length; i++) {
+				names[i] = AsieLibMod.nick.getNickname(names[i]);
+			}
+		}
+		return CommandBase.getListOfStringsMatchingLastWord(args, names);
 	}
 }

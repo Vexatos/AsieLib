@@ -73,6 +73,10 @@ public class NicknameRepository implements INicknameRepository {
 		String nn = getNickname(username);
 		return nn.replaceAll("&.", "");
 	}
+
+	public boolean hasNickname(String username) {
+		return nicknames.containsKey(username) && !nicknames.get(username).equals(username);
+	}
 	
 	public void loadNicknames(String data) {
 		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;

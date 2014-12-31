@@ -1,7 +1,9 @@
 ==== 0.3.9 ====
 
   * FIXED: /nick command should work properly now!
+  * CHANGED: Now you can use /nick to change your own nickname without being Op on the server
   * CHANGED: Re-added /realname command
+  * CHANGED: /me now supports nicknames
 
 ==== 0.3.8 ====
 

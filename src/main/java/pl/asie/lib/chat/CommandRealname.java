@@ -4,7 +4,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import pl.asie.lib.AsieLibMod;
@@ -12,6 +11,8 @@ import pl.asie.lib.AsieLibMod;
 import java.util.List;
 
 public class CommandRealname extends CommandBase {
+
+	@Override
 	public String getCommandName() {
 		return "realname";
 	}
@@ -19,10 +20,12 @@ public class CommandRealname extends CommandBase {
 	/**
 	 * Return the required permission level for this command.
 	 */
+	@Override
 	public int getRequiredPermissionLevel() {
 		return 0;
 	}
 
+	@Override
 	public String getCommandUsage(ICommandSender par1ICommandSender) {
 		return "commands.realname.usage";
 	}
@@ -32,6 +35,7 @@ public class CommandRealname extends CommandBase {
 		return true;
 	}
 
+	@Override
 	public void processCommand(ICommandSender sender, String[] args) {
 		if(args.length > 0 && args[0].length() > 0) {
 			String realname = AsieLibMod.nick.getUsername(args[0]);
@@ -43,26 +47,19 @@ public class CommandRealname extends CommandBase {
 			}
 			sender.addChatMessage(new ChatComponentText(text));
 		} else {
-			throw new WrongUsageException("commands.realname.usage");
+			throw new WrongUsageException(this.getCommandUsage(sender));
 		}
 	}
 
 	/**
 	 * Adds the strings available in this command to the given list of tab completion options.
 	 */
+	@Override
 	public List addTabCompletionOptions(ICommandSender sender, String[] args) {
-		if(args == null || args.length < 1) {
-			return null;
-		}
-		String[] names = MinecraftServer.getServer().getAllUsernames().clone();
-		if(AsieLibMod.nick != null && AsieLibMod.nick.nicknames != null) {
-			for(int i = 0; i < names.length; i++) {
-				names[i] = AsieLibMod.nick.getNickname(names[i]);
-			}
-		}
-		return getListOfStringsMatchingLastWord(args, names);
+		return ChatHandler.addTabUsernameCompletionOptions(args);
 	}
 
+	@Override
 	public int compareTo(Object par1Obj) {
 		return ((ICommand) par1Obj).getCommandName().compareTo(this.getCommandName());
 	}
