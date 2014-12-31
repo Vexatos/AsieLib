@@ -21,7 +21,7 @@ import java.util.List;
 public class ChatHandler {
 	private HashMap<String, String> actions = new HashMap<String, String>();
 	public boolean enableChatFeatures, enableShout, enableGreentext, enableColor;
-	public int CHAT_RADIUS;
+	public int CHAT_RADIUS, nickLevel;
 	public String colorAction, messageFormat, shoutPrefix;
 	
 	public ChatHandler(Configuration config) {
@@ -30,8 +30,8 @@ public class ChatHandler {
 		shoutPrefix = config.get("chat", "shoutPrefix", "[Shout]").getString();
 		enableChatFeatures = config.get("base", "enableChatTweaks", false).getBoolean(false);
 		enableColor = config.get("base", "enableColor", true).getBoolean(true);
-		config.get("chat", "enableGreentext", false).comment = ">implying anyone will ever turn this on";
-		enableGreentext = config.get("chat", "enableGreentext", false).getBoolean(false);
+		enableGreentext = config.get("chat", "enableGreentext", false, ">implying anyone will ever turn this on").getBoolean(false);
+		nickLevel = config.get("chat", "nicknamesForEveryone", true, "Disable to make changing the own nickname require Op rights on a server").getBoolean(true) ? 0 : 2;
 		colorAction = config.get("chat", "colorMe", "5").getString();
 		messageFormat = config.get("chat", "formatMessage", "<%u> %m", "%u - username; %m - message; %w - dimension; %H - hours; %M - minutes; %S - seconds").getString();
 	}

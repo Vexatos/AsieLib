@@ -21,7 +21,7 @@ public class CommandNick extends CommandBase {
 	 */
 	@Override
 	public int getRequiredPermissionLevel() {
-		return 0;
+		return AsieLibMod.chat.nickLevel;
 	}
 
 	public int getOpPermissionLevel() {
