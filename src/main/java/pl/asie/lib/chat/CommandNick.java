@@ -51,7 +51,7 @@ public class CommandNick extends CommandBase {
 			}
 
 			AsieLibMod.nick.setNickname(target, newName);
-			sender.addChatMessage(new ChatComponentTranslation("commands.nick.done", newName));
+			sender.addChatMessage(new ChatComponentTranslation("commands.nick.done", AsieLibMod.nick.getNickname(target)));
 		} else {
 			throw new WrongUsageException(this.getCommandUsage(sender));
 		}
