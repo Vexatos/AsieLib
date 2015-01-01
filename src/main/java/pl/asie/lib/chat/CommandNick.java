@@ -29,6 +29,11 @@ public class CommandNick extends CommandBase {
 	}
 
 	@Override
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+		return this.getRequiredPermissionLevel() == 0 || super.canCommandSenderUseCommand(sender);
+	}
+
+	@Override
 	public String getCommandUsage(ICommandSender sender) {
 		return sender.canCommandSenderUseCommand(this.getOpPermissionLevel(), this.getCommandName())
 			? "commands.nick.usage.op"

@@ -26,13 +26,13 @@ public class CommandRealname extends CommandBase {
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender par1ICommandSender) {
-		return "commands.realname.usage";
+	public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_) {
+		return true;
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_) {
-		return true;
+	public String getCommandUsage(ICommandSender par1ICommandSender) {
+		return "commands.realname.usage";
 	}
 
 	@Override
