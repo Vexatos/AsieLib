@@ -54,6 +54,7 @@ public class NicknameRepository implements INicknameRepository {
 			player.refreshDisplayName();
 		}
 		if(FMLCommonHandler.instance().getEffectiveSide() != Side.SERVER) return;
+		//AsieLibMod.log.info("Updating nickames on server... ");
 		String nickname = getNickname(username);
 		for(INicknameHandler handler: handlers) {
 			handler.onNicknameUpdate(username, nickname);
@@ -129,6 +130,7 @@ public class NicknameRepository implements INicknameRepository {
 	@SubscribeEvent
 	public void nameFormat(PlayerEvent.NameFormat event) {
 		event.displayname = getRawNickname(event.username);
+		//AsieLibMod.log.info("Name format change: Changed " +  event.username + " to " + event.displayname);
 	}
 
 	public void addHandler(INicknameHandler handler) {

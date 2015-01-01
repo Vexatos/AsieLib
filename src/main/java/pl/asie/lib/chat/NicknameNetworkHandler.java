@@ -71,6 +71,7 @@ public class NicknameNetworkHandler implements INicknameHandler {
 
 	@Override
 	public void onNicknameUpdate(String realname, String nickname) {
+		//AsieLibMod.log.info("Network Handler Nickname Update: " + realname + " to " + nickname);
 		sendNicknamePacket(realname, nickname);
 	}
 }
