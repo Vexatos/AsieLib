@@ -6,7 +6,7 @@ public class ChatUtils {
 	};
 	
 	public static String color(String chat) {
-		return chat.replaceAll("&", "\u00a7");
+		return chat.replaceAll("&(?=[0-9A-FK-ORa-fk-or])", "\u00a7");
 	}
 	
 	public static int dyeToChat(int dyeColor) {
