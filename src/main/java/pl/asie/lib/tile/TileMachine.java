@@ -270,6 +270,7 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	public int[] getAccessibleSlotsFromSide(int arg0) {
+		if (this.items == null) { return new int[0]; }
 		int[] slots = new int[this.items.length];
 		for(int i = 0; i < slots.length; i++) {
 			slots[i] = i;
