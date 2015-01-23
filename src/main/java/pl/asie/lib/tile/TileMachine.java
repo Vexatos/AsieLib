@@ -82,7 +82,7 @@ public class TileMachine extends TileEntityBase implements
 		if(Loader.isModLoaded(Mods.IC2) && this.battery != null) {
 			this.deinitIC();
 		}
-		if(Loader.isModLoaded(Mods.IC2) && this.battery != null) {
+		if(Loader.isModLoaded(Mods.IC2Classic) && this.battery != null) {
 			this.deinitICClassic();
 		}
 	}
