@@ -23,7 +23,7 @@ public class ChatHandler {
 	public boolean enableChatFeatures, enableShout, enableGreentext, enableColor;
 	public int CHAT_RADIUS, nickLevel;
 	public String colorAction, messageFormat, shoutPrefix;
-	
+
 	public ChatHandler(Configuration config) {
 		CHAT_RADIUS = config.get("chat", "chatRadius", 0).getInt();
 		enableShout = config.get("chat", "enableShout", true).getBoolean(true);
@@ -35,7 +35,7 @@ public class ChatHandler {
 		colorAction = config.get("chat", "colorMe", "5").getString();
 		messageFormat = config.get("chat", "formatMessage", "<%u> %m", "%u - username; %m - message; %w - dimension; %H - hours; %M - minutes; %S - seconds").getString();
 	}
-	
+
 	public void registerCommands(FMLServerStartingEvent event) {
 		if(enableChatFeatures) {
 			event.registerServerCommand(new CommandMe());
@@ -43,31 +43,36 @@ public class ChatHandler {
 			event.registerServerCommand(new CommandRealname());
 		}
 	}
-	
+
 	private static String pad(int t) {
-		if(t < 10) return "0"+t;
-		else return ""+t;
+		if(t < 10) {
+			return "0" + t;
+		} else {
+			return "" + t;
+		}
 	}
-	
+
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
 		if(CHAT_RADIUS < 0) { // Chat disabled altogether
 			event.setCanceled(true);
 			return;
 		}
-		
+
 		ChatComponentText chat = null;
 		boolean disableRadius = false;
 		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username));
 		String message = event.message;
 		int dimensionId = event.player.worldObj.provider.dimensionId;
-		
-		if(event.message.startsWith("!")) message = message.substring(1);
-		
+
+		if(event.message.startsWith("!")) {
+			message = message.substring(1);
+		}
+
 		if(enableGreentext && message.startsWith(">")) {
 			message = EnumChatFormatting.GREEN + message;
 		}
-		
+
 		Calendar now = Calendar.getInstance();
 		String formattedMessage = EnumChatFormatting.RESET + messageFormat;
 		try {
@@ -81,33 +86,39 @@ public class ChatHandler {
 			e.printStackTrace();
 			formattedMessage = EnumChatFormatting.RESET + "<" + username + "" + EnumChatFormatting.RESET + "> " + message;
 		}
-		
-		try {
-			formattedMessage = formattedMessage.replaceAll("&", "\u00a7");
-		} catch(Exception e) {
-			e.printStackTrace();
+
+		if(enableColor) {
+			try {
+				formattedMessage = ChatUtils.color(formattedMessage);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 		if(event.message.startsWith("!") && enableShout) {
 			chat = new ChatComponentText(EnumChatFormatting.YELLOW + shoutPrefix + " " + formattedMessage);
 			disableRadius = true;
 		} else {
 			chat = new ChatComponentText(formattedMessage);
 		}
-		
+
 		boolean useRadius = CHAT_RADIUS > 0 && !disableRadius;
 		event.setCanceled(true); // Override regular sending
-		
+
 		if(!useRadius && ModAPIManager.INSTANCE.hasAPI("EiraIRC|API")) {
 			ChatHandlerEiraIRC.eiraircRelay(event.player, username, message);
 		}
-		
-		if(MinecraftServer.getServer() == null) return;
-		for(WorldServer ws: MinecraftServer.getServer().worldServers) {
-			if(useRadius && ws.provider.dimensionId != dimensionId) continue;
-			for(Object o: ws.playerEntities) {
+
+		if(MinecraftServer.getServer() == null) {
+			return;
+		}
+		for(WorldServer ws : MinecraftServer.getServer().worldServers) {
+			if(useRadius && ws.provider.dimensionId != dimensionId) {
+				continue;
+			}
+			for(Object o : ws.playerEntities) {
 				if(o instanceof EntityPlayer) {
-					EntityPlayer target = (EntityPlayer)o;
+					EntityPlayer target = (EntityPlayer) o;
 					if(!useRadius || event.player == target || event.player.getDistanceToEntity(target) <= CHAT_RADIUS) {
 						target.addChatMessage(chat);
 					}
