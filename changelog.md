@@ -1,3 +1,7 @@
+==== 0.3.10 ====
+
+  * FIXED: Some more problems with the chat tweaks
+
 ==== 0.3.9 ====
 
   * FIXED: /nick command should work properly now!
