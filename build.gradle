@@ -1,96 +1,127 @@
 buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-    }
+	repositories {
+		mavenCentral()
+		maven {
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
+		maven {
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+	}
 }
 
 apply plugin: 'forge'
 
 file "build.properties" withReader {
-    def prop = new Properties()
-    prop.load(it)
-    ext.config = new ConfigSlurper().parse prop
+	def prop = new Properties()
+	prop.load(it)
+	ext.config = new ConfigSlurper().parse prop
 }
 
 version = "${config.minecraft.version}-${config.asielib.version}"
-group= "pl.asie.lib" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "pl.asie.lib" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AsieLib"
 
-minecraft {
-    version = "${config.minecraft.version}-${config.forge.version}"
-    runDir = "eclipse/assets"
+if (JavaVersion.current().isJava8Compatible()) {
+	allprojects {
+		tasks.withType(Javadoc) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+}
 
-    replaceIn "pl/asie/lib/AsieLibMod.java"
-    replace "@VERSION@", "${config.asielib.version}"
+configurations {
+	provided
+	embedded
+	compile.extendsFrom provided, embedded
 }
 
 dependencies {
-    compile "com.gregoriust.gregtech:${config.gregtech.version}:dev"
+	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
 }
 
-sourceSets{
-    main{
-        output.resourcesDir = 'build/classes/main'
-    }
+minecraft {
+	version = "${config.minecraft.version}-${config.forge.version}"
+	runDir = "eclipse/assets"
+
+	replaceIn "pl/asie/lib/AsieLibMod.java"
+	replace "@VERSION@", "${config.asielib.version}"
+}
+
+sourceSets {
+	main {
+		output.resourcesDir = 'build/classes/main'
+	}
 }
 apply plugin: 'idea'
 idea {
-    module {
-        outputDir = file('build/classes/main')
-    }
+	module {
+		scopes.PROVIDED.plus += [configurations.provided]
+		outputDir = file('build/classes/main')
+	}
 }
 
 processResources
-{
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+	{
+		// replace stuff in mcmod.info, nothing else
+		from(sourceSets.main.resources.srcDirs) {
+			include 'mcmod.info'
+
+			// replace version and mcversion
+			expand 'version': project.version, 'mcversion': project.minecraft.version
+		}
+
+		// copy everything else, thats not the mcmod.info
+		from(sourceSets.main.resources.srcDirs) {
+			exclude 'mcmod.info'
+		}
+	}
+
+//For Building
+
+def libDir = './build/libs'
 
 task deobfJar(type: Jar) {
-    from sourceSets.main.output.classesDir
-    classifier = 'deobf'
+	description = 'Creates a jar file containing the non-obfuscated class files'
+	classifier = 'deobf'
+	destinationDir = file(libDir)
+	from sourceSets.main.output.classesDir
+}
+
+task apiZip(type: Zip) {
+	description = 'Creates a zip file containing the API source files only'
+	classifier = 'api'
+	destinationDir = file(libDir)
+	from sourceSets.main.allSource
+	include 'pl/asie/**/api/**'
 }
 
 task makeJars << {
-    description = 'Creates the mod files'
+	description = 'Creates the mod files'
 }
-makeJars.dependsOn clean, build, deobfJar
+
+makeJars.dependsOn clean, build, deobfJar, apiZip
 build.shouldRunAfter clean
 deobfJar.shouldRunAfter build
+apiZip.shouldRunAfter deobfJar
 
 apply plugin: 'maven-publish'
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-            artifact deobfJar
-        }
-    }
-    repositories {
-        maven {
-            url "${config.maven.url}"
-        }
-    }
+	publications {
+		mavenJava(MavenPublication) {
+			artifact jar
+			artifact deobfJar
+		}
+	}
+	repositories {
+		maven {
+			url "${config.maven.url}"
+		}
+	}
 }
