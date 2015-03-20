@@ -1,4 +1,4 @@
-package pl.asie.lib.tweak.enchantment;
+package pl.asie.lib.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,19 +10,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Basic Ray Tracer that uses an EntityLivingBase as the base and can detect Entities.
  * @author Vexatos
  */
 public class RayTracer {
+
 	private static RayTracer instance = new RayTracer();
 
+	/**
+	 * @return The main instance of the RayTracer
+	 */
 	public static RayTracer instance() {
-		if(instance == null)
+		if(instance == null) {
 			instance = new RayTracer();
+		}
 		return instance;
 	}
 
-	private Entity target = null;
+	protected MovingObjectPosition target = null;
 
+	/**
+	 * @param entity The {@link EntityLivingBase} to fire from
+	 * @param distance The max distance the ray can go
+	 */
 	public void fire(EntityLivingBase entity, double distance) {
 		if(entity.worldObj.isRemote) {
 			return;
@@ -30,11 +40,14 @@ public class RayTracer {
 		this.target = this.rayTrace(entity, distance, 0);
 	}
 
-	public Entity getTarget() {
+	/**
+	 * @return The {@link MovingObjectPosition} containing the Target Block or Entity
+	 */
+	public MovingObjectPosition getTarget() {
 		return this.target;
 	}
 
-	public Entity rayTrace(EntityLivingBase entity, double distance, float par3) {
+	protected MovingObjectPosition rayTrace(EntityLivingBase entity, double distance, float par3) {
 		Entity target;
 		final Vec3 position = entity.getPosition(par3);
 		if(entity.getEyeHeight() != 0.12F) {
@@ -51,23 +64,23 @@ public class RayTracer {
 			MovingObjectPosition blockCheck = entity.worldObj.rayTraceBlocks(
 				Vec3.createVectorHelper(position.xCoord, position.yCoord, position.zCoord), search, false);
 			if(blockCheck != null && blockCheck.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-				double d1 = position.distanceTo(blockCheck.hitVec);
-				double d2 = position.distanceTo(search);
-				if(position.distanceTo(blockCheck.hitVec)
-					< position.distanceTo(search)) {
-					return null;
+				/*double d1 = position.squareDistanceTo(blockCheck.hitVec);
+				double d2 = position.squareDistanceTo(search);*/
+				if(position.squareDistanceTo(blockCheck.hitVec)
+					< position.squareDistanceTo(search)) {
+					return blockCheck;
 				}
 			}
 
-			target = getArthropod(entity, position, search, look, searchBox, 0.1);
+			target = getEntity(entity, position, search, look, searchBox, 0.1);
 			if(target != null) {
-				return target;
+				return new MovingObjectPosition(target);
 			}
 		}
 		return null;
 	}
 
-	private Entity getArthropod(EntityLivingBase base, Vec3 position, Vec3 search, Vec3 look, AxisAlignedBB searchBox, double v) {
+	protected Entity getEntity(EntityLivingBase base, Vec3 position, Vec3 search, Vec3 look, AxisAlignedBB searchBox, double v) {
 		ArrayList<Entity> entityList = new ArrayList<Entity>();
 		List entityObjects = base.worldObj.getEntitiesWithinAABB(Entity.class, searchBox);
 		for(Object o : entityObjects) {
@@ -81,8 +94,8 @@ public class RayTracer {
 		Entity entity = null;
 		if(entityList.size() > 1) {
 			for(Entity e : entityList) {
-				if(entity == null || position.distanceTo(Vec3.createVectorHelper(e.posX, e.posY, e.posZ))
-					< position.distanceTo(Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ))) {
+				if(entity == null || position.squareDistanceTo(e.posX, e.posY, e.posZ)
+					< position.squareDistanceTo(entity.posX, entity.posY, entity.posZ)) {
 					entity = e;
 				}
 			}
@@ -90,7 +103,7 @@ public class RayTracer {
 			AxisAlignedBB newSearchBox = AxisAlignedBB.getBoundingBox(
 				newSearch.xCoord - v / 2.0, newSearch.yCoord - v / 2.0, newSearch.zCoord - v / 2.0,
 				newSearch.xCoord + v / 2.0, newSearch.yCoord + v / 2.0, newSearch.zCoord + v / 2.0);
-			return getArthropod(world, newSearch, look, newSearchBox, v / 2.0);*/
+			return getEntity(world, newSearch, look, newSearchBox, v / 2.0);*/
 		} else {
 			entity = entityList.get(0);
 		}

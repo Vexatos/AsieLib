@@ -11,8 +11,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.util.RayTracer;
 
 /**
  * @author Vexatos
@@ -92,17 +94,20 @@ public class EnchantmentTweak {
 		}
 		if(player.getCurrentEquippedItem() != null && hasBaneEnchantment(player.getCurrentEquippedItem()) && player.getCurrentEquippedItem().isItemStackDamageable()) {
 			RayTracer.instance().fire(player, 10.0);
-			Entity entity = RayTracer.instance().getTarget();
-			if(entity != null
-				&& entity instanceof EntityLivingBase
-				&& ((EntityLivingBase) entity).getCreatureAttribute() == EnumCreatureAttribute.ARTHROPOD
-				&& entity.hurtResistantTime <= 10
-				&& !player.isBlocking()) {
-				player.attackTargetEntityWithCurrentItem(entity);
-				if(player.getCurrentEquippedItem().isItemStackDamageable()) {
-					float distance = player.getDistanceToEntity(entity);
-					int damage = Math.max(Math.min((int) distance + 1, 10), 1);
-					player.getCurrentEquippedItem().damageItem(damage, player);
+			MovingObjectPosition target = RayTracer.instance().getTarget();
+			if(target != null && target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+				Entity entity = target.entityHit;
+				if(entity != null
+					&& entity instanceof EntityLivingBase
+					&& ((EntityLivingBase) entity).getCreatureAttribute() == EnumCreatureAttribute.ARTHROPOD
+					&& entity.hurtResistantTime <= 10
+					&& !player.isBlocking()) {
+					player.attackTargetEntityWithCurrentItem(entity);
+					if(player.getCurrentEquippedItem().isItemStackDamageable()) {
+						float distance = player.getDistanceToEntity(entity);
+						int damage = Math.max(Math.min((int) distance + 1, 10), 1);
+						player.getCurrentEquippedItem().damageItem(damage, player);
+					}
 				}
 			}
 		}

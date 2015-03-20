@@ -8,6 +8,10 @@ public class ChatUtils {
 	public static String color(String chat) {
 		return chat.replaceAll("&(?=[0-9A-FK-ORa-fk-or])", "\u00a7");
 	}
+
+	public static String stripColors(String chat) {
+		return chat.replaceAll("&[0-9A-FK-ORa-fk-or]", "");
+	}
 	
 	public static int dyeToChat(int dyeColor) {
 		return dyeToChatArray[dyeColor % 16];
