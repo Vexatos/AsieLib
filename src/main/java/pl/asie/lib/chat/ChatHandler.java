@@ -45,7 +45,7 @@ public class ChatHandler {
 		}
 	}
 
-	private static String pad(int t) {
+	static String pad(int t) {
 		if(t < 10) {
 			return "0" + t;
 		} else {

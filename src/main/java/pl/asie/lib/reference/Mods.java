@@ -15,6 +15,7 @@ public class Mods {
 		IC2 = "IC2",
 		IC2Classic = "IC2-Classic",
 		GregTech = "gregtech",
+		Prattle = "Prattle",
 		ProjectRed = "ProjRed|Core",
 		RedLogic = "RedLogic";
 

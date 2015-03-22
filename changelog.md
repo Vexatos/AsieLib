@@ -1,5 +1,7 @@
 ==== 0.3.11 ====
 
+  * ADDED: Prattle support
+    - Chat tweaks work in every channel now!
   * FIXED: Chat Events not being processed properly
   * MISC: Refactored some code
 

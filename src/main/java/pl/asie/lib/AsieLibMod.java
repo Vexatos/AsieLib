@@ -1,6 +1,7 @@
 package pl.asie.lib;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -18,6 +19,7 @@ import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.chat.ChatHandler;
+import pl.asie.lib.chat.ChatHandlerPrattle;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
 import pl.asie.lib.client.BlockBaseRender;
@@ -58,7 +60,11 @@ public class AsieLibMod extends AsieLibAPI {
 		chat = new ChatHandler(config);
 
 		if(chat.enableChatFeatures) {
-			MinecraftForge.EVENT_BUS.register(chat);
+			if(Loader.isModLoaded(Mods.Prattle)) {
+				MinecraftForge.EVENT_BUS.register(new ChatHandlerPrattle());
+			} else {
+				MinecraftForge.EVENT_BUS.register(chat);
+			}
 		}
 		MinecraftForge.EVENT_BUS.register(new AsieLibEvents());
 
