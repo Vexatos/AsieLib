@@ -2,6 +2,7 @@ package pl.asie.lib.chat;
 
 import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -52,7 +53,7 @@ public class ChatHandler {
 		}
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void chatEvent(ServerChatEvent event) {
 		if(CHAT_RADIUS < 0) { // Chat disabled altogether
 			event.setCanceled(true);

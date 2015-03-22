@@ -1,3 +1,8 @@
+==== 0.3.11 ====
+
+  * FIXED: Chat Events not being processed properly
+  * MISC: Refactored some code
+
 ==== 0.3.10 ====
 
   * FIXED: Some more problems with the chat tweaks
