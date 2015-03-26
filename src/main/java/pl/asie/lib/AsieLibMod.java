@@ -61,6 +61,9 @@ public class AsieLibMod extends AsieLibAPI {
 
 		if(chat.enableChatFeatures) {
 			if(Loader.isModLoaded(Mods.Prattle)) {
+				log.info("Prattle detected, adapting Chat Tweaks.");
+				log.info("The Chat Radius config setting will not have any effect now.");
+				log.info("Shouting will be disabled in favour of the Prattle Chat Zone system.");
 				MinecraftForge.EVENT_BUS.register(new ChatHandlerPrattle());
 			} else {
 				MinecraftForge.EVENT_BUS.register(chat);
