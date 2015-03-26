@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CraftingTweaker {
+	@SuppressWarnings("deprecation")
 	public static boolean equal(Object from, Object to, boolean ignoreMeta) {
 		if(from == null || to == null) return false;
 		else if(from instanceof ItemStack && to instanceof ItemStack) {
