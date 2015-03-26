@@ -1,6 +1,8 @@
 package pl.asie.lib.chat;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
+import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -13,6 +15,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.reference.Mods;
 import pl.asie.lib.util.ChatUtils;
 
 import java.util.Calendar;
@@ -39,13 +42,24 @@ public class ChatHandler {
 
 	public void registerCommands(FMLServerStartingEvent event) {
 		if(enableChatFeatures) {
+			if(Loader.isModLoaded(Mods.Prattle)) {
+				registerPrattleCommands(event);
+				return;
+			}
 			event.registerServerCommand(new CommandMe());
 			event.registerServerCommand(new CommandNick());
 			event.registerServerCommand(new CommandRealname());
 		}
 	}
 
-	static String pad(int t) {
+	@Optional.Method(modid = Mods.Prattle)
+	private void registerPrattleCommands(FMLServerStartingEvent event) {
+		//event.registerServerCommand(new CommandMePrattle());
+		event.registerServerCommand(new CommandNick());
+		event.registerServerCommand(new CommandRealname());
+	}
+
+	public static String pad(int t) {
 		if(t < 10) {
 			return "0" + t;
 		} else {
@@ -135,7 +149,7 @@ public class ChatHandler {
 		String[] names = MinecraftServer.getServer().getAllUsernames().clone();
 		if(AsieLibMod.nick != null && AsieLibMod.nick.nicknames != null) {
 			for(int i = 0; i < names.length; i++) {
-				names[i] = AsieLibMod.nick.getNickname(names[i]);
+				names[i] = AsieLibMod.nick.getRawNickname(names[i]);
 			}
 		}
 		return CommandBase.getListOfStringsMatchingLastWord(args, names);

@@ -7,6 +7,7 @@ import mcp.mobius.talkative.api.PrattleChatEvent;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.util.ChatUtils;
 
@@ -23,14 +24,27 @@ public class ChatHandlerPrattle {
 	public void chatEvent(PrattleChatEvent.ServerSendChatEvent event) {
 
 		ChatComponentText chatmessage;
-		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.sender));
-		String message = event.displayMsg.getFormattedText();
+		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.sender)) + EnumChatFormatting.RESET;
+		final String messageVar = "%MESSAGE%";
 		EntityPlayerMP player;
 		try {
 			player = FMLCommonHandler.instance().getSidedDelegate().getServer().getConfigurationManager().func_152612_a(event.sender);
 		} catch(Exception e) {
 			player = null;
 		}
+		String message = event.displayMsg.getUnformattedText()
+			.replaceAll(
+				StatCollector.translateToLocalFormatted("chat.type.text",
+					player != null ? player.getDisplayName() : event.sender, messageVar)
+					.replaceAll("(.*)(" + messageVar + ")(.*)", "\\\\Q$1\\\\E(.*)\\\\Q$3\\\\E")
+				, "$1");
+		final String originalMessage = message;
+
+		//The /me comamnd
+		/*if(message.startsWith("%MECOMMAND%")) {
+			event.displayMsg = new ChatComponentText(message.substring("%MECOMMAND%".length()));
+			return;
+		}*/
 
 		if(message.startsWith("!") && chat.enableShout) {
 			message = message.substring(1);
@@ -64,7 +78,7 @@ public class ChatHandlerPrattle {
 			}
 		}
 
-		if(event.displayMsg.getFormattedText().startsWith("!") && chat.enableShout) {
+		if(originalMessage.startsWith("!") && chat.enableShout) {
 			chatmessage = new ChatComponentText(EnumChatFormatting.YELLOW + chat.shoutPrefix + " " + formattedMessage);
 		} else {
 			chatmessage = new ChatComponentText(formattedMessage);
