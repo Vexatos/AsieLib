@@ -60,13 +60,13 @@ public class ChatHandler {
 			return;
 		}
 
-		ChatComponentText chat = null;
+		ChatComponentText chat;
 		boolean disableRadius = false;
 		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username));
 		String message = event.message;
 		int dimensionId = event.player.worldObj.provider.dimensionId;
 
-		if(event.message.startsWith("!")) {
+		if(event.message.startsWith("!") && enableShout) {
 			message = message.substring(1);
 		}
 
