@@ -62,7 +62,7 @@ public class ChatHandler {
 
 		ChatComponentText chat;
 		boolean disableRadius = false;
-		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username));
+		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username)) + EnumChatFormatting.RESET;
 		String message = event.message;
 		int dimensionId = event.player.worldObj.provider.dimensionId;
 

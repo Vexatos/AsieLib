@@ -1,6 +1,7 @@
 ==== 0.3.11 ====
 
   * FIXED: Chat Events not being processed properly
+  * FIXED: Properly added a soft dependency on GregTech 5 until GregTech 6 is considered stable
   * MISC: Refactored some code
 
 ==== 0.3.10 ====
