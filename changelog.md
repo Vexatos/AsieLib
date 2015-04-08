@@ -1,3 +1,7 @@
+==== 0.3.12 ====
+
+  * FIXED: Actually 'fixed' crashes with GregTech 6
+
 ==== 0.3.11 ====
 
   * FIXED: Chat Events not being processed properly
