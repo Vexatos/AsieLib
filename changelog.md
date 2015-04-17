@@ -1,3 +1,7 @@
+==== 0.3.13 ====
+
+  * FIXED: Fixed license file to represent actual license
+
 ==== 0.3.12 ====
 
   * FIXED: Actually 'fixed' crashes with GregTech 6
