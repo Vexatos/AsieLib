@@ -1,86 +1,63 @@
 package pl.asie.lib.integration;
 
-import buildcraft.api.tools.IToolWrench;
-import cofh.api.item.IToolHammer;
-import cpw.mods.fml.common.ModAPIManager;
-import cpw.mods.fml.common.Optional;
-import crazypants.enderio.api.tool.ITool;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import pl.asie.lib.reference.Mods;
+import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.api.tool.IToolProvider;
+import pl.asie.lib.integration.tool.ToolRegistry;
 
 public class Integration {
-	private boolean bcLoaded = false;
-	private boolean cofhLoaded = false;
-	private boolean eioLoaded = false;
+	public static final ToolRegistry toolRegistry = new ToolRegistry();
 
-	public Integration() {
-		bcLoaded = ModAPIManager.INSTANCE.hasAPI(Mods.API.BuildCraftTools);
-		cofhLoaded = ModAPIManager.INSTANCE.hasAPI(Mods.API.CoFHItems);
-		eioLoaded = ModAPIManager.INSTANCE.hasAPI(Mods.API.EnderIOTools);
+	/**
+	 * Registers a new {@link IToolProvider}
+	 * @param provider the {@link IToolProvider to register}
+	 */
+	public static void registerToolProvider(IToolProvider provider) {
+		toolRegistry.registerToolProvider(provider);
 	}
 
-	@Optional.Method(modid = Mods.API.BuildCraftTools)
-	private boolean bc_isWrench(Item item) {
-		return (item instanceof IToolWrench);
-	}
-
-	@Optional.Method(modid = Mods.API.BuildCraftTools)
-	private boolean bc_wrench(Item item, EntityPlayer player, int x, int y, int z) {
-		if(item instanceof IToolWrench) {
-			IToolWrench wrench = (IToolWrench) item;
-			if(wrench.canWrench(player, x, y, z)) {
-				wrench.wrenchUsed(player, x, y, z);
-				return true;
+	/**
+	 * Checks whether the ItemStack is a valid tool
+	 * @param stack the ItemStack to check
+	 * @param player the player holding the item
+	 * @param x The x coordinate of the block the tool is used on
+	 * @param y The y coordinate of the block the tool is used on
+	 * @param z The z coordinate of the block the tool is used on
+	 * @return Wether the ItemStack is a valid tool
+	 */
+	public static boolean isTool(ItemStack stack, EntityPlayer player, int x, int y, int z) {
+		for(IToolProvider provider : toolRegistry) {
+			try {
+				if(provider.isTool(stack, player, x, y, z)) {
+					return true;
+				}
+			} catch(Exception e) {
+				AsieLibMod.log.error("An error occured trying to identify a tool", e);
 			}
 		}
 		return false;
 	}
 
-	@Optional.Method(modid = Mods.API.CoFHItems)
-	private boolean cofh_isHammer(ItemStack stack) {
-		return (stack.getItem() instanceof IToolHammer);
-	}
-
-	@Optional.Method(modid = Mods.API.CoFHItems)
-	private boolean cofh_hammer(ItemStack stack, EntityPlayer player, int x, int y, int z) {
-		if(stack.getItem() instanceof IToolHammer) {
-			IToolHammer hammer = (IToolHammer) stack.getItem();
-			if(hammer.isUsable(stack, player, x, y, z)) {
-				hammer.toolUsed(stack, player, x, y, z);
-				return true;
+	/**
+	 * Uses the tool on the block
+	 * @param stack The ItemStack to check
+	 * @param player The player holding the item
+	 * @param x The x coordinate of the block the tool is used on
+	 * @param y The y coordinate of the block the tool is used on
+	 * @param z The z coordinate of the block the tool is used on
+	 * @return true if the tool has been successfully used
+	 */
+	public static boolean useTool(ItemStack stack, EntityPlayer player, int x, int y, int z) {
+		for(IToolProvider provider : toolRegistry) {
+			try {
+				if(provider.useTool(stack, player, x, y, z)) {
+					return true;
+				}
+			} catch(Exception e) {
+				AsieLibMod.log.error("An error occured trying to use a tool", e);
 			}
 		}
 		return false;
-	}
-
-	@Optional.Method(modid = Mods.API.EnderIOTools)
-	private boolean eio_isTool(ItemStack stack) {
-		return (stack.getItem() instanceof ITool);
-	}
-
-	@Optional.Method(modid = Mods.API.EnderIOTools)
-	private boolean eio_tool(ItemStack stack, EntityPlayer player, int x, int y, int z) {
-		if(stack.getItem() instanceof ITool) {
-			ITool tool = ((ITool) stack.getItem());
-			if(tool.canUse(stack, player, x, y, z)) {
-				tool.used(stack, player, x, y, z);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean isWrench(ItemStack stack) {
-		return (bcLoaded && bc_isWrench(stack.getItem()))
-			|| (eioLoaded && eio_isTool(stack))
-			|| (cofhLoaded && cofh_isHammer(stack));
-	}
-
-	public boolean wrench(ItemStack stack, EntityPlayer player, int x, int y, int z) {
-		return (bcLoaded && bc_wrench(stack.getItem(), player, x, y, z))
-			|| (eioLoaded && eio_tool(stack, player, x, y, z))
-			|| (cofhLoaded && cofh_hammer(stack, player, x, y, z));
 	}
 }

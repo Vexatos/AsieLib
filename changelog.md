@@ -1,3 +1,8 @@
+==== 0.4.0 ====
+
+  * ADDED: Support for OpenComputers, AppliedEnergistics and Mekanism wrenches
+  * CHANGED: Changed how tools from other mods are handled. This might break addons not updated to this version!
+
 ==== 0.3.13 ====
 
   * FIXED: Fixed license file to represent actual license

@@ -35,6 +35,13 @@ if (JavaVersion.current().isJava8Compatible()) {
 	}
 }
 
+repositories {
+	maven {
+		name = "OC repo"
+		url = "http://maven.cil.li/"
+	}
+}
+
 configurations {
 	provided
 	embedded
@@ -43,6 +50,7 @@ configurations {
 
 dependencies {
 	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
+	provided "li.cil.oc:OpenComputers:${config.oc.version}:api"
 }
 
 minecraft {
