@@ -1,20 +1,24 @@
 package pl.asie.lib.chat;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import mcp.mobius.talkative.api.PrattleAPI;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.ServerChatEvent;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.chat.prattle.CommandMePrattle;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.util.ChatUtils;
 
@@ -54,7 +58,7 @@ public class ChatHandler {
 
 	@Optional.Method(modid = Mods.Prattle)
 	private void registerPrattleCommands(FMLServerStartingEvent event) {
-		//event.registerServerCommand(new CommandMePrattle());
+		event.registerServerCommand(new CommandMePrattle());
 		event.registerServerCommand(new CommandNick());
 		event.registerServerCommand(new CommandRealname());
 	}
@@ -153,5 +157,21 @@ public class ChatHandler {
 			}
 		}
 		return CommandBase.getListOfStringsMatchingLastWord(args, names);
+	}
+
+	public void sendChatMessage(ICommandSender sender, IChatComponent message) {
+		if(Loader.isModLoaded(Mods.Prattle)) {
+			sendPrattleChatMessage(sender, message);
+		} else {
+			sender.addChatMessage(message);
+		}
+	}
+
+	@Optional.Method(modid = Mods.Prattle)
+	private void sendPrattleChatMessage(ICommandSender sender, IChatComponent message) {
+		if(sender instanceof EntityPlayerMP) {
+			PrattleAPI.sendMessage(sender, message, PrattleAPI.getDisplayChannel((EntityPlayerMP) sender));
+		}
+		sender.addChatMessage(message);
 	}
 }

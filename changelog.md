@@ -1,5 +1,7 @@
 ==== 0.4.0 ====
 
+  * ADDED: Prattle support
+    - Chat tweaks work in every channel now!
   * ADDED: Support for OpenComputers, AppliedEnergistics and Mekanism wrenches
   * CHANGED: Changed how tools from other mods are handled. This might break addons not updated to this version!
 
@@ -13,8 +15,6 @@
 
 ==== 0.3.11 ====
 
-  * ADDED: Prattle support
-    - Chat tweaks work in every channel now!
   * FIXED: Chat Events not being processed properly
   * FIXED: Properly added a soft dependency on GregTech 5 until GregTech 6 is considered stable
   * MISC: Refactored some code

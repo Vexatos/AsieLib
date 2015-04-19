@@ -1,4 +1,4 @@
-package pl.asie.lib.chat;
+package pl.asie.lib.chat.prattle;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.EventPriority;
@@ -9,6 +9,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import pl.asie.lib.AsieLibMod;
+import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.util.ChatUtils;
 
 import java.util.Calendar;

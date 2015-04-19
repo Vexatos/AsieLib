@@ -45,7 +45,7 @@ public class CommandRealname extends CommandBase {
 			} else {
 				text = StatCollector.translateToLocal("commands.realname.isNot");
 			}
-			sender.addChatMessage(new ChatComponentText(text));
+			AsieLibMod.chat.sendChatMessage(sender, new ChatComponentText(text));
 		} else {
 			throw new WrongUsageException(this.getCommandUsage(sender));
 		}

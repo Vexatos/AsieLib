@@ -22,7 +22,7 @@ import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
 import pl.asie.lib.api.tool.IToolRegistry;
 import pl.asie.lib.chat.ChatHandler;
-import pl.asie.lib.chat.ChatHandlerPrattle;
+import pl.asie.lib.chat.prattle.ChatHandlerPrattle;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
 import pl.asie.lib.client.BlockBaseRender;
