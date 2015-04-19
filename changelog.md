@@ -1,3 +1,16 @@
+==== 0.4.0 ====
+
+  * ADDED: Support for OpenComputers, AppliedEnergistics and Mekanism wrenches
+  * CHANGED: Changed how tools from other mods are handled. This might break addons not updated to this version!
+
+==== 0.3.13 ====
+
+  * FIXED: Fixed license file to represent actual license
+
+==== 0.3.12 ====
+
+  * FIXED: Actually 'fixed' crashes with GregTech 6
+
 ==== 0.3.11 ====
 
   * ADDED: Prattle support

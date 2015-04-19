@@ -76,7 +76,7 @@ public class ChatHandler {
 
 		ChatComponentText chat;
 		boolean disableRadius = false;
-		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username));
+		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username)) + EnumChatFormatting.RESET;
 		String message = event.message;
 		int dimensionId = event.player.worldObj.provider.dimensionId;
 
@@ -120,7 +120,7 @@ public class ChatHandler {
 		boolean useRadius = CHAT_RADIUS > 0 && !disableRadius;
 		event.setCanceled(true); // Override regular sending
 
-		if(!useRadius && ModAPIManager.INSTANCE.hasAPI("EiraIRC|API")) {
+		if(!useRadius && Mods.API.hasAPI("EiraIRC|API")) {
 			ChatHandlerEiraIRC.eiraircRelay(event.player, username, message);
 		}
 

@@ -1,5 +1,12 @@
 package pl.asie.lib.reference;
 
+import cpw.mods.fml.common.ModAPIManager;
+import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.versioning.ArtifactVersion;
+import cpw.mods.fml.common.versioning.VersionParser;
+
+import java.util.HashMap;
+
 /**
  * @author Vexatos
  */
@@ -12,9 +19,11 @@ public class Mods {
 
 	//Other mods
 	public static final String
+		AE2 = "appliedenergistics2",
 		IC2 = "IC2",
 		IC2Classic = "IC2-Classic",
 		GregTech = "gregtech",
+		Mekanism = "Mekanism",
 		Prattle = "Prattle",
 		ProjectRed = "ProjRed|Core",
 		RedLogic = "RedLogic";
@@ -28,6 +37,38 @@ public class Mods {
 			CoFHItems = "CoFHAPI|item",
 			CoFHTileEntities = "CoFHAPI|tileentity",
 			EiraIRC = "EiraIRC|API",
-			EnderIOTools = "EnderIOAPI|Tools";
+			EnderIOTools = "EnderIOAPI|Tools",
+			OpenComputersInternal = "OpenComputersAPI|Internal";
+
+		private static HashMap<String, ArtifactVersion> apiList;
+
+		public static ArtifactVersion getVersion(String name) {
+			if(apiList == null) {
+				apiList = new HashMap<String, ArtifactVersion>();
+				Iterable<? extends ModContainer> apis = ModAPIManager.INSTANCE.getAPIList();
+
+				for(ModContainer api : apis) {
+					apiList.put(api.getModId(), api.getProcessedVersion());
+				}
+			}
+
+			if(apiList.containsKey(name)) {
+				return apiList.get(name);
+			}
+			throw new IllegalArgumentException("API '" + name + "' does not exist!");
+		}
+
+		public static boolean hasVersion(String name, String version) {
+			if(ModAPIManager.INSTANCE.hasAPI(name)) {
+				ArtifactVersion v1 = VersionParser.parseVersionReference(name + "@" + version);
+				ArtifactVersion v2 = getVersion(name);
+				return v1.containsVersion(v2);
+			}
+			return false;
+		}
+
+		public static boolean hasAPI(String name) {
+			return ModAPIManager.INSTANCE.hasAPI(name);
+		}
 	}
 }

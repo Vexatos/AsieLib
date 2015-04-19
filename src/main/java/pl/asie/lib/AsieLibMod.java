@@ -1,5 +1,6 @@
 package pl.asie.lib;
 
+import com.google.common.collect.ImmutableList;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -7,6 +8,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -18,25 +20,27 @@ import org.apache.logging.log4j.Logger;
 import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
+import pl.asie.lib.api.tool.IToolRegistry;
 import pl.asie.lib.chat.ChatHandler;
 import pl.asie.lib.chat.ChatHandlerPrattle;
 import pl.asie.lib.chat.NicknameNetworkHandler;
 import pl.asie.lib.chat.NicknameRepository;
 import pl.asie.lib.client.BlockBaseRender;
 import pl.asie.lib.integration.Integration;
+import pl.asie.lib.integration.tool.ToolProviders;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
 
+import java.lang.reflect.Method;
 import java.util.Random;
 
-@Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "@VERSION@", useMetadata = true,
-	dependencies = "required-after:Forge@[10.13.2.1236,);after:gregtech@MC1710;after:Prattle@[0.0.8,);"
+@Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "@VERSION@",
+	dependencies = "required-after:Forge@[10.13.2.1236,);after:gregtech@[MC1710];after:Prattle@[0.0.9,);"
 		+ "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);"
 		+ "after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")
 public class AsieLibMod extends AsieLibAPI {
 	public Configuration config;
-	public static Integration integration;
 	public static Random rand = new Random();
 	public static Logger log;
 	public static ChatHandler chat;
@@ -54,7 +58,7 @@ public class AsieLibMod extends AsieLibAPI {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		AsieLibAPI.instance = this;
-		integration = new Integration();
+		ToolProviders.registerToolProviders();
 		log = LogManager.getLogger(Mods.AsieLib);
 
 		config = new Configuration(event.getSuggestedConfigurationFile());
@@ -136,5 +140,41 @@ public class AsieLibMod extends AsieLibAPI {
 
 	public INicknameRepository getNicknameRepository() {
 		return nick;
+	}
+
+	/**
+	 * Call this using {@link FMLInterModComms#sendMessage}.
+	 * <p/>
+	 * Example:
+	 * FMLInterModComms.sendMessage("asielib", "addToolProvider", "com.example.examplemod.tool.ToolProviders.register")
+	 * @see IToolRegistry
+	 */
+	@EventHandler
+	@SuppressWarnings("unchecked")
+	public void receiveIMC(FMLInterModComms.IMCEvent event) {
+		ImmutableList<FMLInterModComms.IMCMessage> messages = event.getMessages();
+		for(FMLInterModComms.IMCMessage message : messages) {
+			if(message.key.equalsIgnoreCase("addtoolprovider") && message.isStringMessage()) {
+				try {
+					String methodString = message.getStringValue();
+					String[] methodParts = methodString.split("\\.");
+					String methodName = methodParts[methodParts.length - 1];
+					String className = methodString.substring(0, methodString.length() - methodName.length() - 1);
+					try {
+						Class c = Class.forName(className);
+						Method method = c.getDeclaredMethod(methodName, IToolRegistry.class);
+						method.invoke(null, Integration.toolRegistry);
+					} catch(ClassNotFoundException e) {
+						log.warn("Could not find class " + className, e);
+					} catch(NoSuchMethodException e) {
+						log.warn("Could not find method " + methodString, e);
+					} catch(Exception e) {
+						log.warn("Exception while trying to call method " + methodString, e);
+					}
+				} catch(Exception e) {
+					log.warn("Exception while trying to register a ToolProvider", e);
+				}
+			}
+		}
 	}
 }

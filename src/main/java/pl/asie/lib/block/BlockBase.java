@@ -24,9 +24,9 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.api.tile.IInformationProvider;
 import pl.asie.lib.client.BlockBaseRender;
+import pl.asie.lib.integration.Integration;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tile.TileMachine;
 import pl.asie.lib.util.ItemUtils;
@@ -124,7 +124,7 @@ public abstract class BlockBase extends BlockContainer implements
 	}
 
 	public int getFrontSide(int m) {
-		switch(this.rotation){
+		switch(this.rotation) {
 			case FOUR:
 				return (m & 3) + 2;
 			case SIX:
@@ -280,8 +280,11 @@ public abstract class BlockBase extends BlockContainer implements
 		}
 		if(!world.isRemote) {
 			ItemStack held = player.inventory.getCurrentItem();
-			if(held != null && held.getItem() != null && AsieLibMod.integration.isWrench(held) && this.rotation != null) {
-				boolean wrenched = AsieLibMod.integration.wrench(held, player, x, y, z);
+			if(held != null && held.getItem() != null && Integration.isTool(held, player, x, y, z) && this.rotation != null) {
+				boolean wrenched = Integration.useTool(held, player, x, y, z);
+				if(!wrenched) {
+					return false;
+				}
 				int meta = world.getBlockMetadata(x, y, z);
 				if(this.rotation == Rotation.FOUR) {
 					if(side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal()) {
