@@ -14,6 +14,7 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
+import pl.asie.lib.util.ChatUtils;
 import pl.asie.lib.util.PlayerUtils;
 
 import java.io.File;
@@ -71,7 +72,7 @@ public class NicknameRepository implements INicknameRepository {
 		//BiMap<String, String> usernames = nicknames.inverse();
 		for(String username : nicknames.keySet()) {
 			String nick = nicknames.get(username);
-			if(nick != null && nick.replaceAll("&.", "").equals(nickname)) {
+			if(nick != null && ChatUtils.stripColors(nick).equals(nickname)) {
 				return username;
 			}
 		}
@@ -85,7 +86,7 @@ public class NicknameRepository implements INicknameRepository {
 
 	public String getRawNickname(String username) {
 		String nn = getNickname(username);
-		return nn.replaceAll("&.", "");
+		return ChatUtils.stripColors(nn);
 	}
 
 	public boolean hasNickname(String username) {
