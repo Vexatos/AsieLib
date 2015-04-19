@@ -28,6 +28,11 @@ public class CommandMe extends CommandBase {
 	}
 
 	@Override
+	public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_) {
+		return true;
+	}
+
+	@Override
 	public String getCommandUsage(ICommandSender par1ICommandSender) {
 		return "commands.me.usage";
 	}

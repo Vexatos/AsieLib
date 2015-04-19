@@ -1,5 +1,6 @@
 ==== 0.4.0 ====
 
+  * ADDED: Config option to make the /realname command require Op rights on a server
   * ADDED: Support for OpenComputers, AppliedEnergistics and Mekanism wrenches
   * CHANGED: Changed how tools from other mods are handled. This might break addons not updated to this version!
 

@@ -22,16 +22,16 @@ public class CommandRealname extends CommandBase {
 	 */
 	@Override
 	public int getRequiredPermissionLevel() {
-		return 0;
+		return AsieLibMod.chat.realnameLevel;
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_) {
-		return true;
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+		return this.getRequiredPermissionLevel() == 0 || super.canCommandSenderUseCommand(sender);
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender par1ICommandSender) {
+	public String getCommandUsage(ICommandSender sender) {
 		return "commands.realname.usage";
 	}
 
