@@ -17,7 +17,7 @@ public class EnchantmentBetterBane extends EnchantmentDamage {
 	@Override
 	public String getTranslatedName(int p_77316_1_) {
 		String s = StatCollector.translateToLocal(this.getName());
-		return s + " \u2468" /*+ StatCollector.translateToLocal("enchantment.computronics.level.9")*/;
+		return s + " \u2468" /*+ StatCollector.translateToLocal("enchantment.asielib.level.9")*/;
 	}
 
 	@Override

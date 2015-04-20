@@ -1,13 +1,17 @@
 package pl.asie.lib;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.init.Items;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import pl.asie.lib.util.ChatUtils;
 
 public class AnvilDyeTweak {
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void event(AnvilUpdateEvent e) {
+		if(e.left == null || e.right == null || e.left.getItem() == null || e.right.getItem() == null || e.isCanceled()) {
+			return;
+		}
 		if(e.right.getItem().equals(Items.dye) && e.right.stackSize == e.left.stackSize) {
 			e.cost = e.left.isItemStackDamageable() ? 7 : e.left.stackSize * 5;
 			String colorPrefix = "\u00a7" + Integer.toHexString(ChatUtils.dyeToChat(e.right.getItemDamage()));
@@ -24,7 +28,9 @@ public class AnvilDyeTweak {
 					name = name.substring(1);
 				}
 			}
-			if(e.output == null) e.output = e.left.copy();
+			if(e.output == null) {
+				e.output = e.left.copy();
+			}
 			e.output.setStackDisplayName(colorPrefix + name);
 		}
 	}

@@ -1,5 +1,6 @@
 package pl.asie.lib.tweak.enchantment;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.enchantment.Enchantment;
@@ -40,51 +41,31 @@ public class EnchantmentTweak {
 		throw new IllegalArgumentException("No valid enchantment id! " + EnchantmentBetterBane.class + " Enchantment ID:" + enchID);
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void anvilEvent(AnvilUpdateEvent e) {
-		if(e.left.isItemStackDamageable() && e.left.isItemEnchanted()
-			&& e.right.getItem() == Items.fermented_spider_eye) {
-			if(e.right.stackSize == 64) {
-				e.output = e.left.copy();
-				e.cost = 37;
-				addBaneEnchantment(e.output, 9);
-			} else {
-				e.output = null;
-				if(e.isCancelable()) {
-					e.setCanceled(true);
-				}
-			}
-		} else if(hasBaneEnchantment(e.right) || hasBaneEnchantment(e.left)) {
-			e.output = null;
-			if(e.isCancelable()) {
-				e.setCanceled(true);
-			}
+		if(e.left == null || e.right == null || e.left.getItem() == null || e.right.getItem() == null || e.isCanceled()) {
+			return;
 		}
-	}
-
-	/*@SubscribeEvent
-	public void enchEvent(TickEvent.ClientTickEvent e) {
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		if(player != null && player.getCurrentEquippedItem() != null && hasBaneEnchantment(player.getCurrentEquippedItem())
-			&& player.getCurrentEquippedItem().isItemStackDamageable()) {
-			RayTracing.instance().fire(20.0F);
-			MovingObjectPosition pos = RayTracing.instance().getTarget();
-			if(pos != null && pos.typeOfHit != null && pos.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-				Entity entity = pos.entityHit;
-				if(entity != null && entity instanceof EntityLivingBase
-					&& ((EntityLivingBase) entity).getCreatureAttribute() == EnumCreatureAttribute.ARTHROPOD
-					&& entity.hurtResistantTime <= 10) {
-					try {
-						AsieLibMod.packet.sendToServer(
-							AsieLibMod.packet.create(Packets.ATTACK_ENTITY)
-								.writeInt(entity.getEntityId())
-					} catch(IOException e1) {
-						//NO-OP
+		if(e.left.isItemStackDamageable() && e.left.isItemEnchanted()) {
+			if(e.right.getItem() == Items.fermented_spider_eye && !hasBaneEnchantment(e.left)) {
+				if(e.right.stackSize == 64) {
+					e.output = e.left.copy();
+					e.cost = 37;
+					if(!addBaneEnchantment(e.output, 9)) {
+						e.output = null;
+						if(e.isCancelable()) {
+							e.setCanceled(true);
+						}
+					}
+				} else {
+					e.output = null;
+					if(e.isCancelable()) {
+						e.setCanceled(true);
 					}
 				}
 			}
 		}
-	}*/
+	}
 
 	@SubscribeEvent
 	public void enchEvent(TickEvent.PlayerTickEvent e) {
@@ -92,7 +73,9 @@ public class EnchantmentTweak {
 		if(player.worldObj.isRemote) {
 			return;
 		}
-		if(player.getCurrentEquippedItem() != null && hasBaneEnchantment(player.getCurrentEquippedItem()) && player.getCurrentEquippedItem().isItemStackDamageable()) {
+		if(player.getCurrentEquippedItem() != null && hasBaneEnchantment(player.getCurrentEquippedItem())
+			&& player.getCurrentEquippedItem().isItemStackDamageable()) {
+
 			RayTracer.instance().fire(player, 10.0);
 			MovingObjectPosition target = RayTracer.instance().getTarget();
 			if(target != null && target.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
