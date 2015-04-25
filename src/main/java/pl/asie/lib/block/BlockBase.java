@@ -269,39 +269,64 @@ public abstract class BlockBase extends BlockContainer implements
 		return (gui >= 0);
 	}
 
+	@Deprecated
 	public int getGuiID() {
 		return gui;
 	}
 
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float par7, float par8, float par9) {
+	public boolean hasGui(World world, int x, int y, int z, EntityPlayer player, int side) {
+		return (gui >= 0);
+	}
+
+	public int getGuiID(World world, int x, int y, int z, EntityPlayer player, int side) {
+		return gui;
+	}
+
+	protected boolean rotate(World world, int x, int y, int z, EntityPlayer player, int side) {
 		if(player.isSneaking()) {
 			return false;
 		}
-		if(!world.isRemote) {
-			ItemStack held = player.inventory.getCurrentItem();
-			if(held != null && held.getItem() != null && Integration.isTool(held, player, x, y, z) && this.rotation != null) {
-				boolean wrenched = Integration.useTool(held, player, x, y, z);
-				if(!wrenched) {
-					return false;
-				}
-				int meta = world.getBlockMetadata(x, y, z);
-				if(this.rotation == Rotation.FOUR) {
-					if(side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal()) {
-						world.setBlockMetadataWithNotify(x, y, z, ((meta & 3) +
-							(meta == 0 ? 3 : meta == 3 ? 2 : meta)) % 4, 2);
-					} else {
-						world.setBlockMetadataWithNotify(x, y, z,
-							getFrontSide(meta) != side ? (side >= 2 ? side - 2 : 2)
-								: (ForgeDirection.getOrientation(side).getOpposite().ordinal() - 2) & 3, 2);
-					}
-				} else if(this.rotation == Rotation.SIX) {
-					world.setBlockMetadataWithNotify(x, y, z,
-						getFrontSide(meta) != side ? side
-							: ForgeDirection.getOrientation(side).getOpposite().ordinal(), 2);
-				}
+		int meta = world.getBlockMetadata(x, y, z);
+		if(this.rotation == Rotation.FOUR) {
+			if(side == ForgeDirection.UP.ordinal() || side == ForgeDirection.DOWN.ordinal()) {
+				world.setBlockMetadataWithNotify(x, y, z, ((meta & 3) +
+					(meta == 0 ? 3 : meta == 3 ? 2 : meta)) % 4, 2);
 			} else {
-				player.openGui(this.parent, this.gui, world, x, y, z);
+				world.setBlockMetadataWithNotify(x, y, z,
+					getFrontSide(meta) != side ? (side >= 2 ? side - 2 : 2)
+						: (ForgeDirection.getOrientation(side).getOpposite().ordinal() - 2) & 3, 2);
+			}
+			return true;
+		} else if(this.rotation == Rotation.SIX) {
+			world.setBlockMetadataWithNotify(x, y, z,
+				getFrontSide(meta) != side ? side
+					: ForgeDirection.getOrientation(side).getOpposite().ordinal(), 2);
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean onToolUsed(World world, int x, int y, int z, EntityPlayer player, int side) {
+		return false;
+	}
+
+	protected boolean useTool(World world, int x, int y, int z, EntityPlayer player, int side) {
+		ItemStack held = player.inventory.getCurrentItem();
+		if(held != null && held.getItem() != null && Integration.isTool(held, player, x, y, z) && this.rotation != null) {
+			boolean wrenched = Integration.useTool(held, player, x, y, z);
+			return wrenched && (this.onToolUsed(world, x, y, z, player, side) || this.rotate(world, x, y, z, player, side));
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float par7, float par8, float par9) {
+		if(!world.isRemote) {
+			if(!this.useTool(world, x, y, z, player, side)) {
+				int guiID = this.getGuiID(world, x, y, z, player, side);
+				if(guiID >= 0) {
+					player.openGui(this.parent, guiID, world, x, y, z);
+				}
 			}
 		}
 		return true;
