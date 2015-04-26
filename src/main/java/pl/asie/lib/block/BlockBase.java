@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import pl.asie.lib.api.tile.IInformationProvider;
 import pl.asie.lib.client.BlockBaseRender;
+import pl.asie.lib.gui.managed.IGuiProvider;
 import pl.asie.lib.integration.Integration;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tile.TileMachine;
@@ -41,6 +42,7 @@ import java.util.List;
 })
 public abstract class BlockBase extends BlockContainer implements
 	IBlockInfo, IDebugableBlock {
+
 	public enum Rotation {
 		NONE,
 		FOUR,
@@ -50,6 +52,7 @@ public abstract class BlockBase extends BlockContainer implements
 	private Rotation rotation = Rotation.NONE;
 	private final Object parent;
 	private int gui = -1;
+	protected IGuiProvider guiProvider;
 
 	public BlockBase(Material material, Object parent) {
 		super(material);
@@ -259,27 +262,51 @@ public abstract class BlockBase extends BlockContainer implements
 		return parent;
 	}
 
+	@Deprecated
 	public void setGuiID(int gui) {
 		if(gui >= 0) {
 			this.gui = gui;
 		}
 	}
 
+	@Deprecated
 	public boolean hasGui() {
-		return (gui >= 0);
+		if(guiProvider != null) {
+			this.gui = guiProvider.getGuiID();
+		}
+		return (guiProvider != null && gui >= 0);
 	}
 
 	@Deprecated
 	public int getGuiID() {
+		if(guiProvider != null) {
+			this.gui = guiProvider.getGuiID();
+		}
 		return gui;
 	}
 
 	public boolean hasGui(World world, int x, int y, int z, EntityPlayer player, int side) {
-		return (gui >= 0);
+		if(guiProvider != null) {
+			this.gui = guiProvider.getGuiID();
+		}
+		return guiProvider != null && gui >= 0;
 	}
 
+	@Deprecated
 	public int getGuiID(World world, int x, int y, int z, EntityPlayer player, int side) {
+		if(guiProvider != null) {
+			this.gui = guiProvider.getGuiID();
+		}
 		return gui;
+	}
+
+	public IGuiProvider getGuiProvider(World world, int x, int y, int z, EntityPlayer player, int side) {
+		return guiProvider;
+	}
+
+	public void setGuiProvider(IGuiProvider provider) {
+		this.guiProvider = provider;
+		this.gui = guiProvider.getGuiID();
 	}
 
 	protected boolean rotate(World world, int x, int y, int z, EntityPlayer player, int side) {
@@ -319,13 +346,24 @@ public abstract class BlockBase extends BlockContainer implements
 		return false;
 	}
 
+	@SuppressWarnings("deprecation")
+	private void tryOpenOldGui(World world, int x, int y, int z, EntityPlayer player, int side) {
+		int guiID = this.getGuiID(world, x, y, z, player, side);
+		if(guiID >= 0) {
+			player.openGui(this.parent, guiID, world, x, y, z);
+		}
+	}
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float par7, float par8, float par9) {
 		if(!world.isRemote) {
 			if(!this.useTool(world, x, y, z, player, side)) {
-				int guiID = this.getGuiID(world, x, y, z, player, side);
-				if(guiID >= 0) {
-					player.openGui(this.parent, guiID, world, x, y, z);
+				IGuiProvider guiProvider = getGuiProvider(world, x, y, z, player, side);
+				if(guiProvider != null) {
+					player.openGui(this.parent, guiProvider.getGuiID(), world, x, y, z);
+					return true;
+				} else {
+					this.tryOpenOldGui(world, x, y, z, player, side);
 				}
 			}
 		}
