@@ -11,21 +11,23 @@ import pl.asie.lib.block.TileEntityBase;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class GuiHandler implements IGuiHandler {
 	private final ArrayList<Class<? extends ContainerBase>> containers;
 	private final ArrayList<Class<? extends GuiBase>> guis;
-	
+
 	public GuiHandler() {
 		containers = new ArrayList<Class<? extends ContainerBase>>();
 		guis = new ArrayList<Class<? extends GuiBase>>();
 	}
-	
+
+	@Deprecated
 	public int registerGui(Class<? extends ContainerBase> container, Class<? extends GuiBase> gui) {
 		containers.add(container);
 		guis.add(gui);
 		return guis.size() - 1;
 	}
-	
+
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
