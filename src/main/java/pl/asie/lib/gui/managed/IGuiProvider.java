@@ -14,6 +14,8 @@ public interface IGuiProvider {
 
 	public Container makeContainer(int ID, EntityPlayer player, World world, int x, int y, int z);
 
+	public boolean canOpen(World world, int x, int y, int z, EntityPlayer player, int side);
+
 	public void setGuiID(int guiID);
 
 	public int getGuiID();

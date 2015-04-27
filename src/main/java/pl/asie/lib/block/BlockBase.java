@@ -359,7 +359,7 @@ public abstract class BlockBase extends BlockContainer implements
 		if(!world.isRemote) {
 			if(!this.useTool(world, x, y, z, player, side)) {
 				IGuiProvider guiProvider = getGuiProvider(world, x, y, z, player, side);
-				if(guiProvider != null) {
+				if(guiProvider != null && guiProvider.canOpen(world, x, y, z, player, side)) {
 					player.openGui(this.parent, guiProvider.getGuiID(), world, x, y, z);
 					return true;
 				} else {
