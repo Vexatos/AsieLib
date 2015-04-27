@@ -1,5 +1,6 @@
 package pl.asie.lib.reference;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModAPIManager;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
@@ -69,5 +70,22 @@ public class Mods {
 		public static boolean hasAPI(String name) {
 			return ModAPIManager.INSTANCE.hasAPI(name);
 		}
+	}
+
+	public static boolean isLoaded(String name) {
+		return Loader.isModLoaded(name);
+	}
+
+	private static boolean checkedEnergyMods = false;
+	private static boolean hasEnergyMod = false;
+
+	public static boolean hasEnergyMod() {
+		if(!checkedEnergyMods) {
+			hasEnergyMod = API.hasAPI(API.CoFHEnergy)
+				|| isLoaded(IC2)
+				|| isLoaded(IC2Classic);
+			checkedEnergyMods = true;
+		}
+		return hasEnergyMod;
 	}
 }

@@ -1,6 +1,5 @@
 package pl.asie.lib.tile;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
@@ -68,10 +67,10 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void validate() {
 		super.validate();
-		if(Loader.isModLoaded(Mods.IC2) && this.battery != null) {
+		if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 			this.initIC();
 		}
-		if(Loader.isModLoaded(Mods.IC2Classic) && this.battery != null) {
+		if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
 			this.initICClassic();
 		}
 	}
@@ -79,10 +78,10 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void invalidate() {
 		super.invalidate();
-		if(Loader.isModLoaded(Mods.IC2) && this.battery != null) {
+		if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
 			this.deinitIC();
 		}
-		if(Loader.isModLoaded(Mods.IC2Classic) && this.battery != null) {
+		if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
 			this.deinitICClassic();
 		}
 	}

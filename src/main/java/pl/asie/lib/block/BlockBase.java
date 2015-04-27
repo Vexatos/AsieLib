@@ -1,7 +1,6 @@
 package pl.asie.lib.block;
 
 import cofh.api.block.IBlockInfo;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -94,7 +93,7 @@ public abstract class BlockBase extends BlockContainer implements
 				((TileEntityBase) te).onRedstoneSignal_internal(getVanillaRedstoneValue(world, x, y, z));
 			}
 		}
-		if(Loader.isModLoaded(Mods.ProjectRed)) {
+		if(Mods.isLoaded(Mods.ProjectRed)) {
 			TileEntity tile = world.getTileEntity(x, y, z);
 			if(tile != null && tile instanceof TileMachine) {
 				((TileMachine) tile).onProjectRedBundledInputChanged();

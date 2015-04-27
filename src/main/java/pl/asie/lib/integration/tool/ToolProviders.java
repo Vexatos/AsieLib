@@ -1,6 +1,5 @@
 package pl.asie.lib.integration.tool;
 
-import cpw.mods.fml.common.Loader;
 import pl.asie.lib.integration.tool.appeng.ToolProviderAE2;
 import pl.asie.lib.integration.tool.buildcraft.ToolProviderBuildCraft;
 import pl.asie.lib.integration.tool.cofh.ToolProviderCoFH;
@@ -28,10 +27,10 @@ public class ToolProviders {
 		if(Mods.API.hasAPI(Mods.API.CoFHItems)) {
 			registerToolProvider(new ToolProviderCoFH());
 		}
-		if(Loader.isModLoaded(Mods.AE2)) {
+		if(Mods.isLoaded(Mods.AE2)) {
 			registerToolProvider(new ToolProviderAE2());
 		}
-		if(Loader.isModLoaded(Mods.Mekanism)) {
+		if(Mods.isLoaded(Mods.Mekanism)) {
 			registerToolProvider(new ToolProviderMekanism());
 		}
 	}
