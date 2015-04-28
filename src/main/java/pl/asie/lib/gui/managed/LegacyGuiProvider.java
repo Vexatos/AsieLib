@@ -1,5 +1,7 @@
 package pl.asie.lib.gui.managed;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -14,11 +16,13 @@ import pl.asie.lib.gui.GuiBase;
  */
 public abstract class LegacyGuiProvider extends GuiProviderBase {
 
+	@SideOnly(Side.CLIENT)
 	protected abstract GuiBase makeGuiBase(int guiID, EntityPlayer entityPlayer, World world, int x, int y, int z, TileEntityBase tile);
 
 	protected abstract ContainerBase makeContainerBase(int guiID, EntityPlayer entityPlayer, World world, int x, int y, int z, TileEntityBase tile);
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public GuiContainer makeGui(int guiID, EntityPlayer entityPlayer, World world, int x, int y, int z) {
 		TileEntity tile = world.getTileEntity(x, y, z);
 		if(tile instanceof TileEntityBase) {
