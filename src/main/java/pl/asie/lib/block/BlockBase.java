@@ -358,15 +358,26 @@ public abstract class BlockBase extends BlockContainer implements
 		if(!world.isRemote) {
 			if(!this.useTool(world, x, y, z, player, side)) {
 				IGuiProvider guiProvider = getGuiProvider(world, x, y, z, player, side);
-				if(guiProvider != null && guiProvider.canOpen(world, x, y, z, player, side)) {
-					player.openGui(this.parent, guiProvider.getGuiID(), world, x, y, z);
-					return true;
+				if(guiProvider != null) {
+					if(guiProvider.canOpen(world, x, y, z, player, side) && this.onOpenGui(world, x, y, z, player, side)) {
+						player.openGui(this.parent, guiProvider.getGuiID(), world, x, y, z);
+						return true;
+					} else {
+						this.onOpenGuiDenied(world, x, y, z, player, side);
+					}
 				} else {
 					this.tryOpenOldGui(world, x, y, z, player, side);
 				}
 			}
 		}
 		return true;
+	}
+
+	protected boolean onOpenGui(World world, int x, int y, int z, EntityPlayer player, int side) {
+		return true;
+	}
+
+	protected void onOpenGuiDenied(World world, int x, int y, int z, EntityPlayer player, int side) {
 	}
 
 	// Simple textures
