@@ -11,6 +11,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.ServerChatEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.util.ChatUtils;
@@ -21,9 +23,10 @@ import java.util.List;
 
 public class ChatHandler {
 	private final HashMap<String, String> actions = new HashMap<String, String>();
-	public final boolean enableChatFeatures, enableShout, enableGreentext, enableColor;
+	public final boolean enableChatFeatures, enableShout, enableGreentext, enableColor, enableChatLog;
 	public final int CHAT_RADIUS, nickLevel, realnameLevel;
 	public final String colorAction, messageFormat, shoutPrefix;
+	public final Logger chatlog;
 
 	public ChatHandler(Configuration config) {
 		CHAT_RADIUS = config.get("chat", "chatRadius", 0).getInt();
@@ -33,9 +36,11 @@ public class ChatHandler {
 		enableColor = config.get("base", "enableColor", true).getBoolean(true);
 		enableGreentext = config.get("chat", "enableGreentext", false, ">implying anyone will ever turn this on").getBoolean(false);
 		nickLevel = config.get("chat", "nicknamesForEveryone", true, "Disable to make changing the own nickname require Op rights on a server").getBoolean(true) ? 0 : 2;
-		realnameLevel =config.get("chat", "realnamesForEveryone", true, "Disable to make looking up the real name of others require Op rights on a server").getBoolean(true) ? 0 : 2;
+		realnameLevel = config.get("chat", "realnamesForEveryone", true, "Disable to make looking up the real name of others require Op rights on a server").getBoolean(true) ? 0 : 2;
 		colorAction = config.get("chat", "colorMe", "5").getString();
 		messageFormat = config.get("chat", "formatMessage", "<%u> %m", "%u - username; %m - message; %w - dimension; %H - hours; %M - minutes; %S - seconds").getString();
+		enableChatLog = config.get("chat", "chatLog", true, "Enable this to log server chat to console").getBoolean(true);
+		chatlog = LogManager.getLogger("Chat");
 	}
 
 	public void registerCommands(FMLServerStartingEvent event) {
@@ -113,6 +118,9 @@ public class ChatHandler {
 
 		if(MinecraftServer.getServer() == null) {
 			return;
+		}
+		if(enableChatLog) {
+			chatlog.info(ChatUtils.stripColors(formattedMessage));
 		}
 		for(WorldServer ws : MinecraftServer.getServer().worldServers) {
 			if(useRadius && ws.provider.dimensionId != dimensionId) {

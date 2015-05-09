@@ -2,7 +2,9 @@
 
   * ADDED: Config option to make the /realname command require Op rights on a server
   * ADDED: Support for OpenComputers, AppliedEnergistics and Mekanism wrenches
+  * ADDED: Config option to log chat to the server console. Enabled by default.
   * CHANGED: Changed how tools from other mods are handled. This might break addons not updated to this version!
+  * FIXED: server chat not being logged to console at all. Now works provided the config option is enabled.
 
 ==== 0.3.13 ====
 
