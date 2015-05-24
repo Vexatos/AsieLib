@@ -1,3 +1,7 @@
+==== 0.4.1 ====
+
+  * FIXED: Links in Chat not working when Chat Tweaks are enabled.
+
 ==== 0.4.0 ====
 
   * ADDED: Config option to make the /realname command require Op rights on a server
