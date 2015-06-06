@@ -2,10 +2,13 @@ package pl.asie.lib.integration.buildcraft;
 
 import buildcraft.api.blueprints.IBuilderContext;
 import buildcraft.api.blueprints.SchematicTile;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import pl.asie.lib.block.BlockBase;
 import pl.asie.lib.tile.TileMachine;
+
+import java.util.ArrayList;
 
 /**
  * @author Vexatos
@@ -52,15 +55,39 @@ public class SchematicBlockBase extends SchematicTile {
 
 		if(block.hasTileEntity(meta)) {
 			TileEntity tile = context.world().getTileEntity(x, y, z);
-			if(tile != null && tile instanceof TileMachine){
+			if(tile != null && tile instanceof TileMachine) {
 				((TileMachine) tile).removeFromNBTForTransfer(tileNBT);
 				tileNBT = (NBTTagCompound) tileNBT.copy();
 			}
 		}
 	}
 
+	// Don't store the inventory.
+	@Override
+	public void storeRequirements(IBuilderContext context, int x, int y, int z) {
+		if(block != null) {
+			ArrayList<ItemStack> req = block.getDrops(context.world(), x,
+				y, z, context.world().getBlockMetadata(x, y, z), 0);
+
+			if(req != null) {
+				storedRequirements = new ItemStack[req.size()];
+				req.toArray(storedRequirements);
+			}
+		}
+	}
+
 	@Override
 	public boolean isAlreadyBuilt(IBuilderContext context, int x, int y, int z) {
+		if(block instanceof BlockBase) {
+			switch(((BlockBase) block).getRotation()) {
+				case FOUR: {
+					return block == context.world().getBlock(x, y, z) && (meta & (~3)) == (context.world().getBlockMetadata(x, y, z) & (~3));
+				}
+				case SIX: {
+					return block == context.world().getBlock(x, y, z) && (meta & (~7)) == (context.world().getBlockMetadata(x, y, z) & (~7));
+				}
+			}
+		}
 		return block == context.world().getBlock(x, y, z);
 	}
 }
