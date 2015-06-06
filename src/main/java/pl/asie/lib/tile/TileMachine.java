@@ -269,7 +269,9 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	public int[] getAccessibleSlotsFromSide(int arg0) {
-		if (this.items == null) { return new int[0]; }
+		if(this.items == null) {
+			return new int[0];
+		}
 		int[] slots = new int[this.items.length];
 		for(int i = 0; i < slots.length; i++) {
 			slots[i] = i;
@@ -327,7 +329,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = Mods.IC2)
 	public void initIC() {
-		if(!didInitIC2) {
+		if(!didInitIC2 && (worldObj == null || !worldObj.isRemote)) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent((IEnergyTile) this));
 		}
 		didInitIC2 = true;
@@ -335,7 +337,7 @@ public class TileMachine extends TileEntityBase implements
 
 	@Optional.Method(modid = Mods.IC2)
 	public void deinitIC() {
-		if(didInitIC2) {
+		if(didInitIC2 && (worldObj == null || !worldObj.isRemote)) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent((IEnergyTile) this));
 		}
 		didInitIC2 = false;
@@ -479,6 +481,12 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
+	// Remove NBT data for transfer with the BuildCraft Builder
+	public void removeFromNBTForTransfer(NBTTagCompound data){
+		data.removeTag("Inventory");
+		data.removeTag("bb_energy");
+	}
+
 	@Optional.Method(modid = Mods.API.CoFHTileEntities)
 	public int getInfoEnergyPerTick() {
 		if(this.battery != null) {
@@ -541,7 +549,7 @@ public class TileMachine extends TileEntityBase implements
 			p.getInformation(null, ForgeDirection.UNKNOWN, data, false);
 			return data.toArray(new String[data.size()]);
 		} else {
-			return new String[] { };
+			return new String[] {};
 		}
 	}
 }

@@ -1,3 +1,7 @@
+==== 0.4.2 ====
+
+  * ADDED: Blueprint support for the BuildCraft Builder.
+
 ==== 0.4.1 ====
 
   * FIXED: Links in Chat not working when Chat Tweaks are enabled.

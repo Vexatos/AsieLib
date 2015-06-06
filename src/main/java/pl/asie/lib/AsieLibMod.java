@@ -80,7 +80,6 @@ public class AsieLibMod extends AsieLibAPI {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		if(proxy.isClient()) {
-
 			new BlockBaseRender();
 		}
 

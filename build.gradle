@@ -40,6 +40,10 @@ repositories {
 		name = "OC repo"
 		url = "http://maven.cil.li/"
 	}
+	ivy {
+		name = "BuildCraft"
+		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
+	}
 }
 
 configurations {
@@ -51,6 +55,7 @@ configurations {
 dependencies {
 	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
 	provided "li.cil.oc:OpenComputers:${config.oc.version}:api"
+	compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
 }
 
 minecraft {
