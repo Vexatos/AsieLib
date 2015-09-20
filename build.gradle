@@ -40,6 +40,10 @@ repositories {
 		name = "OC repo"
 		url = "http://maven.cil.li/"
 	}
+	maven {
+		name = "Forestry and IC2 repo"
+		url = "http://maven.ic2.player.to/"
+	}
 	ivy {
 		name = "BuildCraft"
 		artifactPattern "http://www.mod-buildcraft.com/releases/BuildCraft/[revision]/[module]-[revision]-[classifier].[ext]"
@@ -53,6 +57,7 @@ configurations {
 }
 
 dependencies {
+	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
 	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
 	provided "li.cil.oc:OpenComputers:${config.oc.version}:api"
 	compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
