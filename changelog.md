@@ -1,3 +1,7 @@
+==== 0.4.3 ====
+
+  * FIXED: Server-side crash related to ray tracing
+
 ==== 0.4.2 ====
 
   * ADDED: Blueprint support for the BuildCraft Builder.

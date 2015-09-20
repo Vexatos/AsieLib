@@ -37,7 +37,7 @@ public class RayTracer {
 		if(entity.worldObj.isRemote) {
 			return;
 		}
-		this.target = this.rayTrace(entity, distance, 0);
+		this.target = this.rayTrace(entity, distance);
 	}
 
 	/**
@@ -47,14 +47,14 @@ public class RayTracer {
 		return this.target;
 	}
 
-	protected MovingObjectPosition rayTrace(EntityLivingBase entity, double distance, float par3) {
+	protected MovingObjectPosition rayTrace(EntityLivingBase entity, double distance) {
 		Entity target;
-		final Vec3 position = entity.getPosition(par3);
+		final Vec3 position = Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
 		if(entity.getEyeHeight() != 0.12F) {
 			position.yCoord += entity.getEyeHeight();
 		}
 
-		Vec3 look = entity.getLook(par3);
+		Vec3 look = entity.getLookVec();
 
 		for(double i = 1.0; i < distance; i += 0.2) {
 			Vec3 search = position.addVector(look.xCoord * i, look.yCoord * i, look.zCoord * i);
