@@ -345,6 +345,10 @@ public abstract class BlockBase extends BlockContainer implements
 		return false;
 	}
 
+	protected boolean canUseTool(World world, int x, int y, int z, EntityPlayer player, int side){
+		return this.rotation != Rotation.NONE;
+	}
+
 	@SuppressWarnings("deprecation")
 	private void tryOpenOldGui(World world, int x, int y, int z, EntityPlayer player, int side) {
 		int guiID = this.getGuiID(world, x, y, z, player, side);
@@ -356,7 +360,7 @@ public abstract class BlockBase extends BlockContainer implements
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float par7, float par8, float par9) {
 		if(!world.isRemote) {
-			if(!this.useTool(world, x, y, z, player, side)) {
+			if(!this.canUseTool(world, x, y, z, player, side) || !this.useTool(world, x, y, z, player, side)) {
 				IGuiProvider guiProvider = getGuiProvider(world, x, y, z, player, side);
 				if(guiProvider != null) {
 					if(guiProvider.canOpen(world, x, y, z, player, side) && this.onOpenGui(world, x, y, z, player, side)) {
