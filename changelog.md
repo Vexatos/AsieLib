@@ -1,6 +1,7 @@
 ==== 0.4.3 ====
 
   * FIXED: Server-side crash related to ray tracing
+  * FIXED: Players not being able to place blocks against other blocks (for instance Computronics Colorful Lamps) without sneaking when they should.
 
 ==== 0.4.2 ====
 

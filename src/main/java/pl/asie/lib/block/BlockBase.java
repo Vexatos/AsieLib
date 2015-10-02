@@ -370,7 +370,7 @@ public abstract class BlockBase extends BlockContainer implements
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	protected boolean onOpenGui(World world, int x, int y, int z, EntityPlayer player, int side) {
