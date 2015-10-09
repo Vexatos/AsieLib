@@ -48,7 +48,7 @@ public class EnchantmentTweak {
 		}
 		if(e.left.isItemStackDamageable() && e.left.isItemEnchanted()) {
 			if(e.right.getItem() == Items.fermented_spider_eye && !hasBaneEnchantment(e.left)) {
-				if(e.right.stackSize == 64) {
+				if(e.right.stackSize == e.right.getMaxStackSize()) {
 					e.output = e.left.copy();
 					e.cost = 37;
 					if(!addBaneEnchantment(e.output, 9)) {
