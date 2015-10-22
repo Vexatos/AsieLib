@@ -1,3 +1,7 @@
+==== 0.4.4 ====
+
+  * FIXED: Some strange visual bug with blocks.
+
 ==== 0.4.3 ====
 
   * FIXED: Server-side crash related to ray tracing

@@ -373,8 +373,9 @@ public abstract class BlockBase extends BlockContainer implements
 					this.tryOpenOldGui(world, x, y, z, player, side);
 				}
 			}
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	protected boolean onOpenGui(World world, int x, int y, int z, EntityPlayer player, int side) {
