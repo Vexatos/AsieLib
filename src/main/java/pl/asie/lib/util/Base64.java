@@ -42,9 +42,9 @@ package pl.asie.lib.util;
  *   characters. You should now get an IOException if you try decoding
  *   something that has bad characters in it.</li>
  *  <li>v2.3.6 - Fixed bug when breaking lines and the final byte of the encoded
- *   string ended in the last column; the buffer was not properly shrunk and
+ *   string ended in the last column; the src was not properly shrunk and
  *   contained an extra (null) byte that made it into the string.</li>
- *  <li>v2.3.5 - Fixed bug in {@link #encodeFromFile} where estimated buffer size
+ *  <li>v2.3.5 - Fixed bug in {@link #encodeFromFile} where estimated src size
  *   was wrong for files of size 31, 34, and 37 bytes.</li>
  *  <li>v2.3.4 - Fixed bug when working with gzipped streams whereby flushing
  *   the Base64.OutputStream closed the Base64 encoding (by padding with equals
@@ -130,7 +130,7 @@ package pl.asie.lib.util;
  *  <li>v1.4 - Added helper methods to read/write files.</li>
  *  <li>v1.3.6 - Fixed OutputStream.flush() so that 'position' is reset.</li>
  *  <li>v1.3.5 - Added flag to turn on and off line breaks. Fixed bug in input stream
- *      where last buffer being read, if not completely full, was not returned.</li>
+ *      where last src being read, if not completely full, was not returned.</li>
  *  <li>v1.3.4 - Fixed when "improperly padded stream" error was thrown at the wrong time.</li>
  *  <li>v1.3.3 - Fixed I/O streams which were totally messed up.</li>
  * </ul>
@@ -505,7 +505,7 @@ public class Base64
         //          >>18  >>12  >> 6  >> 0  Right shift necessary
         //                0x3f  0x3f  0x3f  Additional AND
         
-        // Create buffer with zero-padding if there are only one or two
+        // Create src with zero-padding if there are only one or two
         // significant bytes passed in the array.
         // We have to shift left 24 in order to flush out the 1's that appear
         // when Java treats a value as negative that is cast from a byte to an int.
@@ -550,8 +550,8 @@ public class Base64
      * pass along any options (such as {@link #DO_BREAK_LINES}
      * or {@link #GZIP}.
      *
-     * @param raw input buffer
-     * @param encoded output buffer
+     * @param raw input src
+     * @param encoded output src
      * @since 2.3
      */
     public static void encode( java.nio.ByteBuffer raw, java.nio.ByteBuffer encoded ){
@@ -574,8 +574,8 @@ public class Base64
      * pass along any options (such as {@link #DO_BREAK_LINES}
      * or {@link #GZIP}.
      *
-     * @param raw input buffer
-     * @param encoded output buffer
+     * @param raw input src
+     * @param encoded output src
      * @since 2.3
      */
     public static void encode( java.nio.ByteBuffer raw, java.nio.CharBuffer encoded ){
@@ -1033,14 +1033,14 @@ public class Base64
         
         // Lots of error checking and exception throwing
         if( source == null ){
-            throw new NullPointerException( "Source array was null." );
+            throw new NullPointerException( "SourceIndex array was null." );
         }   // end if
         if( destination == null ){
             throw new NullPointerException( "Destination array was null." );
         }   // end if
         if( srcOffset < 0 || srcOffset + 3 >= source.length ){
             throw new IllegalArgumentException( String.format(
-            "Source array with length %d cannot have offset of %d and still process four bytes.", source.length, srcOffset ) );
+            "SourceIndex array with length %d cannot have offset of %d and still process four bytes.", source.length, srcOffset ) );
         }   // end if
         if( destOffset < 0 || destOffset +2 >= destination.length ){
             throw new IllegalArgumentException( String.format(
@@ -1154,7 +1154,7 @@ public class Base64
         }   // end if
         if( off < 0 || off + len > source.length ){
             throw new IllegalArgumentException( String.format(
-            "Source array with length %d cannot have offset of %d and process %d bytes.", source.length, off, len ) );
+            "SourceIndex array with length %d cannot have offset of %d and process %d bytes.", source.length, off, len ) );
         }   // end if
         
         if( len == 0 ){
@@ -1170,9 +1170,9 @@ public class Base64
         byte[] outBuff = new byte[ len34 ]; // Upper limit on size of output
         int    outBuffPosn = 0;             // Keep track of where we're writing
         
-        byte[] b4        = new byte[4];     // Four byte buffer from source, eliminating white space
-        int    b4Posn    = 0;               // Keep track of four byte input buffer
-        int    i         = 0;               // Source array counter
+        byte[] b4        = new byte[4];     // Four byte src from source, eliminating white space
+        int    b4Posn    = 0;               // Keep track of four byte input src
+        int    i         = 0;               // SourceIndex array counter
         byte   sbiDecode = 0;               // Special value from DECODABET
         
         for( i = off; i < off+len; i++ ) {  // Loop through source
@@ -1641,10 +1641,10 @@ public class Base64
     public static class InputStream extends java.io.FilterInputStream {
         
         private boolean encode;         // Encoding or decoding
-        private int     position;       // Current position in the buffer
-        private byte[]  buffer;         // Small buffer holding converted data
-        private int     bufferLength;   // Length of buffer (3 or 4)
-        private int     numSigBytes;    // Number of meaningful bytes in the buffer
+        private int     position;       // Current position in the src
+        private byte[]  buffer;         // Small src holding converted data
+        private int     bufferLength;   // Length of src (3 or 4)
+        private int     numSigBytes;    // Number of meaningful bytes in the src
         private int     lineLength;
         private boolean breakLines;     // Break lines at less than 80 characters
         private int     options;        // Record options used to create the stream.
@@ -1995,7 +1995,7 @@ public class Base64
         
         /**
          * Method added by PHIL. [Thanks, PHIL. -Rob]
-         * This pads the buffer without closing the stream.
+         * This pads the src without closing the stream.
          * @throws java.io.IOException  if there's an error.
          */
         public void flushBase64() throws java.io.IOException  {
@@ -2007,7 +2007,7 @@ public class Base64
                 else {
                     throw new java.io.IOException( "Base64 input not properly padded." );
                 }   // end else: decoding
-            }   // end if: buffer partially full
+            }   // end if: src partially full
 
         }   // end flush
 
