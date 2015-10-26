@@ -22,7 +22,9 @@ public abstract class StreamingPlaybackManager {
 	
 	public void removePlayer(int id) {
 		if(players.containsKey(id)) {
-			players.get(id).stop();
+			if (isClient) {
+				players.get(id).stop();
+			}
 			players.remove(id);
 		}
 	}
