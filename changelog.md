@@ -1,3 +1,7 @@
+==== 0.4.5 ====
+
+  * MISC: Some changes to audio system.
+
 ==== 0.4.4 ====
 
   * FIXED: Some strange visual bug with blocks.
