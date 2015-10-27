@@ -15,7 +15,7 @@ import static pl.asie.lib.integration.Integration.registerToolProvider;
  */
 public class ToolProviders {
 	public static void registerToolProviders() {
-		if(Mods.API.hasVersion(Mods.API.OpenComputersInternal, "[5.1.1,)")) {
+		if(Mods.hasVersion(Mods.API.OpenComputersInternal, "[5.1.1,)")) {
 			registerToolProvider(new ToolProviderOC());
 		}
 		if(Mods.API.hasAPI(Mods.API.BuildCraftTools)) {
