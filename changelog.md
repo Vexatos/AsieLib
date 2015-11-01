@@ -1,5 +1,6 @@
 ==== 0.4.5 ====
 
+  * NEW: Spy mode and /spy command for server administrators using the chat-radius config option.
   * MISC: Some changes to audio system.
 
 ==== 0.4.4 ====
