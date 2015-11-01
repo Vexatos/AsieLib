@@ -1,7 +1,8 @@
 ==== 0.4.5 ====
 
   * NEW: Spy mode and /spy command for server administrators using the chat-radius config option.
-  * MISC: Some changes to audio system.
+  * MISC: Some changes to the audio system.
+  * MISC: Allow soft dependencies on specific mod versions.
 
 ==== 0.4.4 ====
 
