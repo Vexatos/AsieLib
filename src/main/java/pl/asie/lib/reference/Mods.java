@@ -70,7 +70,7 @@ public class Mods {
 	}
 
 	public static boolean hasVersion(String name, String version) {
-		if(isLoaded(name)) {
+		if(isLoaded(name) || API.hasAPI(name)) {
 			ArtifactVersion v1 = VersionParser.parseVersionReference(name + "@" + version);
 			ArtifactVersion v2 = getVersion(name);
 			return v1.containsVersion(v2);
