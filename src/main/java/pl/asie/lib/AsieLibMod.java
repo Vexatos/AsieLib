@@ -1,6 +1,12 @@
 package pl.asie.lib;
 
+import java.lang.reflect.Method;
+import java.util.Random;
+
 import com.google.common.collect.ImmutableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -14,8 +20,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import pl.asie.lib.api.AsieLibAPI;
 import pl.asie.lib.api.chat.INicknameHandler;
 import pl.asie.lib.api.chat.INicknameRepository;
@@ -29,9 +34,6 @@ import pl.asie.lib.integration.tool.ToolProviders;
 import pl.asie.lib.network.PacketHandler;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
-
-import java.lang.reflect.Method;
-import java.util.Random;
 
 @Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "@VERSION@",
 	dependencies = "required-after:Forge@[10.13.2.1236,);after:gregtech@[MC1710];"
@@ -66,6 +68,7 @@ public class AsieLibMod extends AsieLibAPI {
 
 		if(chat.enableChatFeatures) {
 			MinecraftForge.EVENT_BUS.register(chat);
+			FMLCommonHandler.instance().bus().register(chat);
 		}
 		MinecraftForge.EVENT_BUS.register(new AsieLibEvents());
 

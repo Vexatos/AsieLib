@@ -1,36 +1,41 @@
 package pl.asie.lib.chat;
 
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.WorldServer;
+
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.event.ServerChatEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import pl.asie.lib.AsieLibMod;
 import pl.asie.lib.reference.Mods;
 import pl.asie.lib.util.ChatUtils;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-
 public class ChatHandler {
 	private final HashMap<String, String> actions = new HashMap<String, String>();
-	public final boolean enableChatFeatures, enableShout, enableGreentext, enableColor, enableChatLog;
+	public final boolean enableChatFeatures, enableShout, enableGreentext, enableColor, enableChatLog, spyOnByDefault;
 	public final int CHAT_RADIUS, nickLevel, realnameLevel;
 	public final String colorAction, messageFormat, shoutPrefix;
 	public final Logger chatlog;
 
 	public ChatHandler(Configuration config) {
 		CHAT_RADIUS = config.get("chat", "chatRadius", 0).getInt();
+		spyOnByDefault = config.get("chat", "spyOnByDefault", true, "Admins will have spy mode on by default after connecting. (Only matters if chatRadius > 0)").getBoolean(true);
 		enableShout = config.get("chat", "enableShout", true).getBoolean(true);
 		shoutPrefix = config.get("chat", "shoutPrefix", "[Shout]").getString();
 		enableChatFeatures = config.get("base", "enableChatTweaks", false).getBoolean(false);
@@ -49,6 +54,9 @@ public class ChatHandler {
 			event.registerServerCommand(new CommandMe());
 			event.registerServerCommand(new CommandNick());
 			event.registerServerCommand(new CommandRealname());
+			if (CHAT_RADIUS > 0) {
+				event.registerServerCommand(new CommandSpy());
+			}
 		}
 	}
 
@@ -60,6 +68,18 @@ public class ChatHandler {
 		}
 	}
 
+	@SubscribeEvent
+	public void loggedInEvent(PlayerEvent.PlayerLoggedInEvent event) {
+		if (event.player.canCommandSenderUseCommand(2, "spy") && spyOnByDefault) {
+			CommandSpy.SPYING_USERS.add(event.player.getCommandSenderName());
+		}
+	}
+
+	@SubscribeEvent
+	public void loggedOutEvent(PlayerEvent.PlayerLoggedOutEvent event) {
+		CommandSpy.SPYING_USERS.remove(event.player.getCommandSenderName());
+	}
+
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void chatEvent(ServerChatEvent event) {
 		if(CHAT_RADIUS < 0) { // Chat disabled altogether
@@ -67,7 +87,7 @@ public class ChatHandler {
 			return;
 		}
 
-		IChatComponent chat;
+		IChatComponent chat, chatSpy = null;
 		boolean disableRadius = false;
 		String username = ChatUtils.color(AsieLibMod.nick.getNickname(event.username)) + EnumChatFormatting.RESET;
 		String message = event.message;
@@ -108,6 +128,7 @@ public class ChatHandler {
 			disableRadius = true;
 		} else {
 			chat = ForgeHooks.newChatWithLinks(formattedMessage);
+			chatSpy = ForgeHooks.newChatWithLinks(EnumChatFormatting.GRAY + "[Spy] " + formattedMessage);
 		}
 
 		boolean useRadius = CHAT_RADIUS > 0 && !disableRadius;
@@ -123,15 +144,16 @@ public class ChatHandler {
 		if(enableChatLog) {
 			chatlog.info(ChatUtils.stripColors(formattedMessage));
 		}
-		for(WorldServer ws : MinecraftServer.getServer().worldServers) {
-			if(useRadius && ws.provider.dimensionId != dimensionId) {
-				continue;
-			}
+		for (WorldServer ws : MinecraftServer.getServer().worldServers) {
 			for(Object o : ws.playerEntities) {
 				if(o instanceof EntityPlayer) {
 					EntityPlayer target = (EntityPlayer) o;
-					if(!useRadius || event.player == target || event.player.getDistanceToEntity(target) <= CHAT_RADIUS) {
+
+					if ((!useRadius || event.player == target || event.player.getDistanceToEntity(target) <= CHAT_RADIUS)
+							&& ws.provider.dimensionId == dimensionId) {
 						target.addChatMessage(chat);
+					} else if (chatSpy != null && CommandSpy.SPYING_USERS.contains(target.getCommandSenderName())) {
+						target.addChatMessage(chatSpy);
 					}
 				}
 			}
