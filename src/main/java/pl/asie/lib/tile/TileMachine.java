@@ -67,11 +67,22 @@ public class TileMachine extends TileEntityBase implements
 	@Override
 	public void validate() {
 		super.validate();
-		if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
-			this.initIC();
+	}
+
+	@Override
+	public void updateEntity() {
+		super.updateEntity();
+		if(!didInitIC2) {
+			if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
+				this.initIC();
+			}
+			didInitIC2 = true; // Just so this check won't be done every tick.
 		}
-		if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
-			this.initICClassic();
+		if(!didInitIC2C) {
+			if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
+				this.initICClassic();
+			}
+			didInitIC2C = true; // Just so this check won't be done every tick.
 		}
 	}
 
@@ -86,6 +97,16 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		if(Mods.isLoaded(Mods.IC2) && this.battery != null) {
+			this.deinitIC();
+		}
+		if(Mods.isLoaded(Mods.IC2Classic) && this.battery != null) {
+			this.deinitICClassic();
+		}
+	}
 	// (Bundled) Redstone
 
 	@Optional.Method(modid = Mods.RedLogic)
@@ -482,7 +503,7 @@ public class TileMachine extends TileEntityBase implements
 	}
 
 	// Remove NBT data for transfer with the BuildCraft Builder
-	public void removeFromNBTForTransfer(NBTTagCompound data){
+	public void removeFromNBTForTransfer(NBTTagCompound data) {
 		data.removeTag("Inventory");
 		data.removeTag("bb_energy");
 	}

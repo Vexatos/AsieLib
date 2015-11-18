@@ -1,6 +1,7 @@
 ==== 0.4.5 ====
 
-  * NEW: Spy mode and /spy command for server administrators using the chat-radius config option.
+  * ADDED: Spy mode and /spy command for server administrators using the chat-radius config option.
+  * FIXED: IC2 energy integration not working very well.
   * MISC: Some changes to the audio system.
   * MISC: Allow soft dependencies on specific mod versions.
 
