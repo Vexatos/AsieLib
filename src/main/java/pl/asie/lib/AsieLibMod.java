@@ -36,7 +36,7 @@ import pl.asie.lib.reference.Mods;
 import pl.asie.lib.tweak.enchantment.EnchantmentTweak;
 
 @Mod(modid = Mods.AsieLib, name = Mods.AsieLib_NAME, version = "@VERSION@",
-	dependencies = "required-after:Forge@[10.13.2.1236,);after:gregtech@[MC1710];"
+	dependencies = "required-after:Forge@[10.13.2.1236,);"
 		+ "after:CoFHAPI|block@[1.7.10R1.0.0,);after:CoFHAPI|energy@[1.7.10R1.0.0,);"
 		+ "after:CoFHAPI|tileentity@[1.7.10R1.0.0,);after:CoFHAPI|item@[1.7.10R1.0.0,)")
 public class AsieLibMod extends AsieLibAPI {

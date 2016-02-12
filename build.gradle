@@ -58,7 +58,7 @@ configurations {
 
 dependencies {
 	provided "net.industrial-craft:industrialcraft-2:${config.ic2.version}:dev"
-	provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
+	//provided "com.gregoriust.gregtech:${config.gregtech.version}:dev"
 	provided "li.cil.oc:OpenComputers:${config.oc.version}:api"
 	compile name: "buildcraft", version: "${config.buildcraft.version}", classifier: "dev"
 }

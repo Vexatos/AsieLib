@@ -1,3 +1,10 @@
+==== 0.4.6 ====
+
+  * FIXED: Made audio system a lot more efficient.
+  * FIXED: Version number detection.
+  * FIXED: IC2 energy integration.
+  * REMOVED: GregTech debugger support for asielib blocks. AsieLib now works with both GregTech 5 and GregTech 6.
+
 ==== 0.4.5 ====
 
   * ADDED: Spy mode and /spy command for server administrators using the chat-radius config option.

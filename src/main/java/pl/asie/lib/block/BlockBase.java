@@ -4,7 +4,6 @@ import cofh.api.block.IBlockInfo;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gregtech.api.interfaces.IDebugableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -36,11 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Optional.InterfaceList({
-	@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = Mods.GregTech),
+	//@Optional.Interface(iface = "gregtech.api.interfaces.IDebugableBlock", modid = Mods.GregTech),
 	@Optional.Interface(iface = "cofh.api.block.IBlockInfo", modid = Mods.API.CoFHBlocks)
 })
 public abstract class BlockBase extends BlockContainer implements
-	IBlockInfo, IDebugableBlock {
+	IBlockInfo/*, IDebugableBlock*/ {
 
 	public enum Rotation {
 		NONE,
@@ -345,7 +344,7 @@ public abstract class BlockBase extends BlockContainer implements
 		return false;
 	}
 
-	protected boolean canUseTool(World world, int x, int y, int z, EntityPlayer player, int side){
+	protected boolean canUseTool(World world, int x, int y, int z, EntityPlayer player, int side) {
 		return this.rotation != Rotation.NONE;
 	}
 
@@ -442,6 +441,7 @@ public abstract class BlockBase extends BlockContainer implements
 
     /* IInformationProvider boilerplate code */
 
+	/*
 	@Override
 	@Optional.Method(modid = Mods.GregTech)
 	public ArrayList<String> getDebugInfo(EntityPlayer aPlayer, int aX, int aY,
@@ -453,6 +453,7 @@ public abstract class BlockBase extends BlockContainer implements
 		}
 		return data;
 	}
+	*/
 
 	@Override
 	@Optional.Method(modid = Mods.API.CoFHBlocks)

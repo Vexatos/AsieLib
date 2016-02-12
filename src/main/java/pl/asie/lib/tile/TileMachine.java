@@ -37,6 +37,7 @@ import java.util.List;
 })
 public class TileMachine extends TileEntityBase implements
 	IConnectable, ISidedInventory /* RedLogic */ {
+
 	private IBattery battery;
 	private IBundledRedstoneProvider brP;
 	private ItemStack[] items;
@@ -557,6 +558,7 @@ public class TileMachine extends TileEntityBase implements
 		}
 	}
 
+	/*
 	@Optional.Method(modid = Mods.GregTech)
 	public boolean isGivingInformation() {
 		return (this instanceof IInformationProvider);
@@ -573,4 +575,5 @@ public class TileMachine extends TileEntityBase implements
 			return new String[] {};
 		}
 	}
+	*/
 }
