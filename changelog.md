@@ -4,6 +4,7 @@
   * FIXED: Version number detection.
   * FIXED: IC2 energy integration.
   * REMOVED: GregTech debugger support for asielib blocks. AsieLib now works with both GregTech 5 and GregTech 6.
+  * MISC: Improved colorizing recipes.
 
 ==== 0.4.5 ====
 
