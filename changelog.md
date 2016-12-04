@@ -1,3 +1,7 @@
+==== 0.4.7 ====
+
+  * FIXED: Added parameter to specify sound rolloff in audio player.
+
 ==== 0.4.6 ====
 
   * FIXED: Made audio system a lot more efficient.
