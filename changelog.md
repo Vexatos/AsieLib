@@ -1,3 +1,7 @@
+==== 0.4.8 ====
+
+  * ADDED: Position-independent sound.
+
 ==== 0.4.7 ====
 
   * FIXED: Added parameter to specify sound rolloff in audio player.
