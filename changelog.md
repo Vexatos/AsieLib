@@ -1,7 +1,7 @@
 ==== 0.4.8 ====
 
   * ADDED: Position-independent sound.
-  * CHANGED: Split ContainerBase into two classes.
+  * CHANGED: Split GuiBase and ContainerBase into two classes.
 
 ==== 0.4.7 ====
 
