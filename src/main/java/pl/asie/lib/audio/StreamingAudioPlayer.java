@@ -73,6 +73,16 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 
 	@SideOnly(Side.CLIENT)
+	public void updatePosition(String id, float x, float y, float z) {
+		for(SourceEntry source : sources) {
+			if((id != null && id.equals(source.id))) {
+				AL10.alSource3f(source.src.get(0), AL10.AL_POSITION, x, y, z);
+				return;
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
 	private double getDistance(int x, int y, int z) {
 		Vec3 pos = Minecraft.getMinecraft().thePlayer.getPosition(1);
 		return pos.distanceTo(Vec3.createVectorHelper(x, y, z));
