@@ -1,3 +1,7 @@
+==== 0.4.9 ====
+
+  * CHANGED: Increased precision of sound positions.
+
 ==== 0.4.8 ====
 
   * ADDED: Position-independent sound.

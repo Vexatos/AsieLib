@@ -22,15 +22,11 @@ import pl.asie.lib.AsieLibMod;
 public class StreamingAudioPlayer extends DFPWM {
 	public class SourceEntry {
 		public final String id;
-		public final int x, y, z;
 		public final IntBuffer src;
 		public int receivedPackets;
 
-		public SourceEntry(String id, int x, int y, int z) {
+		public SourceEntry(String id) {
 			this.id = id;
-			this.x = x;
-			this.y = y;
-			this.z = z;
 			src = BufferUtils.createIntBuffer(1);
 			AL10.alGenSources(src);
 		}
@@ -83,7 +79,7 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 
 	@SideOnly(Side.CLIENT)
-	private double getDistance(int x, int y, int z) {
+	private double getDistance(double x, double y, double z) {
 		Vec3 pos = Minecraft.getMinecraft().thePlayer.getPosition(1);
 		return pos.distanceTo(Vec3.createVectorHelper(x, y, z));
 	}
@@ -122,23 +118,23 @@ public class StreamingAudioPlayer extends DFPWM {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void play(String id, int x, int y, int z) {
+	public void play(String id, float x, float y, float z) {
 		play(id, x, y, z, 0.0f);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void play(String id, int x, int y, int z, float rolloff) {
-		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[]{x + 0.5F, y + 0.5F, z + 0.5F}).rewind());
+	public void play(String id, float x, float y, float z, float rolloff) {
+		FloatBuffer sourcePos = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[]{ x, y, z }).rewind());
 		FloatBuffer sourceVel = (FloatBuffer) (BufferUtils.createFloatBuffer(3).put(new float[]{0.0f, 0.0f, 0.0f}).rewind());
 
 		SourceEntry source = null;
 		for (SourceEntry entry : sources) {
-			if ((id != null && id.equals(entry.id)) || entry.x == x && entry.y == y && entry.z == z) {
+			if (id.equals(entry.id)) {
 				source = entry;
 			}
 		}
 		if (source == null) {
-			source = new SourceEntry(id, x, y, z);
+			source = new SourceEntry(id);
 			sources.add(source);
 		}
 
